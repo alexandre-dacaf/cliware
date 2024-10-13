@@ -1,24 +1,51 @@
 <script lang="ts">
+	export let index: number;
+	let terminalRef: HTMLDivElement;
+	let inputTextRef: HTMLSpanElement;
+
 	let inputText: string = '';
 	let terminalHistory: string[] = [];
 	let isFocused = false;
 
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
-			terminalHistory = [...terminalHistory, inputText];
-			inputText = '';
-		} else if (event.key === 'Backspace') {
-			inputText = inputText.slice(0, -1);
-		} else if (event.key.length === 1) {
-			inputText += event.key;
+			event.preventDefault();
+
+			if (inputText.trim() !== '') {
+				terminalHistory = [...terminalHistory, inputText];
+				inputText = '';
+			}
 		}
+	}
+
+	function handleInput() {
+		inputText = inputTextRef.textContent || '';
 	}
 
 	function handleFocus() {
 		isFocused = true;
+
+		setTimeout(() => {
+			focusEditableText();
+		}, 0); // Timeout to ensure focus is applied after rendering
 	}
 
-	function handleBlur() {
+	function focusEditableText() {
+		if (inputTextRef) {
+			const range = document.createRange();
+			const selection = window.getSelection();
+			range.selectNodeContents(inputTextRef);
+			range.collapse(false);
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	}
+
+	export function focusTerminal() {
+		terminalRef.focus();
+	}
+
+	export function blurTerminal() {
 		isFocused = false;
 	}
 </script>
@@ -26,16 +53,21 @@
 <div
 	class="terminal"
 	tabindex="0"
-	on:keydown={handleKeyPress}
 	on:focus={handleFocus}
-	on:blur={handleBlur}
 	class:focused={isFocused}
+	bind:this={terminalRef}
 >
 	{#each terminalHistory as command}
 		<div class="terminal__command">{command}</div>
 	{/each}
 	<div class="terminal__prompt">
-		> {inputText}<span class="cursor" class:active={isFocused}>_</span>
+		> <span
+			class="input-text"
+			contenteditable="true"
+			bind:this={inputTextRef}
+			on:keydown={handleKeyPress}
+			on:input={handleInput}>{inputText}</span
+		>
 	</div>
 </div>
 
@@ -65,24 +97,20 @@
 		transition: 200ms;
 	}
 
+	.input-text {
+		color: #e0e0e0;
+		caret-color: #999;
+		caret-shape: underscore;
+		border: none;
+		outline: none;
+	}
+
 	.focused {
 		box-shadow: 0 0 4px #6cb6ff;
 	}
 
-	.cursor {
-		display: none;
-		width: 10px;
-		background-color: transparent;
-		animation: blink 900ms step-start infinite;
-	}
-
-	.cursor.active {
-		display: inline;
-	}
-
-	@keyframes blink {
-		50% {
-			opacity: 0;
-		}
+	::selection {
+		background-color: hsl(210, 30%, 35%);
+		color: #e0e0e0;
 	}
 </style>

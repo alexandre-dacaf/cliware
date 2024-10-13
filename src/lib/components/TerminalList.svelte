@@ -1,13 +1,62 @@
-<script>
+<script lang="ts">
+	import { onMount } from 'svelte';
 	import Terminal from '$lib/components/Terminal.svelte';
 
-	let numColumns = 3;
+	let numColumns: number = 3;
+
+	let terminals = [0, 1, 2];
+	let terminalRefs: any[] = [];
+
+	let currentTerminalIndex: number = 0;
+
+	onMount(async () => {
+		focusTerminalAt(currentTerminalIndex);
+	});
+
+	function handleKeyPress(event: KeyboardEvent) {
+		if (event.key === 'Tab') {
+			event.preventDefault();
+			if (event.shiftKey) {
+				focusPrevious();
+			} else {
+				focusNext();
+			}
+		}
+	}
+
+	function focusTerminalAt(index: number) {
+		if (terminalRefs[index]) {
+			terminalRefs[index].focusTerminal();
+		}
+	}
+
+	function blurTerminalAt(index: number) {
+		if (terminalRefs[index]) {
+			terminalRefs[index].blurTerminal();
+		}
+	}
+
+	function focusNext() {
+		blurTerminalAt(currentTerminalIndex);
+		currentTerminalIndex = (currentTerminalIndex + 1) % terminals.length;
+		focusTerminalAt(currentTerminalIndex);
+	}
+
+	function focusPrevious() {
+		blurTerminalAt(currentTerminalIndex);
+		currentTerminalIndex = (currentTerminalIndex - 1 + terminals.length) % terminals.length;
+		focusTerminalAt(currentTerminalIndex);
+	}
 </script>
 
-<div class="terminal-list" style="grid-template-columns: repeat({numColumns}, 1fr);">
-	<Terminal />
-	<Terminal />
-	<Terminal />
+<div
+	class="terminal-list"
+	style="grid-template-columns: repeat({numColumns}, 1fr);"
+	on:keydown={handleKeyPress}
+>
+	{#each terminals as terminalIndex}
+		<Terminal index={terminalIndex} bind:this={terminalRefs[terminalIndex]} />
+	{/each}
 </div>
 
 <style>
