@@ -34,10 +34,14 @@
 		if (inputTextRef) {
 			const range = document.createRange();
 			const selection = window.getSelection();
-			range.selectNodeContents(inputTextRef);
-			range.collapse(false);
-			selection.removeAllRanges();
-			selection.addRange(range);
+
+			if (selection) {
+				// Verifica se 'selection' não é null
+				range.selectNodeContents(inputTextRef);
+				range.collapse(false);
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
 		}
 	}
 
