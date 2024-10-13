@@ -1,11 +1,21 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+
 	export let index: number;
+
 	let terminalRef: HTMLDivElement;
 	let inputTextRef: HTMLSpanElement;
-
 	let inputText: string = '';
 	let terminalHistory: string[] = [];
 	let isFocused = false;
+
+	const dispatch = createEventDispatcher();
+
+	function scrollToBottom() {
+		if (terminalRef) {
+			terminalRef.scrollTop = terminalRef.scrollHeight;
+		}
+	}
 
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
@@ -14,6 +24,12 @@
 			if (inputText.trim() !== '') {
 				terminalHistory = [...terminalHistory, inputText];
 				inputText = '';
+
+				if (inputTextRef) {
+					inputTextRef.textContent = '';
+				}
+
+				scrollToBottom();
 			}
 		}
 	}
@@ -24,6 +40,7 @@
 
 	function handleFocus() {
 		isFocused = true;
+		dispatch('focusTerminal', { index });
 
 		setTimeout(() => {
 			focusEditableText();
@@ -36,7 +53,6 @@
 			const selection = window.getSelection();
 
 			if (selection) {
-				// Verifica se 'selection' não é null
 				range.selectNodeContents(inputTextRef);
 				range.collapse(false);
 				selection.removeAllRanges();
@@ -87,18 +103,41 @@
 		height: 100%;
 		outline: none;
 		transition: 180ms ease-in-out;
+		overflow-y: auto;
+		scrollbar-width: thin;
+		scrollbar-color: #444c56 transparent;
+	}
+
+	.terminal::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.terminal::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.terminal::-webkit-scrollbar-thumb {
+		background-color: #444c56;
+		border-radius: 4px;
+		border: 2px solid transparent;
+	}
+
+	.terminal::-webkit-scrollbar-thumb:hover {
+		background-color: #555;
 	}
 
 	.terminal__command {
-		color: #c9c9c9;
-		font-size: 1.2rem;
+		color: hsl(0, 0%, 70%);
+		font-size: 1rem;
 		margin-bottom: 0.1rem;
 	}
 
 	.terminal__prompt {
-		font-size: 1.2rem;
-		color: #e0e0e0;
+		font-size: 1rem;
+		color: hsl(0, 0%, 88%);
 		transition: 200ms;
+		border-top: solid 1px #444c56;
+		padding-top: 0.2em;
 	}
 
 	.input-text {

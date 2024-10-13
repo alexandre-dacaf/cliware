@@ -4,7 +4,7 @@
 
 	let numColumns: number = 3;
 
-	let terminals = [0, 1, 2];
+	let terminals = [0, 1, 2, 3, 4, 5, 6];
 	let terminalRefs: any[] = [];
 
 	let currentTerminalIndex: number = 0;
@@ -47,6 +47,17 @@
 		currentTerminalIndex = (currentTerminalIndex - 1 + terminals.length) % terminals.length;
 		focusTerminalAt(currentTerminalIndex);
 	}
+
+	function handleTerminalFocus(event) {
+		const { index } = event.detail;
+
+		terminals.forEach((_, i) => {
+			if (i !== index) {
+				blurTerminalAt(i);
+			}
+		});
+		currentTerminalIndex = index;
+	}
 </script>
 
 <div
@@ -55,7 +66,11 @@
 	on:keydown={handleKeyPress}
 >
 	{#each terminals as terminalIndex}
-		<Terminal index={terminalIndex} bind:this={terminalRefs[terminalIndex]} />
+		<Terminal
+			index={terminalIndex}
+			bind:this={terminalRefs[terminalIndex]}
+			on:focusTerminal={handleTerminalFocus}
+		/>
 	{/each}
 </div>
 
