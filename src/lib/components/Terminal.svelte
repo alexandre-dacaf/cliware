@@ -29,13 +29,18 @@
 	export function handleKeyPress(event: KeyboardEvent) {
 		promptRef.handleKeyPress(event);
 	}
+
+	function handleSubmit(event: CustomEvent) {
+		const { content } = event.detail;
+		terminalHistory = [...terminalHistory, content];
+	}
 </script>
 
 <div class="terminal" class:focused={isFocused} bind:this={terminalRef}>
 	{#each terminalHistory as command}
-		<div class="terminal__command">{command}</div>
+		<div class="terminal__command">> {command}</div>
 	{/each}
-	<TextPrompt bind:this={promptRef} />
+	<TextPrompt bind:this={promptRef} on:submit={handleSubmit} />
 </div>
 
 <style>
@@ -77,6 +82,8 @@
 		color: hsl(0, 0%, 70%);
 		font-size: 1rem;
 		margin-bottom: 0.1rem;
+		white-space: nowrap;
+		white-space: pre;
 	}
 
 	.focused {

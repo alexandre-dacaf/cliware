@@ -1,15 +1,24 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import TextInput from '$lib/components/inputs/TextInput.svelte';
 
 	let textInputRef: TextInput;
 
+	const dispatch = createEventDispatcher();
+
 	export function handleKeyPress(event: KeyboardEvent) {
 		textInputRef.handleKeyPress(event);
+	}
+
+	function handleEnterPressed(event: CustomEvent) {
+		const { content } = event.detail;
+		dispatch('submit', { content });
+		textInputRef.clear();
 	}
 </script>
 
 <div class="terminal__prompt">
-	> <TextInput bind:this={textInputRef} />
+	>> <TextInput bind:this={textInputRef} on:enterPressed={handleEnterPressed} />
 </div>
 
 <style>
@@ -19,6 +28,7 @@
 		transition: 200ms;
 		border-top: solid 1px #444c56;
 		padding-top: 0.2em;
+		margin-top: 0.5em;
 	}
 
 	.input-text {

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+
 	let textArray: string[] = [];
 	let cursorPosition: number = 0;
 	let selectionStart: number = -1;
@@ -7,7 +9,9 @@
 	let textAfterCursor: string = '';
 	let selectedText: string = '';
 
-	export function handleKeyPress(event: KeyboardEvent) {
+	const dispatch = createEventDispatcher();
+
+	export function handleKeyPress(event: KeyboardEvent): void {
 		const key = event.key;
 		const isCtrlPressed = event.ctrlKey || event.metaKey;
 		const isShiftPressed = event.shiftKey;
@@ -33,10 +37,13 @@
 					handleArrowRight(isShiftPressed, isCtrlPressed);
 					break;
 				case 'Home':
-					handleHome(isShiftPressed);
+					handleHome(isShiftPressed, isCtrlPressed);
 					break;
 				case 'End':
-					handleEnd(isShiftPressed);
+					handleEnd(isShiftPressed, isCtrlPressed);
+					break;
+				case 'Enter':
+					handleEnter(isShiftPressed);
 					break;
 				default:
 					break;
@@ -46,58 +53,45 @@
 		updateCursor();
 	}
 
-	function insertCharacter(char: string) {
-		if (selectionStart !== -1) {
-			// Remove a seleção atual e insere o caractere no lugar
+	function insertCharacter(char: string): void {
+		if (hasActiveSelection()) {
 			replaceSelectedText(char);
 		} else {
-			// Caso não haja seleção, insere o caractere na posição atual do cursor
-			textArray = [...textArray.slice(0, cursorPosition), char, ...textArray.slice(cursorPosition)];
+			const [arrayBefore, arrayAfter] = sliceTextArray(cursorPosition, cursorPosition);
+			textArray = [...arrayBefore, char, ...arrayAfter];
 			cursorPosition++;
 		}
 		cancelSelection();
 	}
 
-	function replaceSelectedText(char: string) {
-		const [start, end] = getSelectionRange();
-		textArray = [
-			...textArray.slice(0, start), // Parte antes da seleção
-			char, // Novo caractere inserido
-			...textArray.slice(end) // Parte após a seleção
-		];
-		cursorPosition = start + 1; // Posiciona o cursor após o novo caractere
-	}
-
-	// Função para obter o intervalo da seleção
-
-	function handleBackspace() {
-		if (selectionStart !== -1) {
-			// Remove a seleção atual e insere o caractere no lugar
+	function handleBackspace(): void {
+		if (hasActiveSelection()) {
 			replaceSelectedText('');
 		} else {
 			if (cursorPosition > 0) {
-				textArray = [...textArray.slice(0, cursorPosition - 1), ...textArray.slice(cursorPosition)];
+				const [arrayBefore, arrayAfter] = sliceTextArray(cursorPosition - 1, cursorPosition);
+				textArray = [...arrayBefore, ...arrayAfter];
 				cursorPosition--;
 			}
 		}
 		cancelSelection();
 	}
 
-	function handleDelete() {
-		if (selectionStart !== -1) {
-			// Remove a seleção atual e insere o caractere no lugar
+	function handleDelete(): void {
+		if (hasActiveSelection()) {
 			replaceSelectedText('');
 		} else {
 			if (cursorPosition < textArray.length) {
-				textArray = [...textArray.slice(0, cursorPosition), ...textArray.slice(cursorPosition + 1)];
+				const [arrayBefore, arrayAfter] = sliceTextArray(cursorPosition, cursorPosition + 1);
+				textArray = [...arrayBefore, ...arrayAfter];
 			}
 		}
 		cancelSelection();
 	}
 
-	function handleArrowLeft(isShiftPressed: boolean, isCtrlPressed: boolean) {
+	function handleArrowLeft(isShiftPressed: boolean, isCtrlPressed: boolean): void {
 		if (isCtrlPressed) {
-			moveToPreviousWord(isShiftPressed); // Passa o estado do Shift para expandir ou não a seleção
+			moveToPreviousWord(isShiftPressed);
 		} else if (isShiftPressed) {
 			handleSelectionStart();
 			if (cursorPosition > 0) cursorPosition--;
@@ -107,9 +101,9 @@
 		}
 	}
 
-	function handleArrowRight(isShiftPressed: boolean, isCtrlPressed: boolean) {
+	function handleArrowRight(isShiftPressed: boolean, isCtrlPressed: boolean): void {
 		if (isCtrlPressed) {
-			moveToNextWord(isShiftPressed); // Passa o estado do Shift para expandir ou não a seleção
+			moveToNextWord(isShiftPressed);
 		} else if (isShiftPressed) {
 			handleSelectionStart();
 			if (cursorPosition < textArray.length) cursorPosition++;
@@ -119,52 +113,98 @@
 		}
 	}
 
-	function handleHome(isShiftPressed: boolean) {
-		if (isShiftPressed) handleSelectionStart();
-		cursorPosition = 0;
+	function handleHome(isShiftPressed: boolean, isCtrlPressed: boolean): void {
+		if (isCtrlPressed) {
+			if (isShiftPressed) handleSelectionStart();
+			cursorPosition = 0;
+		} else {
+			if (isShiftPressed) handleSelectionStart();
+			moveToLineStart(isShiftPressed);
+		}
 		selectionStart = isShiftPressed ? selectionStart : -1;
 	}
 
-	function handleEnd(isShiftPressed: boolean) {
-		if (isShiftPressed) handleSelectionStart();
-		cursorPosition = textArray.length;
+	function handleEnd(isShiftPressed: boolean, isCtrlPressed: boolean): void {
+		if (isCtrlPressed) {
+			if (isShiftPressed) handleSelectionStart();
+			cursorPosition = textArray.length;
+		} else {
+			if (isShiftPressed) handleSelectionStart();
+			moveToLineEnd(isShiftPressed);
+		}
 		selectionStart = isShiftPressed ? selectionStart : -1;
 	}
 
-	function handleSelectionStart() {
+	function handleEnter(isShiftPressed: boolean): void {
+		cancelSelection();
+		if (isShiftPressed) {
+			insertCharacter('\n');
+		} else {
+			const content = textArray.join('');
+			dispatch('enterPressed', { content });
+		}
+	}
+
+	function replaceSelectedText(char: string): void {
+		const [start, end] = getSelectionRange();
+		const [arrayBefore, arrayAfter] = sliceTextArray(start, end);
+		textArray = [...arrayBefore, char, ...arrayAfter];
+		cursorPosition = start + 1;
+	}
+
+	function sliceTextArray(start: number, end: number): [string[], string[]] {
+		return [textArray.slice(0, start), textArray.slice(end)];
+	}
+
+	function hasActiveSelection(): boolean {
+		return selectionStart !== -1;
+	}
+
+	function handleSelectionStart(): void {
 		if (selectionStart === -1) selectionStart = cursorPosition;
 	}
 
 	function getSelectionRange(): [number, number] {
-		// Retorna o início e o fim da seleção em ordem crescente
 		return [Math.min(selectionStart, cursorPosition), Math.max(selectionStart, cursorPosition)];
 	}
 
-	function cancelSelection() {
+	function cancelSelection(): void {
 		selectionStart = -1;
 	}
 
-	function updateCursor() {
-		if (selectionStart !== -1) {
-			const [start, end] = [
-				Math.min(selectionStart, cursorPosition),
-				Math.max(selectionStart, cursorPosition)
-			];
-			textBeforeCursor = textArray.slice(0, start).join('');
-			selectedText = textArray.slice(start, end).join('');
-			cursorChar = textArray[end] || ' ';
-			textAfterCursor = textArray.slice(end + 1).join('');
+	function updateCursor(): void {
+		if (hasActiveSelection()) {
+			updateCursorWithSelection();
 		} else {
-			textBeforeCursor = textArray.slice(0, cursorPosition).join('');
-			selectedText = '';
-			cursorChar = textArray[cursorPosition] || ' ';
-			textAfterCursor = textArray.slice(cursorPosition + 1).join('');
+			updateCursorWithoutSelection();
 		}
 	}
 
-	function moveToPreviousWord(isShiftPressed: boolean) {
+	function updateCursorWithSelection(): void {
+		const [start, end] = getSelectionRange();
+		textBeforeCursor = textArray.slice(0, start).join('');
+		selectedText = textArray.slice(start, end).join('');
+		updateCursorCharAndTextAfter(end);
+	}
+
+	function updateCursorWithoutSelection(): void {
+		textBeforeCursor = textArray.slice(0, cursorPosition).join('');
+		selectedText = '';
+		updateCursorCharAndTextAfter(cursorPosition);
+	}
+
+	function updateCursorCharAndTextAfter(position: number): void {
+		if (textArray[position] === '\n') {
+			cursorChar = ' ';
+			textAfterCursor = '\n' + textArray.slice(position + 1).join('');
+		} else {
+			cursorChar = textArray[position] || ' ';
+			textAfterCursor = textArray.slice(position + 1).join('');
+		}
+	}
+
+	function moveToPreviousWord(isShiftPressed: boolean): void {
 		if (cursorPosition > 0) {
-			// Ajuste para lidar com seleção quando o Shift estiver pressionado
 			if (isShiftPressed) handleSelectionStart();
 
 			while (cursorPosition > 0 && !isAlphaNumeric(textArray[cursorPosition - 1])) {
@@ -176,9 +216,8 @@
 		}
 	}
 
-	function moveToNextWord(isShiftPressed: boolean) {
+	function moveToNextWord(isShiftPressed: boolean): void {
 		if (cursorPosition < textArray.length) {
-			// Ajuste para lidar com seleção quando o Shift estiver pressionado
 			if (isShiftPressed) handleSelectionStart();
 
 			while (cursorPosition < textArray.length && !isAlphaNumeric(textArray[cursorPosition])) {
@@ -190,8 +229,36 @@
 		}
 	}
 
+	function moveToLineStart(isShiftPressed: boolean): void {
+		if (cursorPosition > 0) {
+			if (isShiftPressed) handleSelectionStart();
+
+			while (cursorPosition > 0 && !isNewLine(textArray[cursorPosition - 1])) {
+				cursorPosition--;
+			}
+		}
+	}
+
+	function moveToLineEnd(isShiftPressed: boolean): void {
+		if (cursorPosition < textArray.length) {
+			if (isShiftPressed) handleSelectionStart();
+
+			while (cursorPosition < textArray.length && !isNewLine(textArray[cursorPosition])) {
+				cursorPosition++;
+			}
+		}
+	}
+
 	function isAlphaNumeric(char: string): boolean {
 		return /\p{L}|\p{N}/u.test(char);
+	}
+
+	function isNewLine(char: string): boolean {
+		return /\n/.test(char);
+	}
+
+	export function clear(): void {
+		textArray = [];
 	}
 </script>
 
@@ -204,7 +271,6 @@
 <style>
 	.editable-span {
 		display: inline-block;
-		border: 1px solid #ccc;
 		padding: 4px;
 		min-width: 200px;
 		font-family: monospace;
@@ -218,7 +284,7 @@
 	}
 
 	.selected {
-		background-color: #ccc;
-		color: #444;
+		background-color: #6cb6ff33;
+		color: #6cb6ff;
 	}
 </style>
