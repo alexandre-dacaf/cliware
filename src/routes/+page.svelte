@@ -1,12 +1,12 @@
 <script>
-	import TerminalList from '$lib/components/TerminalList.svelte';
+	import TerminalContainer from '$lib/components/TerminalContainer.svelte';
 </script>
 
-<TerminalList />
+<TerminalContainer />
 
 <style>
 	:global(body) {
-		background-color: #22272e;
+		background-color: #1c2128;
 		color: #c9c9c9;
 		font-family: 'Fira Code', 'Courier New', Courier, monospace;
 		margin: 0;
