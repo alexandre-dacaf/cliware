@@ -2,9 +2,9 @@
 	import { onMount } from 'svelte';
 	import Terminal from '$lib/components/Terminal.svelte';
 
-	let numColumns: number = 3;
+	let numColumns: number = 2;
 
-	let terminals = [0, 1, 2, 3, 4, 5, 6];
+	let terminals = [0, 1];
 	let terminalRefs: any[] = [];
 
 	let currentTerminalIndex: number = 0;
@@ -61,7 +61,7 @@
 </script>
 
 <div
-	class="terminal-list"
+	class="terminal-container"
 	style="grid-template-columns: repeat({numColumns}, 1fr);"
 	on:keydown={handleKeyPress}
 >
@@ -75,7 +75,7 @@
 </div>
 
 <style>
-	.terminal-list {
+	.terminal-container {
 		background-color: #1c2128;
 		padding: 0.6em;
 		display: grid;
