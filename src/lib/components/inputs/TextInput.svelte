@@ -1,14 +1,14 @@
 <script>
-    let textArray = ['H', 'e', 'l', 'l', 'o']; // Array representando o texto
-    let cursorPosition = 0; // Posição inicial do cursor
-    let selectionStart = null; // Posição de início da seleção
-    let selectionEnd = null; // Posição de fim da seleção
+    let textArray = ['H', 'e', 'l', 'l', 'o']; 
+    let cursorPosition = 0; 
+    let selectionStart = null; 
+    let selectionEnd = null; 
 
     function handleKeyDown(event) {
         const key = event.key;
 
         if (event.shiftKey) {
-            // Se shift está pressionado, ajustamos o range de seleção
+            
             if (key === 'ArrowLeft' && cursorPosition > 0) {
                 cursorPosition--;
                 updateSelection();
@@ -17,31 +17,31 @@
                 updateSelection();
             }
         } else {
-            // Se não está selecionando, move o cursor sem alterar a seleção
+            
             resetSelection();
 
-            if (key.length === 1) { // Inserir caractere
+            if (key.length === 1) { 
                 textArray = [
                     ...textArray.slice(0, cursorPosition),
                     key,
                     ...textArray.slice(cursorPosition)
                 ];
-                cursorPosition++; // Move o cursor após inserir o caractere
+                cursorPosition++; 
             } else if (key === 'Backspace' && cursorPosition > 0) {
                 textArray = [
                     ...textArray.slice(0, cursorPosition - 1),
                     ...textArray.slice(cursorPosition)
                 ];
-                cursorPosition--; // Move o cursor para a esquerda
+                cursorPosition--; 
             } else if (key === 'Delete' && cursorPosition < textArray.length) {
                 textArray = [
                     ...textArray.slice(0, cursorPosition),
                     ...textArray.slice(cursorPosition + 1)
                 ];
             } else if (key === 'ArrowLeft' && cursorPosition > 0) {
-                cursorPosition--; // Move o cursor para a esquerda
+                cursorPosition--; 
             } else if (key === 'ArrowRight' && cursorPosition < textArray.length) {
-                cursorPosition++; // Move o cursor para a direita
+                cursorPosition++; 
             }
         }
 
