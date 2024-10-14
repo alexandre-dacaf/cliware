@@ -2,53 +2,62 @@
 	import { onMount } from 'svelte';
 	import Terminal from '$lib/components/Terminal.svelte';
 
+	let terminalContainerRef: HTMLDivElement;
+
 	let numColumns: number = 2;
-
-	let terminals = [0, 1];
-	let terminalRefs: any[] = [];
-
+	let terminals: number[] = [0, 1];
+	let terminalRefs: Terminal[] = [];
 	let currentTerminalIndex: number = 0;
 
 	onMount(async () => {
+		terminalContainerRef.focus();
 		focusTerminalAt(currentTerminalIndex);
 	});
 
-	function handleKeyPress(event: KeyboardEvent) {
+	function handleKeyPress(event: KeyboardEvent): void {
+		if (event.ctrlKey && event.key === ']') {
+			event.preventDefault();
+			focusNext();
+			return;
+		}
+
+		if (event.ctrlKey && event.key === '[') {
+			event.preventDefault();
+			focusPrevious();
+			return;
+		}
+
 		if (event.key === 'Tab') {
 			event.preventDefault();
-			if (event.shiftKey) {
-				focusPrevious();
-			} else {
-				focusNext();
-			}
+			terminalContainerRef.focus();
 		}
+
+		terminalRefs[currentTerminalIndex].handleKeyPress(event);
 	}
 
-	function focusTerminalAt(index: number) {
+	function focusTerminalAt(index: number): void {
 		if (terminalRefs[index]) {
 			terminalRefs[index].focusTerminal();
 		}
 	}
 
-	function blurTerminalAt(index: number) {
+	function blurTerminalAt(index: number): void {
 		if (terminalRefs[index]) {
 			terminalRefs[index].blurTerminal();
 		}
 	}
 
-	function focusNext() {
-		blurTerminalAt(currentTerminalIndex);
+	function focusNext(): void {
 		currentTerminalIndex = (currentTerminalIndex + 1) % terminals.length;
 		focusTerminalAt(currentTerminalIndex);
 	}
 
-	function focusPrevious() {
-		blurTerminalAt(currentTerminalIndex);
+	function focusPrevious(): void {
 		currentTerminalIndex = (currentTerminalIndex - 1 + terminals.length) % terminals.length;
 		focusTerminalAt(currentTerminalIndex);
 	}
 
-	function handleTerminalFocus(event) {
+	function handleTerminalFocus(event: CustomEvent): void {
 		const { index } = event.detail;
 
 		terminals.forEach((_, i) => {
@@ -62,8 +71,10 @@
 
 <div
 	class="terminal-container"
-	style="grid-template-columns: repeat({numColumns}, 1fr);"
+	tabindex="0"
+	bind:this={terminalContainerRef}
 	on:keydown={handleKeyPress}
+	style="grid-template-columns: repeat({numColumns}, 1fr);"
 >
 	{#each terminals as terminalIndex}
 		<Terminal

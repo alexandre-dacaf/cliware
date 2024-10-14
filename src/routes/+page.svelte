@@ -1,8 +1,8 @@
 <script>
-	import TerminalContainer from '$lib/components/TerminalContainer.svelte';
+	import App from '$lib/components/App.svelte';
 </script>
 
-<TerminalContainer />
+<App />
 
 <style>
 	:global(body) {
