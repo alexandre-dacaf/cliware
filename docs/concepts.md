@@ -128,4 +128,7 @@ Each prompt type has a specific input method and output format. Here's a list of
     - Deal with key presses when the app is focused (switch terminals, access terminal, delete terminal)
         - Terminal creation and column altering will be dealt with later
     - Then, we can move to implementing the print function, and later the prompt chaining basics
-- Remember: focus on the basics! We need sprint 1 to end with v0.1.0, where we'll have a functioning interface with basic navigation, basic prompt chaining with text inputs only and basic configuration with the config.js file.
+- Remember: focus on the basics! We need sprint 1 to end with v0.1.0, where we'll have a functioning interface with basic navigation, basic prompt chaining with TextPrompts only and basic configuration with the config.js file. This version should have a TextPrompt that's purely configurable with the config.js, including it's properties and methods. The Terminal component should be able to load the config.js (or use a helper component/function) and determine the next steps needed by the chain. Printing should be made by the terminal, as should be the prompt calling process.
+- Oh, two more things:
+1. Simplicity! The whole philosophy behind this is having an opinionated framework to build fast and easy interfaces. Even the cli-like design is meant to relate this minimalist feel. The focus is not to allow endless customization. Make it rigid, make developers adapt to the framework (not the other way around).
+2. The interface should _feel_ like a CLI, not necessarily be one. The design should _seem_ text based, not actually be one. Use the web frontend stack to your advantage.
