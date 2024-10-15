@@ -1,6 +1,9 @@
 <script lang="ts">
-    import TextPrompt from "$lib/components/prompts/TextPrompt.svelte";
     import { createEventDispatcher } from "svelte";
+    import TextPrompt from "$lib/components/prompts/TextPrompt.svelte";
+    import Printable from "$lib/components/outputs/Printable.svelte";
+    import type { SvelteComponent } from "svelte";
+    import { tick } from "svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -8,11 +11,14 @@
 
     let self: HTMLDivElement;
     let textPrompt: TextPrompt;
-    let terminalHistory: string[] = [];
+
+    let terminalHistory: Array<{ component: typeof SvelteComponent; props: Record<string, any> }> = [];
+
     let isActive: boolean = false;
     let isHovered: boolean = false;
 
-    function scrollToBottom(): void {
+    async function scrollToBottom(): Promise<void> {
+        await tick();
         if (self) {
             self.scrollTop = self.scrollHeight;
         }
@@ -35,9 +41,10 @@
         isHovered = false;
     }
 
-    function handleSubmitted(event: CustomEvent) {
-        const { content } = event.detail;
-        terminalHistory = [...terminalHistory, content];
+    async function handlePrint(event: CustomEvent) {
+        const { component, props } = event.detail;
+        terminalHistory = [...terminalHistory, { component, props }];
+        await scrollToBottom();
     }
 
     function handleBlurred() {
@@ -46,10 +53,11 @@
 </script>
 
 <div class="terminal" class:active={isActive} class:hovered={isHovered} bind:this={self}>
-    {#each terminalHistory as command}
-        <div class="terminal__command">{command}</div>
+    {#each terminalHistory as item, index (index)}
+        <Printable key={index} component={item.component} props={item.props} />
     {/each}
-    <TextPrompt bind:this={textPrompt} on:submitted={handleSubmitted} on:blurred={handleBlurred} />
+
+    <TextPrompt bind:this={textPrompt} on:print={handlePrint} on:blurred={handleBlurred} />
 </div>
 
 <style>
@@ -84,14 +92,6 @@
 
     .terminal::-webkit-scrollbar-thumb:hover {
         background-color: #768390;
-    }
-
-    .terminal__command {
-        color: #adbac7;
-        font-size: 1rem;
-        margin-bottom: 0.1rem;
-        white-space: nowrap;
-        white-space: pre;
     }
 
     .active {
