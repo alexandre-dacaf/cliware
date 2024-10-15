@@ -1,103 +1,114 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Terminal from '$lib/components/Terminal.svelte';
+    import { onMount } from "svelte";
+    import Terminal from "$lib/components/Terminal.svelte";
 
-	let terminalContainerRef: HTMLDivElement;
+    let self: HTMLDivElement;
 
-	let numColumns: number = 2;
-	let terminals: number[] = [0, 1];
-	let terminalRefs: Terminal[] = [];
-	let currentTerminalIndex: number = 0;
+    let numColumns: number = 2;
+    let terminalIndexes: number[] = [0, 1];
+    let terminals: Terminal[] = [];
+    let activeTerminalIndex: number = NaN;
+    let hoveredTerminalIndex: number = 0;
 
-	onMount(async () => {
-		terminalContainerRef.focus();
-		focusTerminalAt(currentTerminalIndex);
-	});
+    type AppState = "hovering" | "active";
+    let appState: AppState = "active";
 
-	function handleKeyPress(event: KeyboardEvent): void {
-		if (event.ctrlKey && event.key === ']') {
-			event.preventDefault();
-			focusNext();
-			return;
-		}
+    onMount(async () => {
+        self.focus();
+        activateTerminal(hoveredTerminalIndex);
+    });
 
-		if (event.ctrlKey && event.key === '[') {
-			event.preventDefault();
-			focusPrevious();
-			return;
-		}
+    function handleKeyPress(event: KeyboardEvent): void {
+        const key = event.key;
+        const isShiftPressed = event.shiftKey;
 
-		if (event.key === 'Tab') {
-			event.preventDefault();
-			terminalContainerRef.focus();
-		}
+        if (appState !== "hovering") {
+            return;
+        }
 
-		terminalRefs[currentTerminalIndex].handleKeyPress(event);
-	}
+        if (key === "ArrowRight" || (key === "Tab" && !isShiftPressed)) {
+            event.preventDefault();
+            hoverNext();
+            return;
+        }
 
-	function focusTerminalAt(index: number): void {
-		if (terminalRefs[index]) {
-			terminalRefs[index].focusTerminal();
-		}
-	}
+        if (key === "ArrowRight" || (key === "Tab" && isShiftPressed)) {
+            event.preventDefault();
+            hoverPrevious();
+            return;
+        }
 
-	function blurTerminalAt(index: number): void {
-		if (terminalRefs[index]) {
-			terminalRefs[index].blurTerminal();
-		}
-	}
+        if (key === "Enter" || key === "Space") {
+            activateTerminal(hoveredTerminalIndex);
+        }
+    }
 
-	function focusNext(): void {
-		currentTerminalIndex = (currentTerminalIndex + 1) % terminals.length;
-		focusTerminalAt(currentTerminalIndex);
-	}
+    function hoverNext(): void {
+        hoveredTerminalIndex = (hoveredTerminalIndex + 1) % terminalIndexes.length;
+        hoverTerminalAt(hoveredTerminalIndex);
+    }
 
-	function focusPrevious(): void {
-		currentTerminalIndex = (currentTerminalIndex - 1 + terminals.length) % terminals.length;
-		focusTerminalAt(currentTerminalIndex);
-	}
+    function hoverPrevious(): void {
+        hoveredTerminalIndex = (hoveredTerminalIndex - 1 + terminalIndexes.length) % terminalIndexes.length;
+        hoverTerminalAt(hoveredTerminalIndex);
+    }
 
-	function handleTerminalFocus(event: CustomEvent): void {
-		const { index } = event.detail;
+    function hoverTerminalAt(index: number) {
+        if (!terminals[hoveredTerminalIndex]) {
+            return;
+        }
 
-		terminals.forEach((_, i) => {
-			if (i !== index) {
-				blurTerminalAt(i);
-			}
-		});
-		currentTerminalIndex = index;
-	}
+        terminals.forEach((_, i) => {
+            if (i !== index) {
+                terminals[i].unhover();
+            }
+        });
+
+        terminals[hoveredTerminalIndex].hover();
+    }
+
+    function activateTerminal(index: number): void {
+        if (terminals[index]) {
+            terminals[index].unhover();
+            terminals[index].activate();
+            activeTerminalIndex = index;
+            setAppState("active");
+        }
+    }
+
+    function handleBlurred(event: CustomEvent): void {
+        const { terminalIndex } = event.detail;
+        self.focus();
+
+        if (terminals[terminalIndex]) {
+            terminals[terminalIndex].deactivate();
+            terminals[terminalIndex].hover();
+            hoveredTerminalIndex = terminalIndex;
+            setAppState("hovering");
+        }
+    }
+
+    function setAppState(state: AppState): void {
+        if (state === "hovering") activeTerminalIndex = NaN;
+        if (state === "active") hoveredTerminalIndex = NaN;
+        appState = state;
+    }
 </script>
 
-<div
-	class="terminal-container"
-	tabindex="0"
-	bind:this={terminalContainerRef}
-	on:keydown={handleKeyPress}
-	style="grid-template-columns: repeat({numColumns}, 1fr);"
->
-	{#each terminals as terminalIndex}
-		<Terminal
-			index={terminalIndex}
-			bind:this={terminalRefs[terminalIndex]}
-			on:focusTerminal={handleTerminalFocus}
-		/>
-	{/each}
+<div class="terminal-container" tabindex="0" bind:this={self} on:keydown={handleKeyPress} style="grid-template-columns: repeat({numColumns}, 1fr);">
+    {#each terminalIndexes as terminalIndex}
+        <Terminal {terminalIndex} bind:this={terminals[terminalIndex]} on:blurred={handleBlurred} />
+    {/each}
 </div>
 
 <style>
-	.terminal-container {
-		background-color: #1c2128;
-		padding: 0.6em;
-		display: grid;
-		gap: 0.6em;
-		grid-auto-rows: 1fr;
-		height: 100vh;
-		box-sizing: border-box;
-	}
-
-	.terminal {
-		width: 100%;
-		height: 100%;
-	}
+    .terminal-container {
+        background-color: #1c2128;
+        padding: 0.6em;
+        display: grid;
+        gap: 0.6em;
+        grid-auto-rows: 1fr;
+        height: 100vh;
+        box-sizing: border-box;
+    }
 </style>
