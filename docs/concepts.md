@@ -110,3 +110,22 @@ Each prompt type has a specific input method and output format. Here's a list of
     - Choices follow the same structure as the Select prompt.
 10. **Date Prompt**: Allows the user to input or select a date.
     - May use a mask (e.g., `dd/mm/yyyy` or similar).
+
+## Let's revisit the concepts so we can revaluate what needs to be done
+- We've hit a brick wall on the custom terminal idea. It cannot deal with all the necessary functions, mainly pasting text
+- Given this, we now have to go back to the <div contenteditable="true"> ideia. The only problem is dealing is element focus
+- This div, which we'll still call TextInput, must receive a real event focus, not a simulated one. So all input and keydown events will happen in it
+- How can we deal with changes to another terminal and/or global hotkeys? One way is to use the esc key to blur focus on the TextInput, giving focus back to the App (terminal container)
+- We can have visual indication showing the input is active and, when pressed esc, removing this visual indication (along with the focus being given to the App)
+- We may use tab and shift+tab to switch between terminals, and enter to access the input of a terminal
+- Or, better yet, we can switch between terminals using the arrow keys, access a terminal with enter or space, delete a terminal with delete
+- Accessing the terminal gives the visual indication back to the input. Each input type may have a different way of showing it's active.
+- So what are the next steps?
+    - First, adjust the TextInput to be a simple <div contenteditable="true">
+    - Adjust the way focus is passed from the App > Terminal > TextInput and back (no switching between terminals yet)
+    - Deal with input and enter on the TextInput
+    - Adjust styling of the TextInput
+    - Deal with key presses when the app is focused (switch terminals, access terminal, delete terminal)
+        - Terminal creation and column altering will be dealt with later
+    - Then, we can move to implementing the print function, and later the prompt chaining basics
+- Remember: focus on the basics! We need sprint 1 to end with v0.1.0, where we'll have a functioning interface with basic navigation, basic prompt chaining with text inputs only and basic configuration with the config.js file.

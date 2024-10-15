@@ -4,8 +4,14 @@
 
 ### Sprint 1: Basic Structure and Prompt Management
 
-  - Implement text editing features including:
-    - Copy & paste functionality.
+  - So what are the next steps?
+    - First, adjust the TextInput to be a simple <div contenteditable="true">
+    - Adjust the way focus is passed from the App > Terminal > TextInput and back (no switching between terminals yet)
+    - Deal with input and enter on the TextInput
+    - Adjust styling of the TextInput
+    - Deal with key presses when the app is focused (switch terminals, access terminal, delete terminal)
+        - Terminal creation and column altering will be dealt with later
+    - Then, we can move to implementing the print function, and later the prompt chaining basics
   - Implement `print()` on `Enter`:
     - Sends the input to be printed to the terminal, adding it to `OutputHistory`.
 
