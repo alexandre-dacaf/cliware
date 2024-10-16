@@ -27,13 +27,14 @@ const TextField = ({ onContentChanged, onEnterPressed }: TextFieldProps) => {
             event.preventDefault();
             onEnterPressed(content);
         }
+        // TODO handle esc key
     };
 
     return (
         <div
             ref={selfRef}
             contentEditable
-            className="input-field"
+            className="text-field"
             onInput={updateContent}
             onKeyDown={handleKeyDown}
             data-placeholder="Digite um comando..."

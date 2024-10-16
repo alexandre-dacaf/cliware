@@ -1,4 +1,4 @@
-.input-field {
+.text-field {
     width: 100%;
     padding: 0.5em;
     border: none;
@@ -9,7 +9,7 @@
     font-size: 1em;
 }
 
-.input-field:focus {
+.text-field:focus {
     outline: none;
     box-shadow: 0 0 0 2px #6cb6ff;
 }

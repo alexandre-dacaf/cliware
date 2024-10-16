@@ -1,6 +1,6 @@
 import React from "react";
 import Terminal from "./components/Terminal";
-import "./App.css"; // Arquivo CSS para estilos
+import "./App.css";
 
 const App: React.FC = () => {
     return (

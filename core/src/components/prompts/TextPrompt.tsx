@@ -10,12 +10,12 @@ interface TextPromptProps {
 
 const TextPrompt = ({ onPrint }: TextPromptProps) => {
     const handleContentChanged = (content: string) => {
-        // Not implemented yet
+        // TODO implement validation, masking, etc
     };
 
     const handleEnterPressed = (content: string) => {
         onPrint({ component: TextOutput, props: { content } });
-        // Clear TextField content
+        // TODO clear textField content via forwardRef and useImperativeHandle
     };
 
     return (

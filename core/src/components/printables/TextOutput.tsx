@@ -1,7 +1,5 @@
-// src/components/printables/TextOutput.tsx
-
 import React from 'react';
-import './TextOutput.css'; // Arquivo CSS para estilos
+import './TextOutput.css';
 
 interface TextOutputProps {
   content: string;
