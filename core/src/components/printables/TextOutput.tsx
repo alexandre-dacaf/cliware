@@ -5,7 +5,7 @@ interface TextOutputProps {
   content: string;
 }
 
-const TextOutput: React.FC<TextOutputProps> = ({ content }) => {
+const TextOutput: React.FC<TextOutputProps> = ({ content }: TextOutputProps) => {
   return <div className="text-output">{content}</div>;
 };
 
