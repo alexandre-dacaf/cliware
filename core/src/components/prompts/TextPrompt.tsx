@@ -1,26 +1,29 @@
-import React, { useRef } from "react";
-import Input, { InputHandle } from "../inputs/Input";
-import TextOutput from "../outputs/TextOutput";
+import React from "react";
+import TextField from "../input-fields/TextField";
+import TextOutput from "../printables/TextOutput";
+import { IPrintable } from "../../types/printables";
 import "./TextPrompt.css";
 
 interface TextPromptProps {
-    onPrint: (
-        component: React.ComponentType<any>,
-        props: Record<string, any>
-    ) => void;
+    onPrint: (printable: IPrintable) => void;
 }
 
 const TextPrompt = ({ onPrint }: TextPromptProps) => {
-    const inputRef = useRef<InputHandle>(null);
+    const handleContentChanged = (content: string) => {
+        // Not implemented yet
+    };
 
     const handleEnterPressed = (content: string) => {
-        onPrint(TextOutput, { content });
-        inputRef.current?.clear();
+        onPrint({ component: TextOutput, props: { content } });
+        // Clear TextField content
     };
 
     return (
         <div className="terminal__prompt">
-            <Input ref={inputRef} onEnterPressed={handleEnterPressed} />
+            <TextField
+                onContentChanged={handleContentChanged}
+                onEnterPressed={handleEnterPressed}
+            />
         </div>
     );
 };

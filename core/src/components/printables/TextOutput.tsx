@@ -1,4 +1,4 @@
-// src/components/outputs/TextOutput.tsx
+// src/components/printables/TextOutput.tsx
 
 import React from 'react';
 import './TextOutput.css'; // Arquivo CSS para estilos

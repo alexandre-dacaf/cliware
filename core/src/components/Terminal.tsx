@@ -1,35 +1,26 @@
 import React, { useState } from "react";
 import TextPrompt from "./prompts/TextPrompt";
-import Printable from "./outputs/Printable";
+import Printable from "./printables/Printable";
+import { IPrintable } from "../types/printables";
 import "./Terminal.css";
 
-interface TerminalHistoryItem {
-    component: React.ComponentType<any>;
-    props: Record<string, any>;
-}
-
 const Terminal: React.FC = () => {
-    const [terminalHistory, setTerminalHistory] = useState<
-        TerminalHistoryItem[]
-    >([]);
+    const [terminalHistory, setTerminalHistory] = useState<IPrintable[]>([]);
 
-    const handlePrint = (
-        component: React.ComponentType<any>,
-        props: Record<string, any>
-    ) => {
-        setTerminalHistory((previousHistory: TerminalHistoryItem[]) => [
+    const handlePrint = (printable: IPrintable) => {
+        setTerminalHistory((previousHistory: IPrintable[]) => [
             ...previousHistory,
-            { component, props },
+            printable,
         ]);
     };
 
     return (
         <div className="terminal active">
-            {terminalHistory.map((item: TerminalHistoryItem, index: number) => (
+            {terminalHistory.map((printable: IPrintable, index: number) => (
                 <Printable
                     key={index}
-                    component={item.component}
-                    props={item.props}
+                    component={printable.component}
+                    props={printable.props}
                 />
             ))}
 
