@@ -2,17 +2,17 @@ import { PromptConfig } from "../types/prompt";
 
 export const promptChainConfig: PromptConfig = {
     name: {
-        variation: "TextPrompt",
+        variant: "text",
         message: "What's your name?",
         next: () => "age",
     },
     age: {
-        variation: "TextPrompt",
+        variant: "text",
         message: "How old are you?",
         next: () => "city",
     },
     city: {
-        variation: "TextPrompt",
+        variant: "text",
         message: "Where do you live?",
         next: () => null,
     },

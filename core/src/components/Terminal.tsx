@@ -1,17 +1,52 @@
-import React, { useState } from "react";
-import TextPrompt from "./prompts/TextPrompt";
-import Printable from "./printables/Printable";
-import { IPrintable } from "../types/printables";
+import React, { useState, useEffect } from "react";
+import TextVariant from "./variants/TextVariant";
+
+import { promptChainConfig } from "../config/promptChainConfig";
+
 import "./Terminal.css";
 
 const Terminal: React.FC = () => {
-    const [terminalHistory, setTerminalHistory] = useState<IPrintable[]>([]);
+    const [currentPromptKey, setCurrentPromptKey] = useState<string | null>(
+        null
+    );
+    const [answers, setAnswers] = useState<string[]>([]);
 
-    const handlePrint = (printable: IPrintable) => {
-        setTerminalHistory((previousHistory: IPrintable[]) => [
-            ...previousHistory,
-            printable,
-        ]);
+    const initialPromptKey = "name";
+
+    useEffect(() => {
+        setCurrentPromptKey(initialPromptKey);
+    }, []);
+
+    const promptVariantMap = {
+        text: TextVariant,
+    };
+
+    const handleSubmit = (response: string) => {
+        if (currentPromptKey) {
+            const currentPromptConfig = promptChainConfig[currentPromptKey];
+            setAnswers([...answers, response]);
+
+            console.log("Answers so far: ", answers);
+
+            const nextPromptKey = currentPromptConfig.next();
+            setCurrentPromptKey(nextPromptKey);
+        }
+    };
+
+    const renderCurrentPrompt = () => {
+        if (currentPromptKey) {
+            const currentPromptConfig = promptChainConfig[currentPromptKey];
+            const PromptVariant =
+                promptVariantMap[currentPromptConfig.variant];
+
+            return (
+                <PromptVariant
+                    message={currentPromptConfig.message}
+                    onSubmit={handleSubmit}
+                />
+            );
+        }
+        return null;
     };
 
     return (
@@ -24,7 +59,7 @@ const Terminal: React.FC = () => {
                 />
             ))}
 
-            <TextPrompt onPrint={handlePrint} />
+            {renderCurrentPrompt()}
         </div>
     );
 };

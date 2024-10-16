@@ -1,8 +1,8 @@
-type PromptVariation = "TextPrompt";
+type PromptVariant = "text";
 
 export interface PromptConfig {
     [key: string]: {
-        variation: PromptVariation;
+        variant: PromptVariant;
         message: string;
         next: () => string | null;
     };
