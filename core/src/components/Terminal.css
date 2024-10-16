@@ -1,0 +1,42 @@
+/* src/components/Terminal.css */
+
+.terminal {
+    border: solid 1px #444c56;
+    border-radius: 0.3em;
+    padding: 1rem;
+    box-sizing: border-box;
+    background-color: #22272e;
+    font-family: "Fira Code", "Courier New", Courier, monospace;
+    height: 100%;
+    outline: none;
+    transition: 120ms ease-in-out;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #444c56 transparent;
+}
+
+.terminal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.terminal::-webkit-scrollbar-thumb {
+    background-color: #444c56;
+    border-radius: 4px;
+    border: 2px solid transparent;
+}
+
+.terminal::-webkit-scrollbar-thumb:hover {
+    background-color: #768390;
+}
+
+.active {
+    border: solid 1px #6cb6ff;
+}
+
+.hovered {
+    border: solid 1px #89d185;
+}

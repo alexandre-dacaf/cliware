@@ -46,6 +46,34 @@ change_ownership: ## Changes ownership of all project files to the current user.
 
 # --- SECTION: Docker Commands ---
 
+IMAGE_NAME = cliware-dev
+CONTAINER_NAME = cliware-container-dev
+CONTAINER_INTERNAL_PORT = 3000
+WORKDIR = $(shell pwd)
+
+start: ## Builds and runs the development container
+	@docker build -t $(IMAGE_NAME) .
+	@docker run -d --rm --name $(CONTAINER_NAME) \
+		-v $(WORKDIR)/core:/app \
+		-v /app/node_modules \
+		-p 3000:$(CONTAINER_INTERNAL_PORT) \
+		$(IMAGE_NAME)
+
+exec: ## Enter the running container.
+	@docker exec -it $(CONTAINER_NAME) bash
+
+logs: ## Show logs of the running container
+	@docker logs $(CONTAINER_NAME)
+
+stop: ## Stop container.
+	@docker stop $(CONTAINER_NAME)
+
+remove: ## Remove container.
+	@docker rm $(CONTAINER_NAME)
+
+remove-image: ## Remove Docker image.
+	@docker rmi $(IMAGE_NAME)
+
 ps: ## List all running containers
 	@docker ps -a
 
@@ -55,38 +83,6 @@ clean: ## Clean up container and image (stop, remove container and image).
 	docker rmi $$(docker images -q) && \
 	docker volume rm $$(docker volume ls -q) && \
 	docker network prune -f
-
-
-# --- SECTION: Docker Commands (Development) ---
-
-IMAGE_NAME = cliware-dev
-CONTAINER_NAME = cliware-container-dev
-DOCKERFILE_DEV = ./dockerfiles/Dockerfile.dev
-CONTAINER_INTERNAL_PORT = 5173
-WORKDIR = $(shell pwd)
-
-dev-start: ## Builds and runs the development container
-	@docker build -t $(IMAGE_NAME) -f $(DOCKERFILE_DEV) .
-	@docker run -d --rm --name $(CONTAINER_NAME) \
-		-v $(WORKDIR):/app \
-		-v /app/node_modules \
-		-p 3000:$(CONTAINER_INTERNAL_PORT) \
-		$(IMAGE_NAME)
-
-dev-exec: ## Enter the running container.
-	@docker exec -it $(CONTAINER_NAME) bash
-
-dev-logs: ## Show logs of the running container
-	@docker logs $(CONTAINER_NAME)
-
-dev-stop: ## Stop container.
-	@docker stop $(CONTAINER_NAME)
-
-dev-remove: ## Remove container.
-	@docker rm $(CONTAINER_NAME)
-
-dev-remove-image: ## Remove Docker image.
-	@docker rmi $(IMAGE_NAME)
 
 
 # --- SECTION: Standalone Node Container ---
