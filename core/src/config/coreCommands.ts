@@ -1,31 +1,35 @@
-import { CommandConfig, TaskKey, PipelineData } from "../types";
-import { changeTerminalColumns } from "../actions";
+import { CommandConfig } from "../types";
+import { changeTerminalColumns, createTerminal } from "../actions";
 
 export const coreCommands: CommandConfig = {
-    columns: {
-        entrypoint: "howMany",
+    cols: {
+        entrypoint: "action",
         pipeline: {
-            howMany: {
-                type: "prompt",
-                promptType: "text",
-                message: "How many terminal columns?",
-                next: "change",
-            },
-            change: {
+            action: {
                 type: "action",
-                actionFunction: async (
-                    taskKey: TaskKey,
-                    pipelineData: PipelineData
-                ) => {
-                    const colums: number = +pipelineData.howMany;
-                    return await changeTerminalColumns(colums);
-                },
+                actionFunction: changeTerminalColumns,
                 next: "result",
             },
             result: {
                 type: "output",
                 outputFunction: () => {
                     return "Emitted event 'changeTerminalColumns'.";
+                },
+            },
+        },
+    },
+    nt: {
+        entrypoint: "action",
+        pipeline: {
+            action: {
+                type: "action",
+                actionFunction: createTerminal,
+                next: "result",
+            },
+            result: {
+                type: "output",
+                outputFunction: () => {
+                    return "Emitted event 'createTerminal'.";
                 },
             },
         },

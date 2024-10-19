@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import { commandConfig } from "../../config/commandConfig";
-import { CommandConfig, Task, PipelineData } from "../../types";
+import { Task, PipelineData } from "../../types";
 import { PromptComponent } from "../prompts";
 import CommandInput from "../command-input/CommandInput";
+import { parseCommandArguments } from "../../services/utils/parser";
 import "./Terminal.css";
 
 interface HystoryEntry {
@@ -12,24 +12,63 @@ interface HystoryEntry {
 }
 
 interface TerminalProps {
+    terminalId: number;
     isActive: boolean;
     isSelected: boolean;
 }
 
-const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
+const Terminal: React.FC<TerminalProps> = ({
+    terminalId,
+    isActive,
+    isSelected,
+}) => {
     const [currentCommand, setCurrentCommand] = useState<string>("");
     const [currentTaskKey, setCurrentTaskKey] = useState<string | null>(null);
-    const [pipelineData, setPipelineData] = useState<PipelineData>({});
+    const [pipelineData, setPipelineData] = useState<PipelineData>({
+        $terminal: { terminalId },
+        $cmd: { args: [], flags: [], options: {} },
+        $pipeline: {},
+    });
     const [history, setHistory] = useState<HystoryEntry[]>([]);
     const [isExecuting, setIsExecuting] = useState<boolean>(false);
     const terminalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Scroll para o fim do terminal sempre que o histórico mudar
+        // Scroll to the end of the terminal whenever the history changes
         if (terminalRef.current) {
             terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
         }
     }, [history]);
+
+    const handleCommandInput = (command: string) => {
+        const trimmedCommand = command.trim();
+        if (!trimmedCommand) return;
+
+        setHistory((prev: HystoryEntry[]) => [
+            ...prev,
+            { type: "command", content: `$ ${trimmedCommand}` },
+        ]);
+
+        const [cmd, ...args] = trimmedCommand.split(" ");
+        const commandArgs = parseCommandArguments(args);
+
+        const currentCommandConfig = commandConfig[cmd];
+
+        const commandEntrypoint = currentCommandConfig?.entrypoint;
+        const commandPipeline = currentCommandConfig?.pipeline;
+
+        if (commandPipeline && commandEntrypoint) {
+            setPipelineData((prev) => ({
+                ...prev,
+                $cmd: commandArgs,
+            }));
+            const firstTaskKey = commandEntrypoint;
+            setCurrentTaskKey(firstTaskKey);
+            setCurrentCommand(cmd);
+        } else {
+            handleError({ message: `'${cmd}' is not a recognized command.` });
+        }
+    };
 
     const handleError = (error: any) => {
         setHistory((prev) => [
@@ -80,29 +119,14 @@ const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         }
     };
 
-    const handleCommandInput = (command: string) => {
-        const trimmedCommand = command.trim();
-        if (!trimmedCommand) return;
-
-        setHistory((prev) => [
+    const updatePipelineData = (currentTaskKey: string, data: any) => {
+        setPipelineData((prev) => ({
             ...prev,
-            { type: "command", content: `$ ${trimmedCommand}` },
-        ]);
-
-        const [cmd, ...args] = trimmedCommand.split(" ");
-        const currentCommandConfig = commandConfig[cmd];
-
-        const commandEntrypoint = currentCommandConfig?.entrypoint;
-        const commandPipeline = currentCommandConfig?.pipeline;
-
-        if (commandPipeline && commandEntrypoint) {
-            setPipelineData({});
-            const firstTaskKey = commandEntrypoint;
-            setCurrentTaskKey(firstTaskKey);
-            setCurrentCommand(cmd);
-        } else {
-            handleError({ message: `'${cmd}' is not a recognized command.` });
-        }
+            $pipeline: {
+                ...prev.$pipeline,
+                [currentTaskKey]: data,
+            },
+        }));
     };
 
     const handlePromptResponse = (response: any) => {
@@ -110,7 +134,8 @@ const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         if (!currentTaskKey || !currentTask || currentTask.type !== "prompt")
             return;
 
-        setPipelineData((prev) => ({ ...prev, [currentTaskKey]: response }));
+        updatePipelineData(currentTaskKey, response);
+
         setHistory((prev) => [
             ...prev,
             { type: "input", content: `${currentTask.message} ${response}` },
@@ -127,11 +152,13 @@ const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         try {
             setIsExecuting(true);
 
-            const updatedPipelineData = await currentTask.actionFunction(
+            const response = await currentTask.actionFunction(
                 currentTaskKey,
                 pipelineData
             );
-            setPipelineData(updatedPipelineData);
+
+            updatePipelineData(currentTaskKey, response);
+
             goToNextTaskFrom(currentTask);
         } catch (error: any) {
             handleError(error);

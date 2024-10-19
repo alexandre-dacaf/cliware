@@ -22,6 +22,10 @@ const TerminalContainer: React.FC = () => {
     ]);
 
     useEffect(() => {
+        console.log(state.activeTerminalId, state.selectedTerminalId);
+    }, [state]);
+
+    useEffect(() => {
         const handleChangeColumns = (event: Event) => {
             const customEvent = event as CustomEvent;
             setColumns(customEvent.detail.columns);
@@ -33,6 +37,20 @@ const TerminalContainer: React.FC = () => {
                 "changeTerminalColumns",
                 handleChangeColumns
             );
+        };
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener("createTerminal", createTerminal);
+        return () => {
+            window.removeEventListener("createTerminal", createTerminal);
+        };
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener("deleteTerminal", deleteTerminal);
+        return () => {
+            window.removeEventListener("deleteTerminal", deleteTerminal);
         };
     }, []);
 
@@ -89,25 +107,37 @@ const TerminalContainer: React.FC = () => {
     };
 
     const deleteTerminal = () => {
-        const filteredTerminals = terminals.filter(
-            (t) => t.id !== state.selectedTerminalId
-        );
+        setTerminals((prevTerminals) => {
+            const currentTerminalId =
+                state.activeTerminalId || state.selectedTerminalId;
 
-        setTerminals(filteredTerminals);
+            if (currentTerminalId == null) {
+                return prevTerminals;
+            }
+
+            const filteredTerminals = prevTerminals.filter(
+                (t) => t.id !== currentTerminalId
+            );
+
+            return filteredTerminals;
+        });
+
         selectPreviousTerminal();
     };
 
     const createTerminal = () => {
-        let maxTerminalId = 0;
-        if (terminals.length !== 0) {
-            maxTerminalId = terminals.reduce(
-                (max, item) => (item.id > max ? item.id : max),
-                terminals[0].id
-            );
-        }
-        const newTerminal = { id: maxTerminalId + 1 };
-
-        setTerminals((prev) => [...prev, newTerminal]);
+        setTerminals((prev) => {
+            let maxTerminalId = 0;
+            if (prev.length !== 0) {
+                maxTerminalId = prev.reduce(
+                    (max, item) => (item.id > max ? item.id : max),
+                    prev[0].id
+                );
+            }
+            const newTerminal = { id: maxTerminalId + 1 };
+            console.log(newTerminal);
+            return [...prev, newTerminal];
+        });
     };
 
     const getCurrentTerminalIndex = () => {
@@ -154,6 +184,7 @@ const TerminalContainer: React.FC = () => {
             {terminals.map((terminal) => (
                 <Terminal
                     key={terminal.id}
+                    terminalId={terminal.id}
                     isActive={terminal.id === state.activeTerminalId}
                     isSelected={terminal.id === state.selectedTerminalId}
                 />

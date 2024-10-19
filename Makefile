@@ -19,25 +19,25 @@ NC = \033[0m # No Color
 PADDING_COMANDOS_HELP = 30
 
 help: ## Shows available commands.
-	@awk 'BEGIN {                                               \
-		FS = ":.*## ";                                          \
-		OFS = "";                                               \
-		first_section = 1;                                      \
-	}                                                           \
-	/^# --- SECTION:/ {                                         \
-		gsub(/^# --- SECTION: /, "", $$0);                      \
-		gsub(/ ---$$/, "", $$0);                                \
-		if (first_section == 0) {                               \
-			print "";                                           \
-		}                                                       \
-		first_section = 0;                                      \
-		print "  $(YELLOW_BOLD)" $$0 "$(NC)";                   \
-	}                                                           \
-	/^[a-zA-Z_-]+:.*##/ {                                       \
-		len = $(PADDING_COMANDOS_HELP) - length($$1);           \
-		dots = "";                                              \
-		while (len-- > 0) dots = dots ".";                      \
-		printf "    %s %s %s\n", $$1, dots, $$2                 \
+	@awk 'BEGIN {                                     \
+		FS = ":.*## ";                                \
+		OFS = "";                                     \
+		first_section = 1;                            \
+	}                                                 \
+	/^# --- SECTION:/ {                               \
+		gsub(/^# --- SECTION: /, "", $$0);            \
+		gsub(/ ---$$/, "", $$0);                      \
+		if (first_section == 0) {                     \
+			print "";                                 \
+		}                                             \
+		first_section = 0;                            \
+		print "  $(YELLOW_BOLD)" $$0 "$(NC)";         \
+	}                                                 \
+	/^[a-zA-Z_-]+:.*##/ {                             \
+		len = $(PADDING_COMANDOS_HELP) - length($$1); \
+		dots = "";                                    \
+		while (len-- > 0) dots = dots ".";            \
+		printf "    %s %s %s\n", $$1, dots, $$2       \
 	}' $(MAKEFILE_LIST)
 
 change_ownership: ## Changes ownership of all project files to the current user.
@@ -53,8 +53,8 @@ WORKDIR = $(shell pwd)
 
 start: ## Builds and runs the development container
 	@docker build -t $(IMAGE_NAME) .
-	@docker stop $(CONTAINER_NAME)
-	@docker rm $(CONTAINER_NAME)
+	-@docker stop $(CONTAINER_NAME)
+	-@docker rm $(CONTAINER_NAME)
 	@docker run -d --name $(CONTAINER_NAME) \
 		-v $(WORKDIR)/core:/app \
 		-p 3000:$(CONTAINER_INTERNAL_PORT) \
@@ -93,7 +93,6 @@ NODE_INTERNAL_PORT = 3000
 node: ## Runs a node container mapped to the current directory
 	@docker run -it --rm \
 		-v $(WORKDIR):/app \
-		-v /app/node_modules \
 		-w /app \
 		-p 3000:$(NODE_INTERNAL_PORT) \
 		node:20 /bin/bash

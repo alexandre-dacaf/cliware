@@ -44,20 +44,20 @@ export const commandConfig: CommandConfig = {
                     taskKey: TaskKey,
                     pipelineData: PipelineData
                 ) => {
-                    return await createTodo(taskKey, pipelineData);
+                    return await createTodo(pipelineData);
                 },
                 next: "result",
             },
             result: {
                 type: "output",
                 outputFunction: (pipelineData: PipelineData) => {
-                    if (pipelineData.save.success) {
+                    if (pipelineData.$pipeline.save.success) {
                         return `Tarefa '${JSON.stringify(
                             pipelineData
                         )}' criada com sucesso!`;
                     } else {
                         throw new Error(
-                            `Erro ao criar a tarefa: ${pipelineData.save.error}`
+                            `Erro ao criar a tarefa: ${pipelineData.$pipeline.save.error}`
                         );
                     }
                 },

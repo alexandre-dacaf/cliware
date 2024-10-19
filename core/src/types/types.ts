@@ -41,7 +41,10 @@ export type PromptTask = TextPromptTask | ConfirmPromptTask | SelectPromptTask;
 
 export interface ActionTask extends BaseTask {
     type: "action";
-    actionFunction: (taskKey: TaskKey, pipelineData: PipelineData) => Promise<any> | any;
+    actionFunction: (
+        taskKey: TaskKey,
+        pipelineData: PipelineData
+    ) => Promise<any> | any;
 }
 
 export interface OutputTask extends BaseTask {
@@ -51,8 +54,20 @@ export interface OutputTask extends BaseTask {
 
 export type Task = PromptTask | ActionTask | OutputTask;
 
+export type PipelineCmdData = {
+    args: string[];
+    flags: string[];
+    options: Record<string, string>;
+};
+
+export type PipelineTermData = {
+    terminalId: number;
+};
+
 export interface PipelineData {
-    [taskKey: TaskKey]: any;
+    $terminal: PipelineTermData;
+    $cmd: PipelineCmdData;
+    $pipeline: { [taskKey: TaskKey]: any };
 }
 
 export interface CommandPipeline {
@@ -62,6 +77,6 @@ export interface CommandPipeline {
 export interface CommandConfig {
     [command: string]: {
         entrypoint: string;
-        pipeline: CommandPipeline
-    }
+        pipeline: CommandPipeline;
+    };
 }

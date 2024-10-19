@@ -1,6 +1,6 @@
 import { TaskKey, PipelineData } from "../types";
 
-export const createTodo = async (taskKey: TaskKey, pipelineData: PipelineData): Promise<PipelineData> => {
+export const createTodo = async (pipelineData: PipelineData): Promise<any> => {
     // Simulate 2s wait
     await new Promise((resolve) => {
         setTimeout(resolve, 2000);
@@ -10,8 +10,8 @@ export const createTodo = async (taskKey: TaskKey, pipelineData: PipelineData): 
     const simulatedResponse = { success: true };
 
     if (simulatedResponse.success) {
-        return { ...pipelineData, [taskKey]: { success: true } };
+        return { success: true };
     } else {
-        return { ...pipelineData, [taskKey]: { error: "Simulated error" } };
+        return { error: "Simulated error" };
     }
 };
