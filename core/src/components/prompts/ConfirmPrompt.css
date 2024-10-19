@@ -1,0 +1,25 @@
+.confirm-prompt {
+    display: flex;
+    flex-direction: column;
+    outline: none;
+}
+
+.confirm-message {
+    font-weight: bold;
+}
+
+.confirm-choice {
+    margin-left: 0.8em;
+    transition: 80ms ease-in-out;
+}
+
+.confirm-choice.selected {
+    color: #77bcfb;
+    text-decoration: underline;
+}
+
+.confirm-navigation-hint {
+    margin-top: 0.8rem;
+    font-size: 0.8em;
+    color: #768390;
+}

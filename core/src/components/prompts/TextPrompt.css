@@ -1,0 +1,14 @@
+.text-prompt {
+    display: flex;
+    flex-direction: row;
+}
+
+.text-field {
+    margin-left: 1rem;
+    outline: none;
+}
+
+.text-field:empty::before {
+    content: attr(data-placeholder);
+    color: #555;
+}

@@ -1,0 +1,31 @@
+.select-prompt {
+    display: flex;
+    flex-direction: column;
+    outline: none;
+}
+
+.select-message {
+    margin-bottom: 0.6em;
+    font-weight: bold;
+}
+
+.select-choices {
+    display: flex;
+    flex-direction: column;
+}
+
+.select-choice {
+    margin-top: 0.2em;
+    transition: 80ms ease-in-out;
+}
+
+.select-choice.selected {
+    color: #77bcfb;
+    text-decoration: underline;
+}
+
+.select-navigation-hint {
+    margin-top: 0.8rem;
+    font-size: 0.8em;
+    color: #768390;
+}

@@ -1,0 +1,24 @@
+.command-input-container {
+    display: flex;
+    align-items: center;
+    margin-top: 0.8em;
+}
+
+.command-prompt {
+    margin-right: 5px;
+    color: #569cd6;
+}
+
+.command-input {
+    outline: none;
+    border: none;
+    background: transparent;
+    flex: 1;
+    color: #d4d4d4;
+    white-space: pre;
+}
+
+.command-input:empty::before {
+    content: attr(data-placeholder);
+    color: #555;
+}

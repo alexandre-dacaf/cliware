@@ -46,16 +46,17 @@ change_ownership: ## Changes ownership of all project files to the current user.
 
 # --- SECTION: Docker Commands ---
 
-IMAGE_NAME = cliware-dev
-CONTAINER_NAME = cliware-container-dev
+IMAGE_NAME = cliware
+CONTAINER_NAME = cliware-container
 CONTAINER_INTERNAL_PORT = 3000
 WORKDIR = $(shell pwd)
 
 start: ## Builds and runs the development container
 	@docker build -t $(IMAGE_NAME) .
-	@docker run -d --rm --name $(CONTAINER_NAME) \
+	@docker stop $(CONTAINER_NAME)
+	@docker rm $(CONTAINER_NAME)
+	@docker run -d --name $(CONTAINER_NAME) \
 		-v $(WORKDIR)/core:/app \
-		-v /app/node_modules \
 		-p 3000:$(CONTAINER_INTERNAL_PORT) \
 		$(IMAGE_NAME)
 
@@ -78,16 +79,16 @@ ps: ## List all running containers
 	@docker ps -a
 
 clean: ## Clean up container and image (stop, remove container and image).
-	docker stop $$(docker ps -aq) && \
-	docker rm $$(docker ps -aq) && \
-	docker rmi $$(docker images -q) && \
-	docker volume rm $$(docker volume ls -q) && \
-	docker network prune -f
+	- docker stop $$(docker ps -aq)
+	- docker rm $$(docker ps -aq)
+	- docker rmi $$(docker images -q)
+	- docker volume rm $$(docker volume ls -q)
+	- docker network prune -f
 
 
 # --- SECTION: Standalone Node Container ---
 
-NODE_INTERNAL_PORT = 5173
+NODE_INTERNAL_PORT = 3000
 
 node: ## Runs a node container mapped to the current directory
 	@docker run -it --rm \
