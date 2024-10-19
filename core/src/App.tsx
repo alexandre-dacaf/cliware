@@ -15,12 +15,26 @@ const App: React.FC = () => {
 const TerminalContainer: React.FC = () => {
     const terminalContainerRef = useRef<HTMLDivElement>(null);
     const { state, dispatch } = useContext(TerminalContext);
+    const [columns, setColumns] = useState(2);
     const [terminals, setTerminals] = useState<TerminalType[]>([
         { id: 1 },
         { id: 2 },
     ]);
 
-    const columns = 2;
+    useEffect(() => {
+        const handleChangeColumns = (event: Event) => {
+            const customEvent = event as CustomEvent;
+            setColumns(customEvent.detail.columns);
+        };
+
+        window.addEventListener("changeTerminalColumns", handleChangeColumns);
+        return () => {
+            window.removeEventListener(
+                "changeTerminalColumns",
+                handleChangeColumns
+            );
+        };
+    }, []);
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (someTerminalActive()) return;
