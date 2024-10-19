@@ -13,9 +13,10 @@ interface HystoryEntry {
 
 interface TerminalProps {
     isActive: boolean;
+    isSelected: boolean;
 }
 
-const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
+const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     const [currentCommand, setCurrentCommand] = useState<string>("");
     const [currentTaskKey, setCurrentTaskKey] = useState<string | null>(null);
     const [pipelineData, setPipelineData] = useState<PipelineData>({});
@@ -31,7 +32,10 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
     }, [history]);
 
     const handleError = (error: any) => {
-        setHistory((prev) => [...prev, { type: "error", content: error.message || "ERROR" }]);
+        setHistory((prev) => [
+            ...prev,
+            { type: "error", content: error.message || "ERROR" },
+        ]);
         setCurrentTaskKey(null);
         setCurrentCommand("");
         setIsExecuting(false);
@@ -62,9 +66,11 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
         }
 
         const commandPipeline = commandConfig[currentCommand].pipeline;
-        
+
         if (nextTaskKey && !(nextTaskKey in commandPipeline)) {
-            handleError({ message: `The next task '${nextTaskKey}' does not exist in the pipeline for the command '${currentCommand}'` });
+            handleError({
+                message: `The next task '${nextTaskKey}' does not exist in the pipeline for the command '${currentCommand}'`,
+            });
             return;
         }
 
@@ -78,11 +84,14 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
         const trimmedCommand = command.trim();
         if (!trimmedCommand) return;
 
-        setHistory((prev) => [...prev, { type: "command", content: `$ ${trimmedCommand}` }]);
+        setHistory((prev) => [
+            ...prev,
+            { type: "command", content: `$ ${trimmedCommand}` },
+        ]);
 
         const [cmd, ...args] = trimmedCommand.split(" ");
         const currentCommandConfig = commandConfig[cmd];
-        
+
         const commandEntrypoint = currentCommandConfig?.entrypoint;
         const commandPipeline = currentCommandConfig?.pipeline;
 
@@ -98,22 +107,30 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
 
     const handlePromptResponse = (response: any) => {
         const currentTask = getCurrentTask();
-        if (!currentTaskKey || !currentTask || currentTask.type !== "prompt") return;
+        if (!currentTaskKey || !currentTask || currentTask.type !== "prompt")
+            return;
 
         setPipelineData((prev) => ({ ...prev, [currentTaskKey]: response }));
-        setHistory((prev) => [...prev, { type: "input", content: `${currentTask.message} ${response}` }]);
+        setHistory((prev) => [
+            ...prev,
+            { type: "input", content: `${currentTask.message} ${response}` },
+        ]);
 
         goToNextTaskFrom(currentTask);
     };
 
     const handleActionTask = async () => {
         const currentTask = getCurrentTask();
-        if (!currentTaskKey || !currentTask || currentTask.type !== "action") return;
+        if (!currentTaskKey || !currentTask || currentTask.type !== "action")
+            return;
 
         try {
             setIsExecuting(true);
 
-            const updatedPipelineData = await currentTask.actionFunction(currentTaskKey, pipelineData);
+            const updatedPipelineData = await currentTask.actionFunction(
+                currentTaskKey,
+                pipelineData
+            );
             setPipelineData(updatedPipelineData);
             goToNextTaskFrom(currentTask);
         } catch (error: any) {
@@ -125,11 +142,15 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
 
     const handleOutputTask = () => {
         const currentTask = getCurrentTask();
-        if (!currentTaskKey || !currentTask || currentTask.type !== "output") return;
+        if (!currentTaskKey || !currentTask || currentTask.type !== "output")
+            return;
 
         try {
             const outputContent = currentTask.outputFunction(pipelineData);
-            setHistory((prev) => [...prev, { type: "output", content: outputContent }]);
+            setHistory((prev) => [
+                ...prev,
+                { type: "output", content: outputContent },
+            ]);
 
             goToNextTaskFrom(currentTask);
         } catch (error: any) {
@@ -164,7 +185,14 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
 
         switch (currentTask.type) {
             case "prompt":
-                return <PromptComponent task={currentTask} pipelineData={pipelineData} onNext={handlePromptResponse} isActive={isActive} />;
+                return (
+                    <PromptComponent
+                        task={currentTask}
+                        pipelineData={pipelineData}
+                        onNext={handlePromptResponse}
+                        isActive={isActive}
+                    />
+                );
             case "action":
             case "output":
                 // 'action' and 'output' are not rendered directly
@@ -175,39 +203,53 @@ const Terminal: React.FC<TerminalProps> = ({ isActive }) => {
     };
 
     return (
-        <div className={"terminal " + (isActive ? "active" : "")} ref={terminalRef}>
-            {history.map((entry, index) => {
-                switch (entry.type) {
-                    case "command":
-                        return (
-                            <div key={index} className="terminal-command">
-                                {entry.content}
-                            </div>
-                        );
-                    case "input":
-                        return (
-                            <div key={index} className="terminal-input">
-                                {entry.content}
-                            </div>
-                        );
-                    case "output":
-                        return (
-                            <div key={index} className="terminal-output">
-                                {entry.content}
-                            </div>
-                        );
-                    case "error":
-                        return (
-                            <div key={index} className="terminal-error">
-                                {entry.content}
-                            </div>
-                        );
-                    default:
-                        return null;
-                }
-            })}
+        <div
+            className={
+                "terminal " +
+                (isActive ? "active-terminal " : " ") +
+                (isSelected ? "selected-terminal " : " ")
+            }
+            ref={terminalRef}
+        >
+            <div className="history">
+                {history.map((entry, index) => {
+                    switch (entry.type) {
+                        case "command":
+                            return (
+                                <div key={index} className="terminal-command">
+                                    {entry.content}
+                                </div>
+                            );
+                        case "input":
+                            return (
+                                <div key={index} className="terminal-input">
+                                    {entry.content}
+                                </div>
+                            );
+                        case "output":
+                            return (
+                                <div key={index} className="terminal-output">
+                                    {entry.content}
+                                </div>
+                            );
+                        case "error":
+                            return (
+                                <div key={index} className="terminal-error">
+                                    {entry.content}
+                                </div>
+                            );
+                        default:
+                            return null;
+                    }
+                })}
+            </div>
 
-            {!isExecuting && !currentCommand && <CommandInput onCommand={handleCommandInput} isActive={isActive} />}
+            {!isExecuting && !currentCommand && (
+                <CommandInput
+                    onCommand={handleCommandInput}
+                    isActive={isActive}
+                />
+            )}
 
             {renderCurrentTask()}
 

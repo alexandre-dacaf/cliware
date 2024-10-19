@@ -7,7 +7,6 @@
     font-family: "Fira Code", "Courier New", Courier, monospace;
     height: 100%;
     outline: none;
-    transition: 120ms ease-in-out;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #444c56 transparent;
@@ -31,32 +30,42 @@
     background-color: #768390;
 }
 
-.active {
+.active-terminal {
     border: solid 1px #77bcfb;
 }
 
-.hovered {
+.selected-terminal {
     border: solid 1px #89d185;
 }
 
-.loading {
-    color: #faa356;
-    margin-top: 10px;
-}
-
-.terminal-command {
-    color: #77bcfb;
-    margin-top: 0.8em;
-}
-
-.terminal-input {
+.history {
     color: #89929b;
 }
 
-.terminal-output {
+.terminal-command {
+    margin-top: 0.8em;
+}
+
+.active-terminal .loading {
+    color: #faa356;
+}
+
+.active-terminal .terminal-command {
+    color: #77bcfb;
+}
+
+.selected-terminal .terminal-command {
     color: #7ce38b;
 }
 
-.terminal-error {
+.active-terminal .terminal-input {
+    color: #89929b;
+}
+
+.active-terminal .terminal-output {
+    color: #cea5fb;
+}
+
+.active-terminal .terminal-error {
     color: #fa7970;
 }

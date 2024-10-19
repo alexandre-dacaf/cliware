@@ -21,8 +21,8 @@ export const commandConfig: CommandConfig = {
                 type: "prompt",
                 promptType: "confirm",
                 message: "A tarefa está concluída?",
-                falseLabel: "Não",
-                trueLabel: "Oui",
+                falseLabel: "No",
+                trueLabel: "Yes",
                 next: "tag",
             },
             tag: {
@@ -38,7 +38,10 @@ export const commandConfig: CommandConfig = {
             },
             save: {
                 type: "action",
-                actionFunction: async (taskKey: TaskKey, pipelineData: PipelineData) => {
+                actionFunction: async (
+                    taskKey: TaskKey,
+                    pipelineData: PipelineData
+                ) => {
                     return await createTodo(taskKey, pipelineData);
                 },
                 next: "result",
@@ -47,9 +50,13 @@ export const commandConfig: CommandConfig = {
                 type: "output",
                 outputFunction: (pipelineData: PipelineData) => {
                     if (pipelineData.save.success) {
-                        return `Tarefa '${JSON.stringify(pipelineData)}' criada com sucesso!`;
+                        return `Tarefa '${JSON.stringify(
+                            pipelineData
+                        )}' criada com sucesso!`;
                     } else {
-                        throw new Error(`Erro ao criar a tarefa: ${pipelineData.save.error}`);
+                        throw new Error(
+                            `Erro ao criar a tarefa: ${pipelineData.save.error}`
+                        );
                     }
                 },
             },

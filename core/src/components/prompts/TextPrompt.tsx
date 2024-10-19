@@ -1,4 +1,9 @@
-import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from "react";
+import React, {
+    useRef,
+    useState,
+    KeyboardEvent as ReactKeyboardEvent,
+    useEffect,
+} from "react";
 import "./TextPrompt.css";
 
 export type TextPromptProps = {
@@ -7,7 +12,11 @@ export type TextPromptProps = {
     isActive: boolean;
 };
 
-const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive }) => {
+const TextPrompt: React.FC<TextPromptProps> = ({
+    message,
+    onSubmit,
+    isActive,
+}) => {
     const inputRef = useRef<HTMLDivElement>(null);
     const [content, setContent] = useState<string>("");
 
@@ -30,7 +39,17 @@ const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive }) 
                 }
             }
         }
-        // TODO: implement esc key handling
+
+        if (event.key === "Tab") {
+            if (isActive) {
+                event.preventDefault();
+                // Opcional: Executar alguma ação específica ao pressionar Tab
+            }
+        }
+
+        if (event.key === "Escape") {
+            // Opcional: Implementar lógica para a tecla Esc, se necessário
+        }
     };
 
     useEffect(() => {
@@ -38,6 +57,14 @@ const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive }) 
             inputRef.current.focus();
         }
     }, [isActive]);
+
+    const handleBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
+        if (isActive && inputRef.current) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 0);
+        }
+    };
 
     return (
         <div className="text-prompt">
@@ -48,7 +75,10 @@ const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive }) 
                 className="text-field"
                 onInput={updateContent}
                 onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
                 data-placeholder="Digite um comando..."
+                spellCheck="false"
+                autoCorrect="off"
                 suppressContentEditableWarning={true}
             />
         </div>

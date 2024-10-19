@@ -6,7 +6,15 @@
 
 .command-prompt {
     margin-right: 5px;
-    color: #569cd6;
+    color: #89929b;
+}
+
+.active-terminal .command-prompt {
+    color: #77bcfb;
+}
+
+.selected-terminal .command-prompt {
+    color: #7ce38b;
 }
 
 .command-input {
@@ -20,5 +28,5 @@
 
 .command-input:empty::before {
     content: attr(data-placeholder);
-    color: #555;
+    color: #768390;
 }
