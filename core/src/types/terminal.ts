@@ -1,6 +1,5 @@
-export interface Terminal {
+export interface TerminalType {
     id: number;
-    name: string;
 }
 
 export interface TerminalState {

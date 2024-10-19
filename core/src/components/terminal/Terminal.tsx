@@ -181,8 +181,6 @@ const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         const currentTask = getCurrentTask();
         if (!currentTaskKey || !currentTask) return;
 
-        console.log(currentTask);
-
         switch (currentTask.type) {
             case "prompt":
                 return (

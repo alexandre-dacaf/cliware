@@ -54,10 +54,6 @@ const CommandInput: React.FC<CommandInputProps> = ({ onCommand, isActive }) => {
     };
 
     useEffect(() => {
-        console.log(state);
-    }, [state]);
-
-    useEffect(() => {
         if (isActive && inputRef.current) {
             inputRef.current.focus();
         }

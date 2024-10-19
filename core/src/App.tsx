@@ -1,6 +1,7 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import Terminal from "./components/terminal/Terminal";
 import { TerminalProvider, TerminalContext } from "./context/TerminalContext";
+import { TerminalType } from "./types";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -14,11 +15,10 @@ const App: React.FC = () => {
 const TerminalContainer: React.FC = () => {
     const terminalContainerRef = useRef<HTMLDivElement>(null);
     const { state, dispatch } = useContext(TerminalContext);
-
-    const terminals = [
-        { id: 1, name: "Terminal 1" },
-        { id: 2, name: "Terminal 2" },
-    ];
+    const [terminals, setTerminals] = useState<TerminalType[]>([
+        { id: 1 },
+        { id: 2 },
+    ]);
 
     const columns = 2;
 
@@ -36,6 +36,10 @@ const TerminalContainer: React.FC = () => {
             selectPreviousTerminal();
         } else if (key === "Enter") {
             activateTerminal();
+        } else if (key === "Delete") {
+            deleteTerminal();
+        } else if (key === "n") {
+            createTerminal();
         }
 
         focusSelf();
@@ -68,6 +72,28 @@ const TerminalContainer: React.FC = () => {
 
     const activateTerminal = () => {
         dispatch({ type: "ACTIVATE_TERMINAL" });
+    };
+
+    const deleteTerminal = () => {
+        const filteredTerminals = terminals.filter(
+            (t) => t.id !== state.selectedTerminalId
+        );
+
+        setTerminals(filteredTerminals);
+        selectPreviousTerminal();
+    };
+
+    const createTerminal = () => {
+        let maxTerminalId = 0;
+        if (terminals.length !== 0) {
+            maxTerminalId = terminals.reduce(
+                (max, item) => (item.id > max ? item.id : max),
+                terminals[0].id
+            );
+        }
+        const newTerminal = { id: maxTerminalId + 1 };
+
+        setTerminals((prev) => [...prev, newTerminal]);
     };
 
     const getCurrentTerminalIndex = () => {

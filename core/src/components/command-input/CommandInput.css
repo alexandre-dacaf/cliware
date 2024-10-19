@@ -10,11 +10,11 @@
 }
 
 .active-terminal .command-prompt {
-    color: #77bcfb;
+    color: var(--primary-color);
 }
 
 .selected-terminal .command-prompt {
-    color: #7ce38b;
+    color: var(--success);
 }
 
 .command-input {

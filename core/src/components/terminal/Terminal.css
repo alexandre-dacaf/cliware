@@ -1,15 +1,15 @@
 .terminal {
-    border: solid 1px #444c56;
+    border: solid 1px var(--neutral-400);
     border-radius: 0.3em;
     padding: 1rem;
     box-sizing: border-box;
-    background-color: #22272e;
+    background-color: var(--neutral-200);
     font-family: "Fira Code", "Courier New", Courier, monospace;
     height: 100%;
     outline: none;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #444c56 transparent;
+    scrollbar-color: var(--neutral-400) transparent;
 }
 
 .terminal::-webkit-scrollbar {
@@ -21,25 +21,25 @@
 }
 
 .terminal::-webkit-scrollbar-thumb {
-    background-color: #444c56;
+    background-color: var(--neutral-400);
     border-radius: 4px;
     border: 2px solid transparent;
 }
 
 .terminal::-webkit-scrollbar-thumb:hover {
-    background-color: #768390;
+    background-color: var(--neutral-800);
 }
 
 .active-terminal {
-    border: solid 1px #77bcfb;
+    border: solid 1px var(--primary-color);
 }
 
 .selected-terminal {
-    border: solid 1px #89d185;
+    border: solid 1px var(--success);
 }
 
 .history {
-    color: #89929b;
+    color: var(--neutral-800);
 }
 
 .terminal-command {
@@ -47,25 +47,25 @@
 }
 
 .active-terminal .loading {
-    color: #faa356;
+    color: var(--warning);
 }
 
 .active-terminal .terminal-command {
-    color: #77bcfb;
+    color: var(--primary-color);
 }
 
 .selected-terminal .terminal-command {
-    color: #7ce38b;
+    color: var(--success);
 }
 
 .active-terminal .terminal-input {
-    color: #89929b;
+    color: var(--neutral-700);
 }
 
 .active-terminal .terminal-output {
-    color: #cea5fb;
+    color: var(--info);
 }
 
 .active-terminal .terminal-error {
-    color: #fa7970;
+    color: var(--danger);
 }

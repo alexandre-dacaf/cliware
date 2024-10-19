@@ -20,7 +20,7 @@
 }
 
 .select-choice.selected {
-    color: #77bcfb;
+    color: var(--primary-color);
     text-decoration: underline;
 }
 

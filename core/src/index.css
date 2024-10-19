@@ -1,5 +1,18 @@
+:root {
+    --primary-color: #77bcfb;
+    --neutral-100: #1c2128;
+    --neutral-200: #22272e;
+    --neutral-400: #444c56;
+    --neutral-700: #768390;
+    --neutral-800: #89929b;
+    --warning: #faa356;
+    --success: #7ce38b;
+    --info: #cea5fb;
+    --danger: #fa7970;
+}
+
 body {
-    background-color: #1c2128;
+    background-color: var(--neutral-100);
     color: #c9c9c9;
     font-family: "Fira Code", "Courier New", Courier, monospace;
     margin: 0;
