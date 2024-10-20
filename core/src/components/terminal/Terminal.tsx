@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { commandConfig } from "../../commands/commandConfig";
-import { Task, PipelineData } from "../../types";
-import { PromptComponent } from "../prompts";
-import CommandInput from "../command-input/CommandInput";
-import { parseCommandArguments } from "../../services/utils/parser";
-import "./Terminal.css";
+import React, { useState, useEffect, useRef } from 'react';
+import { commandConfig } from '../../commands/commandConfig';
+import { Task, PipelineData } from '../../types';
+import { PromptManager } from '../prompts';
+import CommandInput from '../command-input/CommandInput';
+import { parseCommandArguments } from '../../services/utils/parser';
+import './Terminal.css';
 
 interface HystoryEntry {
-    type: "command" | "input" | "output" | "error";
+    type: 'command' | 'input' | 'output' | 'error';
     content: string | JSX.Element;
 }
 
@@ -17,12 +17,8 @@ interface TerminalProps {
     isSelected: boolean;
 }
 
-const Terminal: React.FC<TerminalProps> = ({
-    terminalId,
-    isActive,
-    isSelected,
-}) => {
-    const [currentCommand, setCurrentCommand] = useState<string>("");
+const Terminal: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected }) => {
+    const [currentCommand, setCurrentCommand] = useState<string>('');
     const [currentTaskKey, setCurrentTaskKey] = useState<string | null>(null);
     const [pipelineData, setPipelineData] = useState<PipelineData>({
         $terminal: { terminalId },
@@ -46,10 +42,10 @@ const Terminal: React.FC<TerminalProps> = ({
 
         setHistory((prev: HystoryEntry[]) => [
             ...prev,
-            { type: "command", content: `$ ${trimmedCommand}` },
+            { type: 'command', content: `$ ${trimmedCommand}` },
         ]);
 
-        const [cmd, ...args] = trimmedCommand.split(" ");
+        const [cmd, ...args] = trimmedCommand.split(' ');
         const commandArgs = parseCommandArguments(args);
 
         const currentCommandConfig = commandConfig[cmd];
@@ -71,12 +67,9 @@ const Terminal: React.FC<TerminalProps> = ({
     };
 
     const handleError = (error: any) => {
-        setHistory((prev) => [
-            ...prev,
-            { type: "error", content: error.message ?? "ERROR" },
-        ]);
+        setHistory((prev) => [...prev, { type: 'error', content: error.message ?? 'ERROR' }]);
         setCurrentTaskKey(null);
-        setCurrentCommand("");
+        setCurrentCommand('');
         setIsExecuting(false);
     };
 
@@ -97,7 +90,7 @@ const Terminal: React.FC<TerminalProps> = ({
         let nextTaskKey: string | null = null;
 
         if (currentTask.next) {
-            if (typeof currentTask.next === "function") {
+            if (typeof currentTask.next === 'function') {
                 nextTaskKey = currentTask.next(pipelineData);
             } else {
                 nextTaskKey = currentTask.next;
@@ -115,7 +108,7 @@ const Terminal: React.FC<TerminalProps> = ({
 
         setCurrentTaskKey(nextTaskKey);
         if (!nextTaskKey) {
-            setCurrentCommand("");
+            setCurrentCommand('');
         }
     };
 
@@ -131,14 +124,13 @@ const Terminal: React.FC<TerminalProps> = ({
 
     const handlePromptResponse = (response: any) => {
         const currentTask = getCurrentTask();
-        if (!currentTaskKey || !currentTask || currentTask.type !== "prompt")
-            return;
+        if (!currentTaskKey || !currentTask || currentTask.type !== 'prompt') return;
 
         updatePipelineData(currentTaskKey, response);
 
         setHistory((prev) => [
             ...prev,
-            { type: "input", content: `${currentTask.message} ${response}` },
+            { type: 'input', content: `${currentTask.message} ${response}` },
         ]);
 
         goToNextTaskFrom(currentTask);
@@ -146,16 +138,12 @@ const Terminal: React.FC<TerminalProps> = ({
 
     const handleActionTask = async () => {
         const currentTask = getCurrentTask();
-        if (!currentTaskKey || !currentTask || currentTask.type !== "action")
-            return;
+        if (!currentTaskKey || !currentTask || currentTask.type !== 'action') return;
 
         try {
             setIsExecuting(true);
 
-            const response = await currentTask.actionFunction(
-                currentTaskKey,
-                pipelineData
-            );
+            const response = await currentTask.actionFunction(currentTaskKey, pipelineData);
 
             updatePipelineData(currentTaskKey, response);
 
@@ -169,15 +157,11 @@ const Terminal: React.FC<TerminalProps> = ({
 
     const handleOutputTask = () => {
         const currentTask = getCurrentTask();
-        if (!currentTaskKey || !currentTask || currentTask.type !== "output")
-            return;
+        if (!currentTaskKey || !currentTask || currentTask.type !== 'output') return;
 
         try {
             const outputContent = currentTask.outputFunction(pipelineData);
-            setHistory((prev) => [
-                ...prev,
-                { type: "output", content: outputContent },
-            ]);
+            setHistory((prev) => [...prev, { type: 'output', content: outputContent }]);
 
             goToNextTaskFrom(currentTask);
         } catch (error: any) {
@@ -193,10 +177,10 @@ const Terminal: React.FC<TerminalProps> = ({
         if (!currentTaskKey || !currentTask) return;
 
         switch (currentTask.type) {
-            case "action":
+            case 'action':
                 handleActionTask();
                 break;
-            case "output":
+            case 'output':
                 handleOutputTask();
                 break;
             default:
@@ -209,17 +193,17 @@ const Terminal: React.FC<TerminalProps> = ({
         if (!currentTaskKey || !currentTask) return;
 
         switch (currentTask.type) {
-            case "prompt":
+            case 'prompt':
                 return (
-                    <PromptComponent
+                    <PromptManager
                         task={currentTask}
                         pipelineData={pipelineData}
                         onNext={handlePromptResponse}
                         isActive={isActive}
                     />
                 );
-            case "action":
-            case "output":
+            case 'action':
+            case 'output':
                 // 'action' and 'output' are not rendered directly
                 return null;
             default:
@@ -230,36 +214,36 @@ const Terminal: React.FC<TerminalProps> = ({
     return (
         <div
             className={
-                "terminal " +
-                (isActive ? "active-terminal " : " ") +
-                (isSelected ? "selected-terminal " : " ")
+                'terminal ' +
+                (isActive ? 'active-terminal ' : ' ') +
+                (isSelected ? 'selected-terminal ' : ' ')
             }
             ref={terminalRef}
         >
-            <div className="history">
+            <div className='history'>
                 {history.map((entry, index) => {
                     switch (entry.type) {
-                        case "command":
+                        case 'command':
                             return (
-                                <div key={index} className="terminal-command">
+                                <div key={index} className='terminal-command'>
                                     {entry.content}
                                 </div>
                             );
-                        case "input":
+                        case 'input':
                             return (
-                                <div key={index} className="terminal-input">
+                                <div key={index} className='terminal-input'>
                                     {entry.content}
                                 </div>
                             );
-                        case "output":
+                        case 'output':
                             return (
-                                <div key={index} className="terminal-output">
+                                <div key={index} className='terminal-output'>
                                     {entry.content}
                                 </div>
                             );
-                        case "error":
+                        case 'error':
                             return (
-                                <div key={index} className="terminal-error">
+                                <div key={index} className='terminal-error'>
                                     {entry.content}
                                 </div>
                             );
@@ -270,19 +254,16 @@ const Terminal: React.FC<TerminalProps> = ({
             </div>
 
             {!isExecuting && !currentCommand && (
-                <CommandInput
-                    onCommand={handleCommandInput}
-                    isActive={isActive}
-                />
+                <CommandInput onCommand={handleCommandInput} isActive={isActive} />
             )}
 
             {renderCurrentTask()}
 
-            {isExecuting && <div className="loading">Executando...</div>}
+            {isExecuting && <div className='loading'>Executando...</div>}
         </div>
     );
 };
 
-Terminal.displayName = "Terminal";
+Terminal.displayName = 'Terminal';
 
 export default Terminal;

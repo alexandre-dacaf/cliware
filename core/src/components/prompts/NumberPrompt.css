@@ -1,0 +1,14 @@
+.number-prompt {
+    display: flex;
+    flex-direction: row;
+}
+
+.number-field {
+    margin-left: 1rem;
+    outline: none;
+}
+
+.number-field:empty::before {
+    content: attr(data-placeholder);
+    color: #555;
+}

@@ -22,7 +22,8 @@ const TextPrompt: React.FC<TextPromptProps> = ({
 
     const updateContent = () => {
         if (inputRef.current) {
-            const currentContent: string = inputRef.current.textContent || "";
+            const currentContent: string = inputRef.current.textContent ?? "";
+
             setContent(currentContent);
             // TODO formatting, validation, etc
         }

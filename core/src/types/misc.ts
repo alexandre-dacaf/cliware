@@ -2,7 +2,7 @@ import { TextPrompt } from "../components/prompts";
 
 export type TaskType = "prompt" | "action" | "output";
 
-export type PromptType = "text" | "confirm" | "select";
+export type PromptType = "text" | "confirm" | "select" | "number";
 
 export type TaskKey = string;
 
@@ -37,7 +37,20 @@ export interface SelectPromptTask extends BasePromptTask {
     choices: Choice[];
 }
 
-export type PromptTask = TextPromptTask | ConfirmPromptTask | SelectPromptTask;
+export interface NumberPromptTask extends BasePromptTask {
+    promptType: "number";
+    max?: number;
+    min?: number;
+    step?: number;
+    float?: boolean;
+    decimals?: number;
+}
+
+export type PromptTask =
+    | TextPromptTask
+    | ConfirmPromptTask
+    | SelectPromptTask
+    | NumberPromptTask;
 
 export interface ActionTask extends BaseTask {
     type: "action";
