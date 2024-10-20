@@ -105,7 +105,7 @@ const TerminalContainer: React.FC = () => {
     const deleteTerminal = () => {
         setTerminals((prevTerminals) => {
             const currentTerminalId =
-                stateRef.current.activeTerminalId ||
+                stateRef.current.activeTerminalId ??
                 stateRef.current.selectedTerminalId;
 
             if (currentTerminalId == null) {

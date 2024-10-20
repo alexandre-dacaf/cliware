@@ -20,7 +20,7 @@ const CommandInput: React.FC<CommandInputProps> = ({ onCommand, isActive }) => {
 
     const handleInput = () => {
         if (inputRef.current) {
-            setContent(inputRef.current.textContent || "");
+            setContent(inputRef.current.textContent ?? "");
         }
     };
 

@@ -73,7 +73,7 @@ const Terminal: React.FC<TerminalProps> = ({
     const handleError = (error: any) => {
         setHistory((prev) => [
             ...prev,
-            { type: "error", content: error.message || "ERROR" },
+            { type: "error", content: error.message ?? "ERROR" },
         ]);
         setCurrentTaskKey(null);
         setCurrentCommand("");
