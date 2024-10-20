@@ -4,4 +4,4 @@
 
 > Version 0.1.0
 
-- [ ] Delete terminal via command
+- [x] Delete terminal via command
