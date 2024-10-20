@@ -1,5 +1,5 @@
 import { CommandConfig, TaskKey, PipelineData } from "../types";
-import { createTodo } from "../actions";
+import { createTodo } from "./actions";
 import { coreCommands } from "./coreCommands";
 
 export const commandConfig: CommandConfig = {

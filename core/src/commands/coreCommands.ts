@@ -1,5 +1,9 @@
 import { CommandConfig } from "../types";
-import { changeTerminalColumns, createTerminal } from "../actions";
+import {
+    changeTerminalColumns,
+    createTerminal,
+    deleteTerminal,
+} from "./actions";
 
 export const coreCommands: CommandConfig = {
     cols: {
@@ -30,6 +34,22 @@ export const coreCommands: CommandConfig = {
                 type: "output",
                 outputFunction: () => {
                     return "Emitted event 'createTerminal'.";
+                },
+            },
+        },
+    },
+    dt: {
+        entrypoint: "action",
+        pipeline: {
+            action: {
+                type: "action",
+                actionFunction: deleteTerminal,
+                next: "result",
+            },
+            result: {
+                type: "output",
+                outputFunction: () => {
+                    return "Emitted event 'deleteTerminal'.";
                 },
             },
         },

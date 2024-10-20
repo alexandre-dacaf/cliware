@@ -1,4 +1,4 @@
-import { TaskKey, PipelineData } from "../types";
+import { TaskKey, PipelineData } from "../../types";
 
 export const createTodo = async (pipelineData: PipelineData): Promise<any> => {
     // Simulate 2s wait

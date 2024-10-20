@@ -14,7 +14,14 @@ const App: React.FC = () => {
 
 const TerminalContainer: React.FC = () => {
     const terminalContainerRef = useRef<HTMLDivElement>(null);
+
     const { state, dispatch } = useContext(TerminalContext);
+    const stateRef = useRef(state);
+
+    useEffect(() => {
+        stateRef.current = state;
+    }, [state]);
+
     const [columns, setColumns] = useState(2);
     const [terminals, setTerminals] = useState<TerminalType[]>([
         { id: 1 },
@@ -22,35 +29,24 @@ const TerminalContainer: React.FC = () => {
     ]);
 
     useEffect(() => {
-        console.log(state.activeTerminalId, state.selectedTerminalId);
-    }, [state]);
+        window.addEventListener("createTerminal", createTerminal);
 
-    useEffect(() => {
+        window.addEventListener("deleteTerminal", deleteTerminal);
+
         const handleChangeColumns = (event: Event) => {
             const customEvent = event as CustomEvent;
             setColumns(customEvent.detail.columns);
         };
 
         window.addEventListener("changeTerminalColumns", handleChangeColumns);
+
         return () => {
+            window.removeEventListener("createTerminal", createTerminal);
+            window.removeEventListener("deleteTerminal", deleteTerminal);
             window.removeEventListener(
                 "changeTerminalColumns",
                 handleChangeColumns
             );
-        };
-    }, []);
-
-    useEffect(() => {
-        window.addEventListener("createTerminal", createTerminal);
-        return () => {
-            window.removeEventListener("createTerminal", createTerminal);
-        };
-    }, []);
-
-    useEffect(() => {
-        window.addEventListener("deleteTerminal", deleteTerminal);
-        return () => {
-            window.removeEventListener("deleteTerminal", deleteTerminal);
         };
     }, []);
 
@@ -109,7 +105,8 @@ const TerminalContainer: React.FC = () => {
     const deleteTerminal = () => {
         setTerminals((prevTerminals) => {
             const currentTerminalId =
-                state.activeTerminalId || state.selectedTerminalId;
+                stateRef.current.activeTerminalId ||
+                stateRef.current.selectedTerminalId;
 
             if (currentTerminalId == null) {
                 return prevTerminals;
@@ -122,7 +119,10 @@ const TerminalContainer: React.FC = () => {
             return filteredTerminals;
         });
 
-        selectPreviousTerminal();
+        dispatch({
+            type: "SET_ACTIVE_TERMINAL",
+            payload: terminals[0].id,
+        });
     };
 
     const createTerminal = () => {
@@ -143,8 +143,8 @@ const TerminalContainer: React.FC = () => {
     const getCurrentTerminalIndex = () => {
         return terminals.findIndex(
             (terminal) =>
-                terminal.id === state.activeTerminalId ||
-                terminal.id === state.selectedTerminalId
+                terminal.id === stateRef.current.activeTerminalId ||
+                terminal.id === stateRef.current.selectedTerminalId
         );
     };
 
@@ -155,7 +155,7 @@ const TerminalContainer: React.FC = () => {
     };
 
     const someTerminalActive = () => {
-        return state.activeTerminalId !== null;
+        return stateRef.current.activeTerminalId !== null;
     };
 
     useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { commandConfig } from "../../config/commandConfig";
+import { commandConfig } from "../../commands/commandConfig";
 import { Task, PipelineData } from "../../types";
 import { PromptComponent } from "../prompts";
 import CommandInput from "../command-input/CommandInput";
