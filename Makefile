@@ -56,7 +56,7 @@ start: ## Builds and runs the development container
 	-@docker stop $(CONTAINER_NAME)
 	-@docker rm $(CONTAINER_NAME)
 	@docker run -d --name $(CONTAINER_NAME) \
-		-v $(WORKDIR)/core:/app \
+		-v $(WORKDIR):/app \
 		-p 3000:$(CONTAINER_INTERNAL_PORT) \
 		$(IMAGE_NAME)
 
