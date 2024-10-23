@@ -1,9 +1,8 @@
 import { TaskKey } from './base';
 import { PromptTask } from './prompts';
 import { ActionTask } from './actions';
-import { OutputTask } from './outputs';
 
-export type Task = PromptTask | ActionTask | OutputTask;
+export type Task = PromptTask | ActionTask;
 
 export interface PipelineBlueprint {
     [taskKey: TaskKey]: Task;

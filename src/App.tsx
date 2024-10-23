@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import Terminal from 'components/terminal/Terminal';
-import { TerminalProvider } from 'context/TerminalContext';
+import { AppProvider } from 'context/AppContext';
 import useApp from 'hooks/app/useApp';
 import 'App.css';
 
 const App: React.FC = () => {
     return (
-        <TerminalProvider>
+        <AppProvider>
             <TerminalContainer />
-        </TerminalProvider>
+        </AppProvider>
     );
 };
 
@@ -69,7 +69,7 @@ const TerminalContainer: React.FC = () => {
         <div
             ref={terminalContainerRef}
             tabIndex={0}
-            className='terminal-container'
+            className="terminal-container"
             onBlur={handleBlur}
             style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
         >

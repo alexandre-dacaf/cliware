@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
+import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
 import { blueprint } from 'blueprints/blueprint';
-import { Task, PipelineData, PipelineDataCmd, Blueprint, CommandBlueprint } from 'types';
-import { PromptHandler } from './managers/handlers/PromptHandler';
+import { CommandArgs, CommandBlueprint } from 'types';
 import TaskManager from './managers/TaskManager';
+import TerminalOutputHistory from 'components/outputs/TerminalOutputHistory';
+import TransientOutput from 'components/outputs/TransientOutput';
 import CommandInput from 'components/command-input/CommandInput';
-import { parseCommandArguments } from 'services/utils/parser';
+import usePrinter from 'hooks/output/usePrinter';
 import './Terminal.css';
-
-interface HistoryEntry {
-    type: 'command' | 'input' | 'output' | 'error';
-    content: string | JSX.Element;
-}
 
 interface TerminalProps {
     terminalId: number;
@@ -19,10 +16,16 @@ interface TerminalProps {
 }
 
 const Terminal: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected }) => {
-    const [commandArgs, setCommandArgs] = useState<PipelineDataCmd | null>(null);
-    const [commandBlueprint, setCommandBlueprint] = useState<CommandBlueprint | null>(null);
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
-    const [isExecuting, setIsExecuting] = useState<boolean>(false);
+    return (
+        <TerminalProvider>
+            <TerminalBody terminalId={terminalId} isActive={isActive} isSelected={isSelected} />
+        </TerminalProvider>
+    );
+};
+
+const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected }) => {
+    const { state, dispatch } = useContext(TerminalContext);
+    const { printOnTerminalHistory } = usePrinter();
     const terminalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,79 +33,37 @@ const Terminal: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected })
         if (terminalRef.current) {
             terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
         }
-    }, [history]);
+    }, [state.terminalOutputHistory, state.transientOutput]);
 
-    useEffect(() => {
-        console.log(terminalId, commandArgs, commandBlueprint, isActive, isExecuting);
-    }, [terminalId, commandArgs, commandBlueprint, isActive, isExecuting]);
+    const handleCommandSubmit = (commandString: string, commandArgs: CommandArgs) => {
+        dispatch({
+            type: 'SET_COMMAND_ARGS',
+            payload: commandArgs,
+        });
 
-    const handleCommandSubmit = (fullCommand: string, commandArgs: PipelineDataCmd) => {
-        setHistory((prev: HistoryEntry[]) => [
-            ...prev,
-            { type: 'command', content: `$ ${fullCommand}` },
-        ]);
+        const commandBlueprint: CommandBlueprint = blueprint[commandArgs.command];
 
-        setCommandArgs(commandArgs);
-        setCommandBlueprint(blueprint[commandArgs.command]);
+        if (commandBlueprint) {
+            dispatch({
+                type: 'SET_COMMAND_BLUEPRINT',
+                payload: commandBlueprint,
+            });
+        } else {
+            printOnTerminalHistory([
+                { type: 'command', content: `$ ${commandString}` },
+                { type: 'error', content: `Command ${commandArgs.command} not found.` },
+            ]);
+            dispatch({ type: 'STANDBY' });
+        }
     };
 
     return (
-        <div
-            className={
-                'terminal ' +
-                (isActive ? 'active-terminal ' : ' ') +
-                (isSelected ? 'selected-terminal ' : ' ')
-            }
-            ref={terminalRef}
-        >
-            <div className='history'>
-                {history.map((entry, index) => {
-                    switch (entry.type) {
-                        case 'command':
-                            return (
-                                <div key={index} className='terminal-command'>
-                                    {entry.content}
-                                </div>
-                            );
-                        case 'input':
-                            return (
-                                <div key={index} className='terminal-input'>
-                                    {entry.content}
-                                </div>
-                            );
-                        case 'output':
-                            return (
-                                <div key={index} className='terminal-output'>
-                                    {entry.content}
-                                </div>
-                            );
-                        case 'error':
-                            return (
-                                <div key={index} className='terminal-error'>
-                                    {entry.content}
-                                </div>
-                            );
-                        default:
-                            return null;
-                    }
-                })}
-            </div>
+        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
+            <TerminalOutputHistory />
 
-            {commandArgs && commandBlueprint ? (
-                <TaskManager
-                    terminalId={terminalId}
-                    commandArgs={commandArgs}
-                    commandBlueprint={commandBlueprint}
-                    isActive={isActive}
-                    isExecuting={isExecuting}
-                    onSetIsExecuting={setIsExecuting}
-                    onSetHistory={setHistory}
-                />
-            ) : (
-                <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />
-            )}
+            {state.commandBlueprint ? <TaskManager isActive={isActive} /> : <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />}
 
-            {/* {isExecuting && <div className='loading'>Executando...</div>} */}
+            <TransientOutput />
         </div>
     );
 };

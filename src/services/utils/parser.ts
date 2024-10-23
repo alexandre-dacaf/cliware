@@ -1,9 +1,9 @@
-import { PipelineDataCmd } from '../../types';
+import { CommandArgs } from '../../types';
 
 export const parseCommandArguments = (command: string) => {
     const [baseCommand, ...commandArgs] = command.split(' ');
 
-    const data: PipelineDataCmd = {
+    const data: CommandArgs = {
         command: baseCommand,
         args: [],
         options: {},

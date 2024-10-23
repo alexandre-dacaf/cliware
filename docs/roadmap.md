@@ -1,16 +1,16 @@
 # Roadmap
 
-## Sprint 3: 
+## Sprint 3: Refactor and formatting
 
 > Version 0.3.0
 
-- [ ] 5.1.2 - Create specific component to handle commands inside Terminal
-- [ ] 5.2.2 - Create custom hooks for the Terminal
-- [ ] 5.1.3 - Create specific component to handle prompts inside Terminal
-- [ ] 5.1.4 - Create specific component to handle actions inside Terminal
-- [ ] 5.1.5 - Create specific component to handle outputs inside Terminal
-- [ ] 5.1.6 - Create specific component to handle terminal history inside Terminal (maybe a form of output)
-- [ ] 5.1.7 - Create specific component inside App to handle terminal switching, creating, deleting, etc
+- [x] 5.1.2 - Create specific component to handle commands inside Terminal
+- [x] <s>*5.2.2 - Create custom hooks for the Terminal*</s>
+- [x] 5.1.3 - Create specific component to handle prompts inside Terminal
+- [x] 5.1.4 - Create specific component to handle actions inside Terminal
+- [x] 5.1.5 - Create specific component to handle outputs inside Terminal
+- [x] 5.1.6 - Create specific component to handle terminal history inside Terminal (maybe a form of output)
+- [x] 5.1.7 - Create specific component inside App to handle terminal switching, creating, deleting, etc
 - [ ] 5.2.1 - Create custom hooks for all prompts
 - [ ] 5.2.4 - Merge related hooks (example: useTextPrompt should have basic formatting features, and useNumberPrompt should use it)
 - [ ] Ch1 - Replace div-content-editables for inputs in prompts where it makes sense

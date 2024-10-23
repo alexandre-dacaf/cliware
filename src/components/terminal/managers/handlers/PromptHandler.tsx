@@ -1,27 +1,18 @@
 import React, { useContext } from 'react';
-import { PromptTask, PipelineData } from 'types';
-import {
-    TextPrompt,
-    ConfirmPrompt,
-    SelectPrompt,
-    NumberPrompt,
-    ListPrompt,
-    DatePrompt,
-    AutoCompletePrompt,
-    PasswordPrompt,
-} from 'components/prompts';
-import { TerminalContext } from 'context/TerminalContext';
+import { PromptTask, TaskStream } from 'types';
+import { TextPrompt, ConfirmPrompt, SelectPrompt, NumberPrompt, ListPrompt, DatePrompt, AutoCompletePrompt, PasswordPrompt } from 'components/prompts';
+import { AppContext } from 'context/AppContext';
 import './PromptHandler.css';
 
 interface PromptHandlerProps {
     task: PromptTask;
-    pipelineData: PipelineData;
+    taskStream: TaskStream;
     onNext: (data: any, textResponse: string) => void;
     isActive: boolean;
 }
 
-const PromptHandler: React.FC<PromptHandlerProps> = ({ task, pipelineData, onNext, isActive }) => {
-    const { dispatch } = useContext(TerminalContext);
+const PromptHandler: React.FC<PromptHandlerProps> = ({ task, taskStream, onNext, isActive }) => {
+    const { dispatch } = useContext(AppContext);
 
     const handleResponse = (data: any, textResponse: string) => {
         onNext(data, textResponse);
@@ -36,14 +27,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, pipelineData, onNex
     const renderPrompt = () => {
         switch (task.promptType) {
             case 'text':
-                return (
-                    <TextPrompt
-                        message={task.message}
-                        onSubmit={handleResponse}
-                        isActive={isActive}
-                        onEscape={deactivateTerminal}
-                    />
-                );
+                return <TextPrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
             case 'confirm':
                 return (
                     <ConfirmPrompt
@@ -93,23 +77,10 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, pipelineData, onNex
                 );
             case 'list':
                 return (
-                    <ListPrompt
-                        message={task.message}
-                        separator={task.separator}
-                        onSubmit={handleResponse}
-                        isActive={isActive}
-                        onEscape={deactivateTerminal}
-                    />
+                    <ListPrompt message={task.message} separator={task.separator} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />
                 );
             case 'date':
-                return (
-                    <DatePrompt
-                        message={task.message}
-                        onSubmit={handleResponse}
-                        isActive={isActive}
-                        onEscape={deactivateTerminal}
-                    />
-                );
+                return <DatePrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
             case 'autocomplete':
                 return (
                     <AutoCompletePrompt
@@ -121,20 +92,13 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, pipelineData, onNex
                     />
                 );
             case 'password':
-                return (
-                    <PasswordPrompt
-                        message={task.message}
-                        onSubmit={handleResponse}
-                        isActive={isActive}
-                        onEscape={deactivateTerminal}
-                    />
-                );
+                return <PasswordPrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
             default:
                 return <p>Prompt type unknown!</p>;
         }
     };
 
-    return <div className='prompt-component'>{renderPrompt()}</div>;
+    return <div className="prompt-component">{renderPrompt()}</div>;
 };
 
 PromptHandler.displayName = 'PromptHandler';

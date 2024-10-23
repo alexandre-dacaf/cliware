@@ -1,17 +1,16 @@
-import { TaskKey, PipelineData } from "../../types";
+import { ActionFunction } from 'types';
 
-export const createTodo = async (pipelineData: PipelineData): Promise<any> => {
-    // Simulate 2s wait
-    await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
-    });
+export const createTodo: ActionFunction = async (taskKey, taskStream, printOnTerminalHistory, printTransientOutput, clearTransientOutput): Promise<any> => {
+    if (taskStream && printOnTerminalHistory && printTransientOutput && clearTransientOutput) {
+        printTransientOutput('Executing...');
 
-    // Simulate success response
-    const simulatedResponse = { success: true };
+        // Simulate 2s wait
+        await new Promise((resolve) => {
+            setTimeout(resolve, 500);
+        });
 
-    if (simulatedResponse.success) {
-        return { success: true };
-    } else {
-        return { error: "Simulated error" };
+        clearTransientOutput();
+
+        printOnTerminalHistory({ type: 'output', content: `Tarefa ${JSON.stringify(taskStream)} criada com sucesso!` });
     }
 };

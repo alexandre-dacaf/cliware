@@ -1,14 +1,21 @@
-export interface TerminalType {
-    id: number;
-}
+import { CommandArgs, TaskStream, TaskKey } from './base';
+import { CommandBlueprint } from './tasks';
 
+export interface HistoryEntry {
+    type: 'command' | 'input' | 'output' | 'error';
+    content: string | JSX.Element;
+}
 export interface TerminalState {
-    activeTerminalId: number | null;
-    selectedTerminalId: number | null;
+    commandArgs: CommandArgs | null;
+    commandBlueprint: CommandBlueprint | null;
+    terminalOutputHistory: HistoryEntry[];
+    transientOutput: string | null;
 }
 
 export type TerminalAction =
-    | { type: "SET_ACTIVE_TERMINAL"; payload: number }
-    | { type: "SET_SELECTED_TERMINAL"; payload: number }
-    | { type: "DEACTIVATE_TERMINAL" }
-    | { type: "ACTIVATE_TERMINAL" };
+    | { type: 'STANDBY' }
+    | { type: 'SET_COMMAND_ARGS'; payload: CommandArgs }
+    | { type: 'SET_COMMAND_BLUEPRINT'; payload: CommandBlueprint }
+    | { type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY'; payload: HistoryEntry | HistoryEntry[] }
+    | { type: 'SET_TRANSIENT_OUTPUT'; payload: string }
+    | { type: 'CLEAR_TRANSIENT_OUTPUT' };

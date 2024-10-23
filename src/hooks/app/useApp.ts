@@ -1,13 +1,13 @@
 import { TerminalType } from 'types';
 import { useState, useEffect, useRef, useContext } from 'react';
-import { TerminalContext } from 'context/TerminalContext';
+import { AppContext } from 'context/AppContext';
 
 const useApp = () => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [columns, setColumns] = useState(2);
     const [terminals, setTerminals] = useState<TerminalType[]>([{ id: 1 }, { id: 2 }]);
 
-    const { state, dispatch } = useContext(TerminalContext);
+    const { state, dispatch } = useContext(AppContext);
 
     const stateRef = useRef(state);
     const terminalContainerRef = useRef<HTMLDivElement>(null);
@@ -67,21 +67,16 @@ const useApp = () => {
         setTerminals((prev) => {
             let maxTerminalId = 0;
             if (prev.length !== 0) {
-                maxTerminalId = prev.reduce(
-                    (max, item) => (item.id > max ? item.id : max),
-                    prev[0].id
-                );
+                maxTerminalId = prev.reduce((max, item) => (item.id > max ? item.id : max), prev[0].id);
             }
             const newTerminal = { id: maxTerminalId + 1 };
-            console.log(newTerminal);
             return [...prev, newTerminal];
         });
     };
 
     const deleteTerminal = () => {
         setTerminals((prevTerminals) => {
-            const currentTerminalId =
-                stateRef.current.activeTerminalId ?? stateRef.current.selectedTerminalId;
+            const currentTerminalId = stateRef.current.activeTerminalId ?? stateRef.current.selectedTerminalId;
 
             if (currentTerminalId === null) {
                 return prevTerminals;
@@ -99,11 +94,7 @@ const useApp = () => {
     };
 
     const getCurrentTerminalIndex = () => {
-        return terminals.findIndex(
-            (terminal) =>
-                terminal.id === stateRef.current.activeTerminalId ||
-                terminal.id === stateRef.current.selectedTerminalId
-        );
+        return terminals.findIndex((terminal) => terminal.id === stateRef.current.activeTerminalId || terminal.id === stateRef.current.selectedTerminalId);
     };
 
     const focusSelf = () => {

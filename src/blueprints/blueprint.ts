@@ -1,4 +1,4 @@
-import { Blueprint, PipelineData } from 'types';
+import { Blueprint, TaskStream } from 'types';
 import { createTodo } from './actions';
 import { coreCommands } from './commands/core';
 
@@ -10,20 +10,18 @@ export const blueprint: Blueprint = {
             q1: {
                 type: 'prompt',
                 promptType: 'text',
-                message: 'Digite:',
+                message: 'Digite1:',
                 next: 'q2',
             },
             q2: {
                 type: 'prompt',
                 promptType: 'number',
-                message: 'Digite:',
-                next: 'result',
+                message: 'Digite2:',
+                next: 'act',
             },
-            result: {
-                type: 'output',
-                outputFunction: (pipelineData: PipelineData) => {
-                    return `Tarefa ${JSON.stringify(pipelineData.$responses)} criada com sucesso!`;
-                },
+            act: {
+                type: 'action',
+                actionFunction: createTodo,
             },
         },
     },

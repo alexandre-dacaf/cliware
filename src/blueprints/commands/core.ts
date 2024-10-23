@@ -11,8 +11,8 @@ export const coreCommands: Blueprint = {
                 next: 'result',
             },
             result: {
-                type: 'output',
-                outputFunction: () => {
+                type: 'action',
+                actionFunction: () => {
                     return "Emitted event 'changeTerminalColumns'.";
                 },
             },
@@ -27,8 +27,8 @@ export const coreCommands: Blueprint = {
                 next: 'result',
             },
             result: {
-                type: 'output',
-                outputFunction: () => {
+                type: 'action',
+                actionFunction: () => {
                     return "Emitted event 'createTerminal'.";
                 },
             },
@@ -43,8 +43,8 @@ export const coreCommands: Blueprint = {
                 next: 'result',
             },
             result: {
-                type: 'output',
-                outputFunction: () => {
+                type: 'action',
+                actionFunction: () => {
                     return "Emitted event 'deleteTerminal'.";
                 },
             },

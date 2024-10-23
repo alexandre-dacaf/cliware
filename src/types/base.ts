@@ -1,24 +1,20 @@
 export type TaskType = 'prompt' | 'action' | 'output';
 
 export type TaskKey = string;
+
+export type NextTask = string | ((taskStream: TaskStream) => string);
 export interface BaseTask {
     type: TaskType;
-    next?: string | ((pipelineData: PipelineData) => string);
+    next?: NextTask;
 }
 
-export type PipelineDataTerm = {
-    terminalId: number;
-};
-
-export type PipelineDataCmd = {
+export type CommandArgs = {
     command: string;
     args: string[];
     flags: string[];
     options: Record<string, string>;
 };
 
-export interface PipelineData {
-    $terminal: PipelineDataTerm;
-    $cmd: PipelineDataCmd;
-    $responses: { [taskKey: TaskKey]: any };
+export interface TaskStream {
+    [taskKey: TaskKey]: any;
 }

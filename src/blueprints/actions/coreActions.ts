@@ -1,34 +1,26 @@
-import { TaskKey, PipelineData } from "../../types";
+import { ActionFunction } from '../../types';
 
-export const changeTerminalColumns = (
-    taskKey: TaskKey,
-    pipelineData: PipelineData
-) => {
-    const columns: number = +pipelineData.$cmd.args[0];
+export const changeTerminalColumns: ActionFunction = (taskKey, taskStream, printOnTerminalHistory, printTransientOutput, clearTransientOutput) => {
+    if (taskStream) {
+        const columns: number = +taskStream.$cmd.args[0];
 
-    if (!columns) {
-        throw new Error("Insira um número de colunas. Ex.: 'columns 3'.");
+        if (!columns) {
+            throw new Error("Insira um número de colunas. Ex.: 'columns 3'.");
+        }
+
+        const event = new CustomEvent('changeTerminalColumns', {
+            detail: { columns },
+        });
+        window.dispatchEvent(event);
     }
+};
 
-    const event = new CustomEvent("changeTerminalColumns", {
-        detail: { columns },
-    });
+export const createTerminal = () => {
+    const event = new CustomEvent('createTerminal');
     window.dispatchEvent(event);
 };
 
-export const createTerminal = (
-    taskKey: TaskKey,
-    pipelineData: PipelineData
-) => {
-    const event = new CustomEvent("createTerminal");
-    window.dispatchEvent(event);
-};
-
-export const deleteTerminal = (
-    taskKey: TaskKey,
-    pipelineData: PipelineData
-) => {
-    // const terminalId = pipelineData.$terminal.terminalId;
-    const event = new CustomEvent("deleteTerminal");
+export const deleteTerminal = () => {
+    const event = new CustomEvent('deleteTerminal');
     window.dispatchEvent(event);
 };

@@ -1,0 +1,3 @@
+.active-terminal .terminal-transient {
+    color: var(--warning);
+}

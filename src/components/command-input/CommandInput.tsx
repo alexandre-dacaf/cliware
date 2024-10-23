@@ -1,22 +1,16 @@
-import React, {
-    useRef,
-    useState,
-    useContext,
-    useEffect,
-    KeyboardEvent as ReactKeyboardEvent,
-} from 'react';
-import { TerminalContext } from 'context/TerminalContext';
+import React, { useRef, useState, useContext, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { AppContext } from 'context/AppContext';
 import { parseCommandArguments } from 'services/utils/parser';
-import { PipelineDataCmd } from 'types';
+import { CommandArgs } from 'types';
 import './CommandInput.css';
 
 interface CommandInputProps {
-    onSubmit: (fullCommand: string, args: PipelineDataCmd) => void;
+    onSubmit: (commandString: string, commandArgs: CommandArgs) => void;
     isActive: boolean;
 }
 
 const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
-    const { dispatch } = useContext(TerminalContext);
+    const { dispatch } = useContext(AppContext);
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
 
@@ -26,7 +20,6 @@ const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         const key = event.key;
-        const isShiftPressed = event.shiftKey;
         preventDefaultEvents(event);
 
         if (key === 'Enter') {
@@ -48,8 +41,7 @@ const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
     const submit = () => {
         const command = value.trim();
         if (command !== '') {
-            const commandArgs = parseCommandArguments(command);
-
+            const commandArgs: CommandArgs = parseCommandArguments(command);
             onSubmit(command, commandArgs);
             setValue('');
         }
@@ -76,16 +68,9 @@ const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
     };
 
     return (
-        <div className='command-input-container'>
-            <span className='command-prompt'>$</span>
-            <input
-                ref={inputRef}
-                className='command-input'
-                value={value}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-            />
+        <div className="command-input-container">
+            <span className="command-prompt">$</span>
+            <input ref={inputRef} className="command-input" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
         </div>
     );
 };
