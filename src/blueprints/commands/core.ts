@@ -1,21 +1,17 @@
-import { CommandConfig } from "../types";
-import {
-    changeTerminalColumns,
-    createTerminal,
-    deleteTerminal,
-} from "./actions";
+import { Blueprint } from '../../types';
+import { changeTerminalColumns, createTerminal, deleteTerminal } from '../actions';
 
-export const coreCommands: CommandConfig = {
+export const coreCommands: Blueprint = {
     cols: {
-        entrypoint: "action",
+        entrypoint: 'action',
         pipeline: {
             action: {
-                type: "action",
+                type: 'action',
                 actionFunction: changeTerminalColumns,
-                next: "result",
+                next: 'result',
             },
             result: {
-                type: "output",
+                type: 'output',
                 outputFunction: () => {
                     return "Emitted event 'changeTerminalColumns'.";
                 },
@@ -23,15 +19,15 @@ export const coreCommands: CommandConfig = {
         },
     },
     nt: {
-        entrypoint: "action",
+        entrypoint: 'action',
         pipeline: {
             action: {
-                type: "action",
+                type: 'action',
                 actionFunction: createTerminal,
-                next: "result",
+                next: 'result',
             },
             result: {
-                type: "output",
+                type: 'output',
                 outputFunction: () => {
                     return "Emitted event 'createTerminal'.";
                 },
@@ -39,15 +35,15 @@ export const coreCommands: CommandConfig = {
         },
     },
     dt: {
-        entrypoint: "action",
+        entrypoint: 'action',
         pipeline: {
             action: {
-                type: "action",
+                type: 'action',
                 actionFunction: deleteTerminal,
-                next: "result",
+                next: 'result',
             },
             result: {
-                type: "output",
+                type: 'output',
                 outputFunction: () => {
                     return "Emitted event 'deleteTerminal'.";
                 },

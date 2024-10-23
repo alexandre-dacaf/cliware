@@ -6,18 +6,19 @@ export interface BaseTask {
     next?: string | ((pipelineData: PipelineData) => string);
 }
 
-export type PipelineCmdData = {
+export type PipelineDataTerm = {
+    terminalId: number;
+};
+
+export type PipelineDataCmd = {
+    command: string;
     args: string[];
     flags: string[];
     options: Record<string, string>;
 };
 
-export type PipelineTermData = {
-    terminalId: number;
-};
-
 export interface PipelineData {
-    $terminal: PipelineTermData;
-    $cmd: PipelineCmdData;
-    $pipeline: { [taskKey: TaskKey]: any };
+    $terminal: PipelineDataTerm;
+    $cmd: PipelineDataCmd;
+    $responses: { [taskKey: TaskKey]: any };
 }

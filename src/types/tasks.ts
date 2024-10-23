@@ -5,13 +5,15 @@ import { OutputTask } from './outputs';
 
 export type Task = PromptTask | ActionTask | OutputTask;
 
-export interface CommandPipeline {
+export interface PipelineBlueprint {
     [taskKey: TaskKey]: Task;
 }
 
-export interface CommandConfig {
-    [command: string]: {
-        entrypoint: string;
-        pipeline: CommandPipeline;
-    };
+export interface CommandBlueprint {
+    entrypoint: string;
+    pipeline: PipelineBlueprint;
+}
+
+export interface Blueprint {
+    [command: string]: CommandBlueprint;
 }

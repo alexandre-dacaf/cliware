@@ -7,11 +7,11 @@ import React, {
 } from 'react';
 import { TerminalContext } from 'context/TerminalContext';
 import { parseCommandArguments } from 'services/utils/parser';
-import { PipelineCmdData } from 'types';
+import { PipelineDataCmd } from 'types';
 import './CommandInput.css';
 
 interface CommandInputProps {
-    onSubmit: (fullCommand: string, command: string, args: PipelineCmdData) => void;
+    onSubmit: (fullCommand: string, args: PipelineDataCmd) => void;
     isActive: boolean;
 }
 
@@ -46,12 +46,11 @@ const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
     };
 
     const submit = () => {
-        const fullCommand = value.trim();
-        if (fullCommand !== '') {
-            const [command, ...args] = fullCommand.split(' ');
-            const commandArgs = parseCommandArguments(args);
+        const command = value.trim();
+        if (command !== '') {
+            const commandArgs = parseCommandArguments(command);
 
-            onSubmit(fullCommand, command, commandArgs);
+            onSubmit(command, commandArgs);
             setValue('');
         }
     };

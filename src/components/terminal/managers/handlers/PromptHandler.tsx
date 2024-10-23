@@ -11,16 +11,16 @@ import {
     PasswordPrompt,
 } from 'components/prompts';
 import { TerminalContext } from 'context/TerminalContext';
-import './PromptManager.css';
+import './PromptHandler.css';
 
-interface PromptManagerProps {
+interface PromptHandlerProps {
     task: PromptTask;
     pipelineData: PipelineData;
     onNext: (data: any, textResponse: string) => void;
     isActive: boolean;
 }
 
-const PromptManager: React.FC<PromptManagerProps> = ({ task, pipelineData, onNext, isActive }) => {
+const PromptHandler: React.FC<PromptHandlerProps> = ({ task, pipelineData, onNext, isActive }) => {
     const { dispatch } = useContext(TerminalContext);
 
     const handleResponse = (data: any, textResponse: string) => {
@@ -137,6 +137,6 @@ const PromptManager: React.FC<PromptManagerProps> = ({ task, pipelineData, onNex
     return <div className='prompt-component'>{renderPrompt()}</div>;
 };
 
-PromptManager.displayName = 'PromptManager';
+PromptHandler.displayName = 'PromptHandler';
 
-export { PromptManager };
+export { PromptHandler };

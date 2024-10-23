@@ -1,8 +1,8 @@
-import { CommandConfig, PipelineData } from 'types';
+import { Blueprint, PipelineData } from 'types';
 import { createTodo } from './actions';
-import { coreCommands } from './coreCommands';
+import { coreCommands } from './commands/core';
 
-export const commandConfig: CommandConfig = {
+export const blueprint: Blueprint = {
     ...coreCommands,
     todo: {
         entrypoint: 'q1',
@@ -22,7 +22,7 @@ export const commandConfig: CommandConfig = {
             result: {
                 type: 'output',
                 outputFunction: (pipelineData: PipelineData) => {
-                    return `Tarefa ${JSON.stringify(pipelineData.$pipeline)} criada com sucesso!`;
+                    return `Tarefa ${JSON.stringify(pipelineData.$responses)} criada com sucesso!`;
                 },
             },
         },
