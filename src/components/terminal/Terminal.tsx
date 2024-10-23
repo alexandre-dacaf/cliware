@@ -48,6 +48,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
                 type: 'SET_COMMAND_BLUEPRINT',
                 payload: commandBlueprint,
             });
+            printOnTerminalHistory({ type: 'command', content: `$ ${commandString}` });
         } else {
             printOnTerminalHistory([
                 { type: 'command', content: `$ ${commandString}` },
@@ -58,10 +59,21 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     };
 
     return (
-        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
+        <div
+            className={
+                'terminal ' +
+                (isActive ? 'active-terminal ' : ' ') +
+                (isSelected ? 'selected-terminal ' : ' ')
+            }
+            ref={terminalRef}
+        >
             <TerminalOutputHistory />
 
-            {state.commandBlueprint ? <TaskManager isActive={isActive} /> : <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />}
+            {state.commandBlueprint ? (
+                <TaskManager isActive={isActive} />
+            ) : (
+                <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />
+            )}
 
             <TransientOutput />
         </div>

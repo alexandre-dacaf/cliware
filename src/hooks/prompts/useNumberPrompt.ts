@@ -1,92 +1,58 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getDigitsBeforeCaret, setCaretPosition } from 'services/utils';
 
 const useNumberPrompt = (min: number, max: number, float: boolean, decimals: number) => {
-    const [content, setContent] = useState<string>('');
-    const inputRef = useRef<HTMLDivElement>(null);
+    const [value, setValue] = useState<string>('0');
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleInput = () => {
-        if (inputRef.current) {
-            const digitsBeforeCaret = getDigitsBeforeCaret(inputRef.current);
-            const currentContent = inputRef.current.innerText ?? '';
-            const formattedContent = processInput(currentContent);
+    useEffect(() => {
+        const initValue = Math.max(0, min);
+        setValue(formatFloatDecimals(initValue));
+    }, [min]);
 
-            setContent(formattedContent);
-            if (inputRef.current) {
-                inputRef.current.innerText = formattedContent;
-                setCaretPosition(inputRef.current, digitsBeforeCaret);
-            }
-        }
-    };
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let inputValue = event.target.value;
 
-    const processInput = (rawContent: string): string => {
-        let formattedContent = rawContent;
-
-        // Step 1: Remove all characters that are not digits, hyphen or decimal point (if float)
-        if (float) {
-            formattedContent = rawContent.replace(/[^0-9\-.]/g, '');
-        } else {
-            formattedContent = rawContent.replace(/[^0-9-]/g, '');
+        // Permitir valor vazio
+        if (inputValue === '') {
+            setValue('0');
+            return;
         }
 
-        // Step 2: Ensure that the hyphen, if present, is only at the beginning
-        const hasLeadingHyphen = formattedContent.startsWith('-');
-        formattedContent = formattedContent.replace(/-/g, '');
-
-        if (hasLeadingHyphen) {
-            formattedContent = '-' + formattedContent;
+        // Verificar se o valor pode ser convertido para número
+        const regex = float ? /^-?\d*(\.\d*)?$/ : /^-?\d*$/;
+        if (!regex.test(inputValue)) {
+            return; // Não permitir valores que não sejam números válidos
         }
 
-        if (float) {
-            // Passo 3a: Garantir que apenas um ponto decimal esteja presente
-            const firstDotIndex = formattedContent.indexOf('.');
-            if (firstDotIndex !== -1) {
-                // Manter apenas o primeiro ponto e remover os demais
-                formattedContent =
-                    formattedContent.slice(0, firstDotIndex + 1) +
-                    formattedContent.slice(firstDotIndex + 1).replace(/\./g, '');
-            }
+        let numericValue = float ? parseFloat(inputValue) : parseInt(inputValue, 10);
 
-            // Passo 3b: Limitar o número de casas decimais
-            const [integerPart, decimalPart] = formattedContent.split('.');
-            if (decimalPart) {
-                formattedContent = integerPart + '.' + decimalPart.slice(0, decimals);
+        // Se o valor for float, limitar casas decimais
+        if (float && inputValue.includes('.')) {
+            const decimalPart = inputValue.split('.')[1];
+            if (decimalPart && decimalPart.length > decimals) {
+                return; // Limitar o número de decimais
             }
         }
 
-        // Step 3: Convert to number and apply limits
-        let numberContent: number = parseFloat(formattedContent) ?? 0;
-        if (isNaN(numberContent)) {
-            numberContent = Math.max(0, min);
+        // Aplicar as restrições de min e max
+        if (numericValue < min || numericValue > max) {
+            return;
         }
-        numberContent = applyLimits(numberContent);
 
-        // Step 4: Format according to `float` and `decimals`
-        // formattedContent = formatFloatDecimals(numberContent);
-
-        return formattedContent;
+        // Atualizar o valor se todas as condições forem satisfeitas
+        setValue(inputValue);
     };
 
     const adjustStep = (stepAmount: number) => {
-        let numberContent: number = parseFloat(content) ?? 0;
+        let numberContent: number = parseFloat(value) ?? 0;
         numberContent += stepAmount;
 
         numberContent = applyLimits(numberContent);
 
         const newStringContent = formatFloatDecimals(numberContent);
 
-        setContent(newStringContent);
-        if (inputRef.current) {
-            inputRef.current.innerText = newStringContent;
-            setCaretPosition(inputRef.current, newStringContent.length);
-        }
-    };
-
-    const clearContent = () => {
-        setContent('');
-        if (inputRef.current) {
-            inputRef.current.innerText = '';
-        }
+        setValue(newStringContent);
     };
 
     const applyLimits = (numberContent: number): number => {
@@ -109,7 +75,14 @@ const useNumberPrompt = (min: number, max: number, float: boolean, decimals: num
         }
     };
 
-    return { content, inputRef, handleInput, adjustStep, clearContent };
+    const clear = () => {
+        setValue('');
+        if (inputRef.current) {
+            inputRef.current.innerText = '';
+        }
+    };
+
+    return { value, inputRef, handleChange, adjustStep, clear };
 };
 
 export default useNumberPrompt;

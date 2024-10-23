@@ -9,14 +9,17 @@ export const blueprint: Blueprint = {
         pipeline: {
             q1: {
                 type: 'prompt',
-                promptType: 'text',
+                promptType: 'number',
                 message: 'Digite1:',
+                min: 4,
+                float: true,
                 next: 'q2',
             },
             q2: {
                 type: 'prompt',
                 promptType: 'number',
                 message: 'Digite2:',
+                min: 2,
                 next: 'act',
             },
             act: {

@@ -25,7 +25,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     isActive,
     onEscape,
 }) => {
-    const { content, inputRef, handleInput, adjustStep, clearContent } = useNumberPrompt(
+    const { value, inputRef, handleChange, adjustStep, clear } = useNumberPrompt(
         min,
         max,
         float,
@@ -33,17 +33,17 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     );
 
     const submit = () => {
-        if (content.trim() === '') {
+        if (value.trim() === '') {
             return;
         }
 
-        const numberContent: number = parseFloat(content);
+        const numberContent: number = parseFloat(value);
         if (isNaN(numberContent)) {
             return;
         }
 
-        onSubmit(numberContent, content);
-        clearContent();
+        onSubmit(numberContent, value);
+        clear();
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
@@ -64,15 +64,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = [
-            'Enter',
-            'Tab',
-            'ArrowUp',
-            'ArrowDown',
-            'ArrowLeft',
-            'ArrowRight',
-            'Escape',
-        ];
+        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -96,7 +88,15 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     return (
         <div className='number-prompt'>
             <span className='prompt-message'>{message}</span>
-            <span
+            <input
+                ref={inputRef}
+                className='text-field'
+                value={value}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+            />
+            {/* <span
                 ref={inputRef}
                 contentEditable
                 className='number-field'
@@ -107,7 +107,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
                 spellCheck='false'
                 autoCorrect='off'
                 suppressContentEditableWarning={true}
-            />
+            /> */}
         </div>
     );
 };
