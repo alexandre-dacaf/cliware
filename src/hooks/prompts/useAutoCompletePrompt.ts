@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Choice } from '../../types';
+import { Choice } from 'types';
 
 const useSelectPrompt = (choices: Choice[]) => {
     const [filteredChoices, setFilteredChoices] = useState<Choice[]>([]);
@@ -25,7 +25,8 @@ const useSelectPrompt = (choices: Choice[]) => {
                 return;
             }
 
-            const normalizeText = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const normalizeText = (text: string) =>
+                text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
             const pattern = new RegExp(normalizeText(currentContent), 'i');
 
@@ -38,7 +39,9 @@ const useSelectPrompt = (choices: Choice[]) => {
     };
 
     const selectPrevious = () => {
-        setSelectedIndex((prevIndex) => (prevIndex - 1 + filteredChoices.length) % filteredChoices.length);
+        setSelectedIndex(
+            (prevIndex) => (prevIndex - 1 + filteredChoices.length) % filteredChoices.length
+        );
     };
 
     const selectNext = () => {

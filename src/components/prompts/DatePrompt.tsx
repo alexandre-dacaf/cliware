@@ -1,5 +1,5 @@
 import React, { useRef, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import useDatePrompt from '../../hooks/prompts/useDatePrompt';
+import useDatePrompt from 'hooks/prompts/useDatePrompt';
 import './DatePrompt.css';
 
 export type DatePromptProps = {
@@ -17,7 +17,8 @@ const DatePrompt: React.FC<DatePromptProps> = ({ message, onSubmit, isActive, on
     const month = currentTime.getMonth() + 1;
     const day = currentTime.getDate();
 
-    const { date, yearRef, monthRef, dayRef, adjustYear, adjustMonth, adjustDay, clear } = useDatePrompt(year, month, day);
+    const { date, yearRef, monthRef, dayRef, adjustYear, adjustMonth, adjustDay, clear } =
+        useDatePrompt(year, month, day);
 
     const submit = () => {
         if (date) {
@@ -102,7 +103,15 @@ const DatePrompt: React.FC<DatePromptProps> = ({ message, onSubmit, isActive, on
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+        const preventDefaultKeys = [
+            'Enter',
+            'Tab',
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'Escape',
+        ];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -133,20 +142,39 @@ const DatePrompt: React.FC<DatePromptProps> = ({ message, onSubmit, isActive, on
 
     const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
         const relatedTarget = event.relatedTarget as HTMLElement | null;
-        if (containerRef.current && relatedTarget && !containerRef.current.contains(relatedTarget)) {
+        if (
+            containerRef.current &&
+            relatedTarget &&
+            !containerRef.current.contains(relatedTarget)
+        ) {
             // Focus completelly left div.date-prompt (containerRef)
             focusYear();
         }
     };
 
     return (
-        <div className="date-prompt" onBlur={handleBlur} ref={containerRef}>
-            <span className="prompt-message">{message}</span>
-            <span ref={yearRef} className="date-field year-field" tabIndex={0} onKeyDown={handleYearKeyDown} />
+        <div className='date-prompt' onBlur={handleBlur} ref={containerRef}>
+            <span className='prompt-message'>{message}</span>
+            <span
+                ref={yearRef}
+                className='date-field year-field'
+                tabIndex={0}
+                onKeyDown={handleYearKeyDown}
+            />
             -
-            <span ref={monthRef} className="date-field month-field" tabIndex={0} onKeyDown={handleMonthKeyDown} />
+            <span
+                ref={monthRef}
+                className='date-field month-field'
+                tabIndex={0}
+                onKeyDown={handleMonthKeyDown}
+            />
             -
-            <span ref={dayRef} className="date-field day-field" tabIndex={0} onKeyDown={handleDayKeyDown} />
+            <span
+                ref={dayRef}
+                className='date-field day-field'
+                tabIndex={0}
+                onKeyDown={handleDayKeyDown}
+            />
         </div>
     );
 };

@@ -1,6 +1,6 @@
-import { TerminalType } from '../../types';
+import { TerminalType } from 'types';
 import { useState, useEffect, useRef, useContext } from 'react';
-import { TerminalContext } from '../../context/TerminalContext';
+import { TerminalContext } from 'context/TerminalContext';
 
 const useApp = () => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -67,7 +67,10 @@ const useApp = () => {
         setTerminals((prev) => {
             let maxTerminalId = 0;
             if (prev.length !== 0) {
-                maxTerminalId = prev.reduce((max, item) => (item.id > max ? item.id : max), prev[0].id);
+                maxTerminalId = prev.reduce(
+                    (max, item) => (item.id > max ? item.id : max),
+                    prev[0].id
+                );
             }
             const newTerminal = { id: maxTerminalId + 1 };
             console.log(newTerminal);
@@ -77,7 +80,8 @@ const useApp = () => {
 
     const deleteTerminal = () => {
         setTerminals((prevTerminals) => {
-            const currentTerminalId = stateRef.current.activeTerminalId ?? stateRef.current.selectedTerminalId;
+            const currentTerminalId =
+                stateRef.current.activeTerminalId ?? stateRef.current.selectedTerminalId;
 
             if (currentTerminalId === null) {
                 return prevTerminals;
@@ -95,7 +99,11 @@ const useApp = () => {
     };
 
     const getCurrentTerminalIndex = () => {
-        return terminals.findIndex((terminal) => terminal.id === stateRef.current.activeTerminalId || terminal.id === stateRef.current.selectedTerminalId);
+        return terminals.findIndex(
+            (terminal) =>
+                terminal.id === stateRef.current.activeTerminalId ||
+                terminal.id === stateRef.current.selectedTerminalId
+        );
     };
 
     const focusSelf = () => {

@@ -1,4 +1,4 @@
-import { CommandConfig, PipelineData } from '../types';
+import { CommandConfig, PipelineData } from 'types';
 import { createTodo } from './actions';
 import { coreCommands } from './coreCommands';
 

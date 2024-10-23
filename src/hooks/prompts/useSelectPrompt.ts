@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Choice } from '../../types';
+import { Choice } from 'types';
 
 const useSelectPrompt = (choices: Choice[], multiselect: boolean) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);

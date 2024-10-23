@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import useAutoCompletePrompt from '../../hooks/prompts/useAutoCompletePrompt';
-import { Choice } from '../../types';
+import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
+import { Choice } from 'types';
 import './AutoCompletePrompt.css';
 
 export type AutoCompletePromptProps = {
@@ -11,7 +11,13 @@ export type AutoCompletePromptProps = {
     onEscape: () => void;
 };
 
-const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choices, onSubmit, isActive, onEscape }) => {
+const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
+    message,
+    choices,
+    onSubmit,
+    isActive,
+    onEscape,
+}) => {
     const formattedChoices = useMemo(
         () =>
             choices.map((choice) => ({
@@ -21,7 +27,8 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choice
         [choices]
     );
 
-    const { inputRef, filteredChoices, selectedIndex, handleInput, selectPrevious, selectNext } = useAutoCompletePrompt(formattedChoices);
+    const { inputRef, filteredChoices, selectedIndex, handleInput, selectPrevious, selectNext } =
+        useAutoCompletePrompt(formattedChoices);
 
     const submit = () => {
         const data = filteredChoices[selectedIndex];
@@ -74,26 +81,31 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choice
     };
 
     return (
-        <div className="autocomplete-prompt">
+        <div className='autocomplete-prompt'>
             <div>
-                <span className="autocomplete-message">{message}</span>
+                <span className='autocomplete-message'>{message}</span>
                 <span
                     ref={inputRef}
                     contentEditable
-                    className="autocomplete-field"
+                    className='autocomplete-field'
                     onInput={handleInput}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    data-placeholder="Digite um comando..."
-                    spellCheck="false"
-                    autoCorrect="off"
+                    data-placeholder='Digite um comando...'
+                    spellCheck='false'
+                    autoCorrect='off'
                     suppressContentEditableWarning={true}
                 />
             </div>
 
-            <div className="autocomplete-choices">
+            <div className='autocomplete-choices'>
                 {filteredChoices.map((choice, index) => (
-                    <span key={index} className={`autocomplete-choice ${selectedIndex === index ? 'selected' : ''}`}>
+                    <span
+                        key={index}
+                        className={`autocomplete-choice ${
+                            selectedIndex === index ? 'selected' : ''
+                        }`}
+                    >
                         {choice.label}
                     </span>
                 ))}

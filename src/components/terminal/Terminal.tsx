@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { commandConfig } from '../../commands/commandConfig';
-import { Task, PipelineData, PipelineCmdData } from '../../types';
+import { commandConfig } from 'commands/commandConfig';
+import { Task, PipelineData, PipelineCmdData } from 'types';
 import { PromptManager } from './managers/PromptManager';
-import CommandInput from '../command-input/CommandInput';
-import { parseCommandArguments } from '../../services/utils/parser';
+import CommandInput from 'components/command-input/CommandInput';
+import { parseCommandArguments } from 'services/utils/parser';
 import './Terminal.css';
 
 interface HystoryEntry {

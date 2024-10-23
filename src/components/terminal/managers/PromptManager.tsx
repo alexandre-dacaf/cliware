@@ -1,7 +1,16 @@
 import React, { useContext } from 'react';
-import { PromptTask, PipelineData } from '../../../types';
-import { TextPrompt, ConfirmPrompt, SelectPrompt, NumberPrompt, ListPrompt, DatePrompt, AutoCompletePrompt, PasswordPrompt } from '../../prompts';
-import { TerminalContext } from '../../../context/TerminalContext';
+import { PromptTask, PipelineData } from 'types';
+import {
+    TextPrompt,
+    ConfirmPrompt,
+    SelectPrompt,
+    NumberPrompt,
+    ListPrompt,
+    DatePrompt,
+    AutoCompletePrompt,
+    PasswordPrompt,
+} from 'components/prompts';
+import { TerminalContext } from 'context/TerminalContext';
 import './PromptManager.css';
 
 interface PromptManagerProps {
@@ -27,7 +36,14 @@ const PromptManager: React.FC<PromptManagerProps> = ({ task, pipelineData, onNex
     const renderPrompt = () => {
         switch (task.promptType) {
             case 'text':
-                return <TextPrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
+                return (
+                    <TextPrompt
+                        message={task.message}
+                        onSubmit={handleResponse}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
+                );
             case 'confirm':
                 return (
                     <ConfirmPrompt
@@ -77,10 +93,23 @@ const PromptManager: React.FC<PromptManagerProps> = ({ task, pipelineData, onNex
                 );
             case 'list':
                 return (
-                    <ListPrompt message={task.message} separator={task.separator} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />
+                    <ListPrompt
+                        message={task.message}
+                        separator={task.separator}
+                        onSubmit={handleResponse}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
                 );
             case 'date':
-                return <DatePrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
+                return (
+                    <DatePrompt
+                        message={task.message}
+                        onSubmit={handleResponse}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
+                );
             case 'autocomplete':
                 return (
                     <AutoCompletePrompt
@@ -92,13 +121,20 @@ const PromptManager: React.FC<PromptManagerProps> = ({ task, pipelineData, onNex
                     />
                 );
             case 'password':
-                return <PasswordPrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
+                return (
+                    <PasswordPrompt
+                        message={task.message}
+                        onSubmit={handleResponse}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
+                );
             default:
                 return <p>Prompt type unknown!</p>;
         }
     };
 
-    return <div className="prompt-component">{renderPrompt()}</div>;
+    return <div className='prompt-component'>{renderPrompt()}</div>;
 };
 
 PromptManager.displayName = 'PromptManager';

@@ -1,7 +1,13 @@
-import React, { useRef, useState, useContext, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { TerminalContext } from '../../context/TerminalContext';
-import { parseCommandArguments } from '../../services/utils/parser';
-import { PipelineCmdData } from '../../types';
+import React, {
+    useRef,
+    useState,
+    useContext,
+    useEffect,
+    KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
+import { TerminalContext } from 'context/TerminalContext';
+import { parseCommandArguments } from 'services/utils/parser';
+import { PipelineCmdData } from 'types';
 import './CommandInput.css';
 
 interface CommandInputProps {
@@ -71,9 +77,16 @@ const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
     };
 
     return (
-        <div className="command-input-container">
-            <span className="command-prompt">$</span>
-            <input ref={inputRef} className="command-input" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
+        <div className='command-input-container'>
+            <span className='command-prompt'>$</span>
+            <input
+                ref={inputRef}
+                className='command-input'
+                value={value}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+            />
         </div>
     );
 };

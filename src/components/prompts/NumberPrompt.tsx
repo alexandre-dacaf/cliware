@@ -1,6 +1,6 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
 import './NumberPrompt.css';
-import useNumberPrompt from '../../hooks/prompts/useNumberPrompt';
+import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
 
 export type NumberPromptProps = {
     message: string;
@@ -25,7 +25,12 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     isActive,
     onEscape,
 }) => {
-    const { content, inputRef, handleInput, adjustStep, clearContent } = useNumberPrompt(min, max, float, decimals);
+    const { content, inputRef, handleInput, adjustStep, clearContent } = useNumberPrompt(
+        min,
+        max,
+        float,
+        decimals
+    );
 
     const submit = () => {
         if (content.trim() === '') {
@@ -59,7 +64,15 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+        const preventDefaultKeys = [
+            'Enter',
+            'Tab',
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'Escape',
+        ];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -81,18 +94,18 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     };
 
     return (
-        <div className="number-prompt">
-            <span className="prompt-message">{message}</span>
+        <div className='number-prompt'>
+            <span className='prompt-message'>{message}</span>
             <span
                 ref={inputRef}
                 contentEditable
-                className="number-field"
+                className='number-field'
                 onInput={handleInput}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
-                data-placeholder="Digite um comando..."
-                spellCheck="false"
-                autoCorrect="off"
+                data-placeholder='Digite um comando...'
+                spellCheck='false'
+                autoCorrect='off'
                 suppressContentEditableWarning={true}
             />
         </div>
