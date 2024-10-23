@@ -1,28 +1,28 @@
-import { CommandConfig, TaskKey, PipelineData } from '../types';
+import { CommandConfig, PipelineData } from '../types';
 import { createTodo } from './actions';
 import { coreCommands } from './coreCommands';
 
 export const commandConfig: CommandConfig = {
     ...coreCommands,
     todo: {
-        entrypoint: 'number',
+        entrypoint: 'q1',
         pipeline: {
-            number: {
+            q1: {
                 type: 'prompt',
-                promptType: 'number',
-                message: 'Digite um número:',
-                next: 'number1',
+                promptType: 'text',
+                message: 'Digite:',
+                next: 'q2',
             },
-            number1: {
+            q2: {
                 type: 'prompt',
                 promptType: 'number',
-                message: 'Digite um número:',
+                message: 'Digite:',
                 next: 'result',
             },
             result: {
                 type: 'output',
                 outputFunction: (pipelineData: PipelineData) => {
-                    return `Tarefa '${JSON.stringify(pipelineData.$pipeline)}' criada com sucesso!`;
+                    return `Tarefa ${JSON.stringify(pipelineData.$pipeline)} criada com sucesso!`;
                 },
             },
         },

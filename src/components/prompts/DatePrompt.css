@@ -1,0 +1,29 @@
+.date-prompt {
+    display: flex;
+    flex-direction: row;
+}
+
+.date-field {
+    font-weight: bold;
+    outline: none;
+}
+
+.year-field {
+    margin-left: 1rem;
+}
+
+.date-field:focus {
+    animation: blink 1s infinite cubic-bezier(0.88, -0.01, 0, 0.99);
+}
+
+@keyframes blink {
+    50% {
+        background-color: #c6cdd5;
+        color: var(--neutral-200);
+    }
+}
+
+.date-field:empty::before {
+    content: attr(data-placeholder);
+    color: #555;
+}

@@ -1,55 +1,58 @@
-import React, {
-    useRef,
-    useState,
-    useContext,
-    useEffect,
-    KeyboardEvent as ReactKeyboardEvent,
-} from "react";
-import { TerminalContext } from "../../context/TerminalContext";
-import "./CommandInput.css";
+import React, { useRef, useState, useContext, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { TerminalContext } from '../../context/TerminalContext';
+import { parseCommandArguments } from '../../services/utils/parser';
+import { PipelineCmdData } from '../../types';
+import './CommandInput.css';
 
 interface CommandInputProps {
-    onCommand: (command: string) => void;
+    onSubmit: (fullCommand: string, command: string, args: PipelineCmdData) => void;
     isActive: boolean;
 }
 
-const CommandInput: React.FC<CommandInputProps> = ({ onCommand, isActive }) => {
-    const { state, dispatch } = useContext(TerminalContext);
-    const inputRef = useRef<HTMLDivElement>(null);
-    const [content, setContent] = useState<string>("");
+const CommandInput: React.FC<CommandInputProps> = ({ onSubmit, isActive }) => {
+    const { dispatch } = useContext(TerminalContext);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [value, setValue] = useState<string>('');
 
-    const handleInput = () => {
-        if (inputRef.current) {
-            setContent(inputRef.current.textContent ?? "");
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+    };
+
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const key = event.key;
+        const isShiftPressed = event.shiftKey;
+        preventDefaultEvents(event);
+
+        if (key === 'Enter') {
+            submit();
+        }
+        if (key === 'Escape') {
+            deactivateTerminal();
         }
     };
 
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-        if (event.key === "Enter") {
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape'];
+
+        if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
-            const trimmedContent = content.trim();
-            if (trimmedContent !== "") {
-                onCommand(trimmedContent);
-                setContent("");
-                if (inputRef.current) {
-                    inputRef.current.textContent = "";
-                }
-            }
         }
+    };
 
-        if (event.key === "Tab") {
-            if (isActive) {
-                event.preventDefault();
+    const submit = () => {
+        const fullCommand = value.trim();
+        if (fullCommand !== '') {
+            const [command, ...args] = fullCommand.split(' ');
+            const commandArgs = parseCommandArguments(args);
 
-                // Opcional: Executar alguma ação específica ao pressionar Tab
-            }
+            onSubmit(fullCommand, command, commandArgs);
+            setValue('');
         }
+    };
 
-        if (event.key === "Escape") {
-            if (isActive) {
-                event.preventDefault();
-                dispatch({ type: "DEACTIVATE_TERMINAL" });
-            }
+    const deactivateTerminal = () => {
+        if (isActive) {
+            dispatch({ type: 'DEACTIVATE_TERMINAL' });
         }
     };
 
@@ -70,18 +73,7 @@ const CommandInput: React.FC<CommandInputProps> = ({ onCommand, isActive }) => {
     return (
         <div className="command-input-container">
             <span className="command-prompt">$</span>
-            <div
-                ref={inputRef}
-                contentEditable
-                className="command-input"
-                onInput={handleInput}
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-                data-placeholder="Digite um comando..."
-                spellCheck="false"
-                autoCorrect="off"
-                suppressContentEditableWarning={true}
-            />
+            <input ref={inputRef} className="command-input" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
         </div>
     );
 };

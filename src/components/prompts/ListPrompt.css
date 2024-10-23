@@ -1,0 +1,14 @@
+.list-prompt {
+    display: flex;
+    flex-direction: row;
+}
+
+.list-field {
+    margin-left: 1rem;
+    outline: none;
+}
+
+.list-field:empty::before {
+    content: attr(data-placeholder);
+    color: #555;
+}

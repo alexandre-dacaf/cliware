@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
-import { getDigitsBeforeCaret, setCaretPosition } from '../services/utils';
+import { getDigitsBeforeCaret, setCaretPosition } from '../../services/utils';
 
-const useNumberInput = (min: number, max: number, float: boolean, decimals: number) => {
+const useNumberPrompt = (min: number, max: number, float: boolean, decimals: number) => {
     const [content, setContent] = useState<string>('');
     const inputRef = useRef<HTMLDivElement>(null);
 
@@ -42,9 +42,7 @@ const useNumberInput = (min: number, max: number, float: boolean, decimals: numb
             const firstDotIndex = formattedContent.indexOf('.');
             if (firstDotIndex !== -1) {
                 // Manter apenas o primeiro ponto e remover os demais
-                formattedContent =
-                    formattedContent.slice(0, firstDotIndex + 1) +
-                    formattedContent.slice(firstDotIndex + 1).replace(/\./g, '');
+                formattedContent = formattedContent.slice(0, firstDotIndex + 1) + formattedContent.slice(firstDotIndex + 1).replace(/\./g, '');
             }
 
             // Passo 3b: Limitar o número de casas decimais
@@ -112,4 +110,4 @@ const useNumberInput = (min: number, max: number, float: boolean, decimals: numb
     return { content, inputRef, handleInput, adjustStep, clearContent };
 };
 
-export default useNumberInput;
+export default useNumberPrompt;

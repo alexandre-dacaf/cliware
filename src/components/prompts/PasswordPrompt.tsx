@@ -1,19 +1,32 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import './TextPrompt.css';
+import './PasswordPrompt.css';
 
-export type TextPromptProps = {
+export type PasswordPromptProps = {
     message: string;
     onSubmit: (data: string, textResponse: string) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
-const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive, onEscape }) => {
+const PasswordPrompt: React.FC<PasswordPromptProps> = ({ message, onSubmit, isActive, onEscape }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
+        const currentContent: string = event.target.value;
+        setValue(currentContent);
+    };
+
+    const submit = () => {
+        if (value === '') {
+            return;
+        }
+
+        onSubmit(value, '•'.repeat(8));
+        setValue('');
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
@@ -28,22 +41,10 @@ const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive, on
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
-        }
-    };
-
-    const submit = () => {
-        if (value.trim() === '') {
-            return;
-        }
-
-        onSubmit(value.trim(), value.trim());
-        setValue('');
-        if (inputRef.current) {
-            inputRef.current.textContent = '';
         }
     };
 
@@ -62,13 +63,21 @@ const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive, on
     };
 
     return (
-        <div className="text-prompt">
+        <div className="password-prompt">
             <span className="prompt-message">{message}</span>
-            <input ref={inputRef} className="text-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
+            <input
+                ref={inputRef}
+                type="password"
+                className="password-field"
+                value={value}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+            />
         </div>
     );
 };
 
-TextPrompt.displayName = 'TextPrompt';
+PasswordPrompt.displayName = 'PasswordPrompt';
 
-export { TextPrompt };
+export { PasswordPrompt };

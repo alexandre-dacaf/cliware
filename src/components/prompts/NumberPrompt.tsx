@@ -1,6 +1,6 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
 import './NumberPrompt.css';
-import useNumberInput from '../../hooks/useNumberInput';
+import useNumberPrompt from '../../hooks/prompts/useNumberPrompt';
 
 export type NumberPromptProps = {
     message: string;
@@ -9,8 +9,9 @@ export type NumberPromptProps = {
     step?: number;
     float?: boolean;
     decimals?: number;
-    onSubmit: (response: number) => void;
+    onSubmit: (data: number, textResponse: string) => void;
     isActive: boolean;
+    onEscape: () => void;
 };
 
 const NumberPrompt: React.FC<NumberPromptProps> = ({
@@ -22,42 +23,46 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     decimals = 2,
     onSubmit,
     isActive,
+    onEscape,
 }) => {
-    const { content, inputRef, handleInput, adjustStep, clearContent } = useNumberInput(
-        min,
-        max,
-        float,
-        decimals
-    );
+    const { content, inputRef, handleInput, adjustStep, clearContent } = useNumberPrompt(min, max, float, decimals);
 
-    const submitContent = () => {
-        if (content.trim() !== '') {
-            const numberContent: number = parseFloat(content);
-            if (!isNaN(numberContent)) {
-                onSubmit(numberContent);
-                clearContent();
-            }
+    const submit = () => {
+        if (content.trim() === '') {
+            return;
         }
+
+        const numberContent: number = parseFloat(content);
+        if (isNaN(numberContent)) {
+            return;
+        }
+
+        onSubmit(numberContent, content);
+        clearContent();
     };
 
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        preventDefaultEvents(event);
+
         if (event.key === 'Enter') {
-            event.preventDefault();
-            submitContent();
+            submit();
         }
         if (event.key === 'ArrowUp') {
-            event.preventDefault();
             adjustStep(step);
         }
         if (event.key === 'ArrowDown') {
-            event.preventDefault();
             adjustStep(-step);
         }
-        if (event.key === 'Tab' && isActive) {
-            event.preventDefault();
-        }
         if (event.key === 'Escape') {
-            // Escape, isActive and blur logic
+            onEscape();
+        }
+    };
+
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+
+        if (preventDefaultKeys.includes(event.key)) {
+            event.preventDefault();
         }
     };
 
@@ -67,7 +72,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
         }
     }, [isActive]);
 
-    const handleBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
+    const handleBlur = () => {
         if (isActive && inputRef.current) {
             setTimeout(() => {
                 inputRef.current?.focus();
@@ -76,18 +81,18 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     };
 
     return (
-        <div className='number-prompt'>
-            <span className='prompt-message'>{message}</span>
+        <div className="number-prompt">
+            <span className="prompt-message">{message}</span>
             <span
                 ref={inputRef}
                 contentEditable
-                className='number-field'
+                className="number-field"
                 onInput={handleInput}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
-                data-placeholder='Digite um comando...'
-                spellCheck='false'
-                autoCorrect='off'
+                data-placeholder="Digite um comando..."
+                spellCheck="false"
+                autoCorrect="off"
                 suppressContentEditableWarning={true}
             />
         </div>

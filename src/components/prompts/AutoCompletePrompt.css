@@ -1,34 +1,39 @@
-.select-prompt {
+.autocomplete-prompt {
     display: flex;
     flex-direction: column;
     outline: none;
 }
 
-.select-message {
+.autocomplete-message {
     margin-bottom: 0.6em;
     font-weight: bold;
 }
 
-.select-choices {
+.autocomplete-field {
+    margin-left: 1em;
+    outline: none;
+}
+
+.autocomplete-choices {
     display: flex;
     flex-direction: column;
 }
 
-.select-choice {
+.autocomplete-choice {
     margin-top: 0.2em;
 }
 
-.select-choice.checked {
+.autocomplete-choice.checked {
     color: var(--success);
     text-decoration: underline;
 }
 
-.select-choice.selected {
+.autocomplete-choice.selected {
     color: var(--primary-color);
     text-decoration: underline;
 }
 
-.select-navigation-hint {
+.autocomplete-navigation-hint {
     margin-top: 0.8rem;
     font-size: 0.8em;
     color: #768390;
