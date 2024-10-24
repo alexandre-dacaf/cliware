@@ -1,9 +1,9 @@
 import { BaseTask } from './base';
 
-export type PromptType = 'text' | 'confirm' | 'select' | 'multiselect' | 'number' | 'list' | 'date' | 'autocomplete' | 'password';
+export type PromptType = 'text' | 'toggle' | 'select' | 'multiselect' | 'number' | 'list' | 'date' | 'autocomplete' | 'password';
 
 export interface Choice {
-    value?: string | number;
+    value?: any;
     label: string;
 }
 
@@ -17,8 +17,8 @@ export interface TextPrompt extends BasePrompt {
     promptType: 'text';
 }
 
-export interface ConfirmPrompt extends BasePrompt {
-    promptType: 'confirm';
+export interface TogglePrompt extends BasePrompt {
+    promptType: 'toggle';
     trueLabel?: string;
     falseLabel?: string;
 }
@@ -45,15 +45,26 @@ export interface NumberPrompt extends BasePrompt {
 export interface ListPrompt extends BasePrompt {
     promptType: 'list';
     separator?: string;
+    trim?: boolean;
 }
 
 export interface DatePrompt extends BasePrompt {
     promptType: 'date';
 }
 
+export type DateLimitFunction = (value: number) => number;
+export type DateAdjustFunction = (amount: number) => void;
+export type DateFocusFunction = () => void;
+export interface DateKeyDownHandler {
+    adjust: DateAdjustFunction;
+    focusLeft: DateFocusFunction;
+    focusRight: DateFocusFunction;
+}
+
 export interface AutoCompletePrompt extends BasePrompt {
     promptType: 'autocomplete';
     choices: Choice[];
+    maxDisplayedOptions?: number;
 }
 
 export interface PasswordPrompt extends BasePrompt {
@@ -62,7 +73,7 @@ export interface PasswordPrompt extends BasePrompt {
 
 export type PromptTask =
     | TextPrompt
-    | ConfirmPrompt
+    | TogglePrompt
     | SelectPrompt
     | MultiselectPrompt
     | NumberPrompt

@@ -6,7 +6,7 @@ import TaskManager from './managers/TaskManager';
 import TerminalOutputHistory from 'components/outputs/TerminalOutputHistory';
 import TransientOutput from 'components/outputs/TransientOutput';
 import CommandInput from 'components/command-input/CommandInput';
-import usePrinter from 'hooks/output/usePrinter';
+import usePrinter from 'hooks/printer/usePrinter';
 import './Terminal.css';
 
 interface TerminalProps {
@@ -59,21 +59,10 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     };
 
     return (
-        <div
-            className={
-                'terminal ' +
-                (isActive ? 'active-terminal ' : ' ') +
-                (isSelected ? 'selected-terminal ' : ' ')
-            }
-            ref={terminalRef}
-        >
+        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
             <TerminalOutputHistory />
 
-            {state.commandBlueprint ? (
-                <TaskManager isActive={isActive} />
-            ) : (
-                <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />
-            )}
+            {state.commandBlueprint ? <TaskManager isActive={isActive} /> : <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />}
 
             <TransientOutput />
         </div>

@@ -13,12 +13,12 @@
 - [ ] **User Story 1.2 - As a dev, have advanced options and properties with the prompts**
     - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
     - [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
-    - [ ] 1.2.3 - Implement *format()* function to re-render (mask) prompt on input
     - [ ] 1.2.4 - Implement *default* answers on prompts
     - [ ] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
     - [ ] 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
     - [ ] 1.2.7 - Implement *hints* on Choices
-    - [ ] 1.2.8 - Implement *palceholders* on commands and prompts
+    - [ ] 1.2.8 - Implement *placeholders* on commands and prompts
+    - [ ] 1.2.9 - Implement *format()* function or pattern to (mask) input
     
 ## Epic 2: Themes & Styling
 
@@ -40,7 +40,7 @@
     - [ ] 2.3.4 - Implement action animations
     - [ ] 2.3.5 - Implement output animations
 
-## Epic 3: Commands
+## Epic 3: Commands & Actions
 
 - [ ] **User Story 3.1 - As a user, have easy help from commands, default options and aliases for commands**
     - [ ] 3.1.1 - Create a way to declare aliases for a command
@@ -50,6 +50,12 @@
     - [ ] 3.1.5 - Make auto-doc and auto-help required
 
 - [ ] **User Story 3.2 - As a user, have autocomplete on commands and default command options**
+    - [ ] 3.2.1 - Implement variable to keep track of available commands on CommandInput
+    - [ ] 3.2.2 - Change CommandInput to use the autocomplete logic
+    - [ ] 3.3.3 - Implement command history to go back to previous used commands (with history limit parametrized)
+
+- [ ] **User Story 3.3 - As a dev, have terminal and global parameters that can be accessed by actionFunction**
+    - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
 
 ## Epic 4: Outputs
 
@@ -63,7 +69,6 @@
 ## Epic 5: Refactoring
 
 - [ ] **User Story 5.1 - As a dev, have more componentization of the huge components (App and Terminal - maybe more)**
-    - [x] <s>*5.1.1 - Create custom hooks for all prompts*</s>
     - [ ] 5.1.2 - Create specific component to handle commands inside Terminal
     - [ ] 5.1.3 - Create specific component to handle prompts inside Terminal
     - [ ] 5.1.4 - Create specific component to handle actions inside Terminal
@@ -73,9 +78,7 @@
 
 - [ ] **User Story 5.2 - As a dev, separate presentation and logic with custom hooks**
     - [ ] 5.2.1 - Create custom hooks for all prompts
-    - [ ] 5.2.2 - Create custom hooks for the Terminal
     - [ ] 5.2.3 - Create custom hooks for the App
-    - [ ] 5.2.4 - Merge related hooks (example: useTextPrompt should have basic formatting features, and useNumberPrompt should use it)
 
 
 ## Epic 6: CI/CD
@@ -93,3 +96,4 @@
 
 ## Chores
 - [ ] Ch1 - Replace div-content-editables for inputs in prompts where it makes sense
+- [ ] Ch2 - Rename terminal-history (print-history) and transient-output (display)

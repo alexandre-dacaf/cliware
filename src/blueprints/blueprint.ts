@@ -1,4 +1,4 @@
-import { Blueprint, TaskStream } from 'types';
+import { Blueprint } from 'types';
 import { createTodo } from './actions';
 import { coreCommands } from './commands/core';
 
@@ -11,15 +11,12 @@ export const blueprint: Blueprint = {
                 type: 'prompt',
                 promptType: 'number',
                 message: 'Digite1:',
-                min: 4,
-                float: true,
                 next: 'q2',
             },
             q2: {
                 type: 'prompt',
                 promptType: 'number',
                 message: 'Digite2:',
-                min: 2,
                 next: 'act',
             },
             act: {

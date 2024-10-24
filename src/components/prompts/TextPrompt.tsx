@@ -1,9 +1,10 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
+import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import './TextPrompt.css';
 
 export type TextPromptProps = {
     message: string;
-    onSubmit: (data: string, textResponse: string) => void;
+    onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
 };
@@ -11,16 +12,25 @@ export type TextPromptProps = {
 const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive, onEscape }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
+    const { submit } = usePromptSubmitter(message, onSubmit);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
+    };
+
+    const handleEnter = () => {
+        const clear = () => {
+            setValue('');
+        };
+
+        submit({ data: value, clear });
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         preventDefaultEvents(event);
 
         if (event.key === 'Enter') {
-            submit();
+            handleEnter();
         }
         if (event.key === 'Escape') {
             onEscape();
@@ -28,22 +38,10 @@ const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive, on
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
-        }
-    };
-
-    const submit = () => {
-        if (value.trim() === '') {
-            return;
-        }
-
-        onSubmit(value.trim(), value.trim());
-        setValue('');
-        if (inputRef.current) {
-            inputRef.current.textContent = '';
         }
     };
 

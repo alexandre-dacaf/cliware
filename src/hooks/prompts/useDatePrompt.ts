@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-
-type LimitFunction = (value: number) => number;
+import { DateLimitFunction, DateKeyDownHandler } from 'types';
 
 const useDatePrompt = (initialYear: number, initialMonth: number, initialDay: number) => {
     const [date, setDate] = useState<Date | null>(null);
@@ -17,33 +16,15 @@ const useDatePrompt = (initialYear: number, initialMonth: number, initialDay: nu
         setDate(newDate);
 
         if (yearRef.current) {
-            const stringContent = year.toString();
-
-            if (isNaN(year)) {
-                yearRef.current.innerText = '';
-            } else {
-                yearRef.current.innerText = stringContent;
-            }
+            yearRef.current.innerText = year.toString();
         }
 
         if (monthRef.current) {
-            const stringContent = month.toString().padStart(2, '0');
-
-            if (isNaN(month)) {
-                monthRef.current.innerText = '';
-            } else {
-                monthRef.current.innerText = stringContent;
-            }
+            monthRef.current.innerText = month.toString().padStart(2, '0');
         }
 
         if (dayRef.current) {
-            const stringContent = day.toString().padStart(2, '0');
-
-            if (isNaN(day)) {
-                dayRef.current.innerText = '';
-            } else {
-                dayRef.current.innerText = stringContent;
-            }
+            dayRef.current.innerText = day.toString().padStart(2, '0');
         }
     }, [year, month, day]);
 
@@ -54,100 +35,81 @@ const useDatePrompt = (initialYear: number, initialMonth: number, initialDay: nu
     }, [year, month]);
 
     const adjustYear = (amount: number) => {
-        let yearValue = year;
-        yearValue += amount;
+        let yearValue = year + amount;
         yearValue = applyYearLimits(yearValue);
         setYear(yearValue);
-
-        if (yearRef.current) {
-            const stringContent = yearValue.toString();
-
-            if (isNaN(yearValue)) {
-                yearRef.current.innerText = '';
-            } else {
-                yearRef.current.innerText = stringContent;
-            }
-        }
     };
 
     const adjustMonth = (amount: number) => {
-        let monthValue = month;
-        monthValue += amount;
+        let monthValue = month + amount;
         monthValue = applyMonthLimits(monthValue);
         setMonth(monthValue);
-
-        if (monthRef.current) {
-            const stringContent = monthValue.toString().padStart(2, '0');
-
-            if (isNaN(monthValue)) {
-                monthRef.current.innerText = '';
-            } else {
-                monthRef.current.innerText = stringContent;
-            }
-        }
     };
 
     const adjustDay = (amount: number) => {
-        let dayValue = day;
-        dayValue += amount;
+        let dayValue = day + amount;
         dayValue = applyDayLimits(dayValue);
         setDay(dayValue);
-
-        if (dayRef.current) {
-            const stringContent = dayValue.toString().padStart(2, '0');
-
-            if (isNaN(dayValue)) {
-                dayRef.current.innerText = '';
-            } else {
-                dayRef.current.innerText = stringContent;
-            }
-        }
     };
 
-    const applyYearLimits: LimitFunction = (yearValue: number) => {
-        if (yearValue < 1) {
-            return 1;
-        }
-
+    const applyYearLimits: DateLimitFunction = (yearValue: number) => {
+        if (yearValue < 1) return 1;
         return yearValue;
     };
 
-    const applyMonthLimits: LimitFunction = (monthValue: number) => {
-        if (monthValue < 1) {
-            return 1;
-        }
-
-        if (monthValue > 12) {
-            return 12;
-        }
-
+    const applyMonthLimits: DateLimitFunction = (monthValue: number) => {
+        if (monthValue < 1) return 1;
+        if (monthValue > 12) return 12;
         return monthValue;
     };
 
-    const applyDayLimits: LimitFunction = (dayValue: number) => {
-        if (dayValue < 1) {
-            return 1;
-        }
+    const applyDayLimits: DateLimitFunction = (dayValue: number) => {
+        if (dayValue < 1) return 1;
 
         const maxDaysInMonth = new Date(year, month, 0).getDate();
-        if (dayValue > maxDaysInMonth) {
-            return maxDaysInMonth;
-        }
+        if (dayValue > maxDaysInMonth) return maxDaysInMonth;
 
         return dayValue;
     };
 
-    const clear = () => {
-        const currentTime = new Date();
-        const newYear = currentTime.getFullYear();
-        const newMonth = currentTime.getMonth() + 1;
-        const newDay = currentTime.getDate();
-        setYear(newYear);
-        setMonth(newMonth);
-        setDay(newDay);
+    const focusYear = () => {
+        yearRef.current?.focus();
     };
 
-    return { date, yearRef, monthRef, dayRef, adjustYear, adjustMonth, adjustDay, clear };
+    const focusMonth = () => {
+        monthRef.current?.focus();
+    };
+
+    const focusDay = () => {
+        dayRef.current?.focus();
+    };
+
+    const yearHandler: DateKeyDownHandler = {
+        adjust: adjustYear,
+        focusLeft: focusDay,
+        focusRight: focusMonth,
+    };
+
+    const monthHandler: DateKeyDownHandler = {
+        adjust: adjustMonth,
+        focusLeft: focusYear,
+        focusRight: focusDay,
+    };
+
+    const dayHandler: DateKeyDownHandler = {
+        adjust: adjustDay,
+        focusLeft: focusMonth,
+        focusRight: focusYear,
+    };
+
+    const clear = () => {
+        const currentTime = new Date();
+        setYear(currentTime.getFullYear());
+        setMonth(currentTime.getMonth() + 1);
+        setDay(currentTime.getDate());
+    };
+
+    return { date, yearRef, monthRef, dayRef, yearHandler, monthHandler, dayHandler, focusYear, clear };
 };
 
 export default useDatePrompt;

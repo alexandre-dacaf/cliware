@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Task, TaskStream } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
-import usePrinter from 'hooks/output/usePrinter';
+import usePrinter from 'hooks/printer/usePrinter';
 
 const useTaskManager = () => {
     const { state, dispatch } = useContext(TerminalContext);
@@ -9,7 +9,7 @@ const useTaskManager = () => {
     const [task, setTask] = useState<Task | null>(null);
     const [isExecuting, setIsExecuting] = useState<boolean>(false);
     const [taskStream, setTaskStream] = useState<TaskStream>({});
-    const { printInputOnHistory, printErrorOnHistory, printOnTerminalHistory, printTransientOutput, clearTransientOutput } = usePrinter();
+    const { printErrorOnHistory, printOnTerminalHistory, printTransientOutput, clearTransientOutput } = usePrinter();
 
     useEffect(() => {
         if (state.commandBlueprint) {
@@ -64,11 +64,10 @@ const useTaskManager = () => {
         }
     };
 
-    const handlePromptResponse = (data: any, textResponse: string) => {
+    const handlePromptResponse = (data: any) => {
         if (!taskKey || !task || task.type !== 'prompt') return;
 
         updateTaskStream(taskKey, data);
-        printInputOnHistory(`${task.message} ${textResponse}`);
 
         goToNextTask();
     };

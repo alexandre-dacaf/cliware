@@ -1,6 +1,7 @@
-import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import './NumberPrompt.css';
+import React, { useRef, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
 import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
+import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
+import './NumberPrompt.css';
 
 export type NumberPromptProps = {
     message: string;
@@ -9,7 +10,7 @@ export type NumberPromptProps = {
     step?: number;
     float?: boolean;
     decimals?: number;
-    onSubmit: (data: number, textResponse: string) => void;
+    onSubmit: (data: number) => void;
     isActive: boolean;
     onEscape: () => void;
 };
@@ -25,32 +26,34 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     isActive,
     onEscape,
 }) => {
-    const { value, inputRef, handleChange, adjustStep, clear } = useNumberPrompt(
-        min,
-        max,
-        float,
-        decimals
-    );
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { value, handleChange, adjustStep, clear } = useNumberPrompt(min, float, decimals);
+    const { submit } = usePromptSubmitter(message, onSubmit);
 
-    const submit = () => {
-        if (value.trim() === '') {
-            return;
-        }
+    const handleEnter = () => {
+        const validate = (inputValue: string) => {
+            const numberContent: number = parseFloat(inputValue);
+            if (isNaN(numberContent)) {
+                return 'Invalid number.';
+            }
+            if (numberContent < min) {
+                return `Minimum value is ${min}.`;
+            }
+            if (numberContent > max) {
+                return `Maximum value is ${max}.`;
+            }
 
-        const numberContent: number = parseFloat(value);
-        if (isNaN(numberContent)) {
-            return;
-        }
+            return true;
+        };
 
-        onSubmit(numberContent, value);
-        clear();
+        submit({ data: parseFloat(value), clear, validate });
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
         preventDefaultEvents(event);
 
         if (event.key === 'Enter') {
-            submit();
+            handleEnter();
         }
         if (event.key === 'ArrowUp') {
             adjustStep(step);
@@ -86,28 +89,9 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     };
 
     return (
-        <div className='number-prompt'>
-            <span className='prompt-message'>{message}</span>
-            <input
-                ref={inputRef}
-                className='text-field'
-                value={value}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-            />
-            {/* <span
-                ref={inputRef}
-                contentEditable
-                className='number-field'
-                onInput={handleInput}
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-                data-placeholder='Digite um comando...'
-                spellCheck='false'
-                autoCorrect='off'
-                suppressContentEditableWarning={true}
-            /> */}
+        <div className="number-prompt">
+            <span className="prompt-message">{message}</span>
+            <input ref={inputRef} className="number-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
         </div>
     );
 };

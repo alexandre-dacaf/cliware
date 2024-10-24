@@ -1,55 +1,58 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
+import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import './ListPrompt.css';
 
 export type ListPromptProps = {
     message: string;
     separator?: string;
-    onSubmit: (data: string[], textResponse: string) => void;
+    trim?: boolean;
+    onSubmit: (data: string[]) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
-const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', onSubmit, isActive, onEscape }) => {
-    const inputRef = useRef<HTMLDivElement>(null);
-    const [content, setContent] = useState<string>('');
+const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', trim = true, onSubmit, isActive, onEscape }) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [value, setValue] = useState<string>('');
+    const [list, setList] = useState<string[]>([]);
+    const { submit } = usePromptSubmitter(message, onSubmit);
 
-    const updateContent = () => {
-        if (inputRef.current) {
-            const currentContent: string = inputRef.current.textContent ?? '';
+    useEffect(() => {
+        let splitContent = value.split(separator);
 
-            setContent(currentContent);
-            // TODO formatting, validation, etc
+        if (trim) {
+            splitContent = splitContent.map((item) => item.trim());
+            splitContent = splitContent.filter((i) => i.length > 0);
         }
+
+        setList(splitContent);
+    }, [value]);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
     };
 
-    const submit = () => {
-        const trimmedContent = content.trim();
-        let splitContent = trimmedContent.split(separator);
-        splitContent = splitContent.map((item) => item.trim());
+    const handleEnter = () => {
+        const clear = () => {
+            setValue('');
+        };
 
-        if (trimmedContent !== '') {
-            onSubmit(splitContent, trimmedContent);
-            setContent('');
-            if (inputRef.current) {
-                inputRef.current.textContent = '';
-            }
-        }
+        submit({ data: list, clear });
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
         preventDefaultEvents(event);
 
         if (event.key === 'Enter') {
-            submit();
+            handleEnter();
         }
-
         if (event.key === 'Escape') {
             onEscape();
         }
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -62,7 +65,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', onSub
         }
     }, [isActive]);
 
-    const handleBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
+    const handleBlur = () => {
         if (isActive && inputRef.current) {
             setTimeout(() => {
                 inputRef.current?.focus();
@@ -73,18 +76,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', onSub
     return (
         <div className="text-prompt">
             <span className="prompt-message">{message}</span>
-            <span
-                ref={inputRef}
-                contentEditable
-                className="text-field"
-                onInput={updateContent}
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-                data-placeholder="Digite um comando..."
-                spellCheck="false"
-                autoCorrect="off"
-                suppressContentEditableWarning={true}
-            />
+            <input ref={inputRef} className="list-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
         </div>
     );
 };

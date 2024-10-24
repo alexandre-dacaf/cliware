@@ -1,5 +1,5 @@
 export { TextPrompt } from './TextPrompt';
-export { ConfirmPrompt } from './ConfirmPrompt';
+export { TogglePrompt } from './TogglePrompt';
 export { SelectPrompt } from './SelectPrompt';
 export { NumberPrompt } from './NumberPrompt';
 export { ListPrompt } from './ListPrompt';

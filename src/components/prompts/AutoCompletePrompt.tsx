@@ -1,23 +1,19 @@
-import React, { useMemo, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import React, { useMemo, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
+import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import { Choice } from 'types';
 import './AutoCompletePrompt.css';
 
 export type AutoCompletePromptProps = {
     message: string;
     choices: Choice[];
-    onSubmit: (data: Choice, textResponse: string) => void;
+    maxDisplayedOptions?: number;
+    onSubmit: (data: Choice) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
-const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
-    message,
-    choices,
-    onSubmit,
-    isActive,
-    onEscape,
-}) => {
+const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choices, maxDisplayedOptions = 10, onSubmit, isActive, onEscape }) => {
     const formattedChoices = useMemo(
         () =>
             choices.map((choice) => ({
@@ -27,19 +23,19 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         [choices]
     );
 
-    const { inputRef, filteredChoices, selectedIndex, handleInput, selectPrevious, selectNext } =
-        useAutoCompletePrompt(formattedChoices);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { value, setValue, filteredChoices, selectedIndex, handleChange, selectPrevious, selectNext } = useAutoCompletePrompt(formattedChoices);
+    const { submit } = usePromptSubmitter(message, onSubmit);
 
-    const submit = () => {
-        const data = filteredChoices[selectedIndex];
-        const textResponse = data.label;
-        onSubmit(data, textResponse);
-        if (inputRef.current) {
-            inputRef.current.textContent = '';
-        }
+    const handleEnter = () => {
+        const clear = () => {
+            setValue('');
+        };
+
+        submit({ data: filteredChoices[selectedIndex], clear });
     };
 
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         const key = event.key;
         const isShiftPressed = event.shiftKey;
         preventDefaultEvents(event);
@@ -51,14 +47,14 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
             selectPrevious();
         }
         if (key === 'Enter') {
-            submit();
+            handleEnter();
         }
         if (key === 'Escape') {
             onEscape();
         }
     };
 
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
@@ -72,7 +68,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         }
     }, [isActive]);
 
-    const handleBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
+    const handleBlur = () => {
         if (isActive && inputRef.current) {
             setTimeout(() => {
                 inputRef.current?.focus();
@@ -81,34 +77,19 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     };
 
     return (
-        <div className='autocomplete-prompt'>
+        <div className="autocomplete-prompt">
             <div>
-                <span className='autocomplete-message'>{message}</span>
-                <span
-                    ref={inputRef}
-                    contentEditable
-                    className='autocomplete-field'
-                    onInput={handleInput}
-                    onKeyDown={handleKeyDown}
-                    onBlur={handleBlur}
-                    data-placeholder='Digite um comando...'
-                    spellCheck='false'
-                    autoCorrect='off'
-                    suppressContentEditableWarning={true}
-                />
+                <span className="autocomplete-message">{message}</span>
+                <input ref={inputRef} className="autocomplete-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
             </div>
 
-            <div className='autocomplete-choices'>
-                {filteredChoices.map((choice, index) => (
-                    <span
-                        key={index}
-                        className={`autocomplete-choice ${
-                            selectedIndex === index ? 'selected' : ''
-                        }`}
-                    >
+            <div className="autocomplete-choices">
+                {filteredChoices.slice(0, maxDisplayedOptions).map((choice, index) => (
+                    <span key={index} className={`autocomplete-choice ${selectedIndex === index ? 'selected' : ''}`}>
                         {choice.label}
                     </span>
                 ))}
+                {filteredChoices.length > maxDisplayedOptions ? <span className="autocomplete-choice">...</span> : null}
             </div>
         </div>
     );

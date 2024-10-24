@@ -10,8 +10,15 @@
 }
 
 .autocomplete-field {
-    margin-left: 1em;
     outline: none;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #c6cdd5;
+    caret-color: #c6cdd5;
+    font-family: var(--font);
+    white-space: pre;
+    margin-left: 1rem;
 }
 
 .autocomplete-choices {

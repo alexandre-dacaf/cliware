@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
 import { PromptTask, TaskStream } from 'types';
-import { TextPrompt, ConfirmPrompt, SelectPrompt, NumberPrompt, ListPrompt, DatePrompt, AutoCompletePrompt, PasswordPrompt } from 'components/prompts';
+import { TextPrompt, TogglePrompt, SelectPrompt, NumberPrompt, ListPrompt, DatePrompt, AutoCompletePrompt, PasswordPrompt } from 'components/prompts';
 import { AppContext } from 'context/AppContext';
 import './PromptHandler.css';
 
 interface PromptHandlerProps {
     task: PromptTask;
     taskStream: TaskStream;
-    onNext: (data: any, textResponse: string) => void;
+    onNext: (data: any) => void;
     isActive: boolean;
 }
 
 const PromptHandler: React.FC<PromptHandlerProps> = ({ task, taskStream, onNext, isActive }) => {
     const { dispatch } = useContext(AppContext);
 
-    const handleResponse = (data: any, textResponse: string) => {
-        onNext(data, textResponse);
+    const handleResponse = (data: any) => {
+        onNext(data);
     };
 
     const deactivateTerminal = () => {
@@ -28,12 +28,12 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, taskStream, onNext,
         switch (task.promptType) {
             case 'text':
                 return <TextPrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
-            case 'confirm':
+            case 'toggle':
                 return (
-                    <ConfirmPrompt
+                    <TogglePrompt
                         message={task.message}
-                        choiceTrueLabel={task.trueLabel}
-                        choiceFalseLabel={task.falseLabel}
+                        trueLabel={task.trueLabel}
+                        falseLabel={task.falseLabel}
                         onSubmit={handleResponse}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -77,7 +77,14 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, taskStream, onNext,
                 );
             case 'list':
                 return (
-                    <ListPrompt message={task.message} separator={task.separator} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />
+                    <ListPrompt
+                        message={task.message}
+                        separator={task.separator}
+                        trim={task.trim}
+                        onSubmit={handleResponse}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
                 );
             case 'date':
                 return <DatePrompt message={task.message} onSubmit={handleResponse} isActive={isActive} onEscape={deactivateTerminal} />;
@@ -87,6 +94,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, taskStream, onNext,
                         message={task.message}
                         onSubmit={handleResponse}
                         choices={task.choices}
+                        maxDisplayedOptions={task.maxDisplayedOptions}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
                     />
