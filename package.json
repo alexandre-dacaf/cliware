@@ -1,6 +1,6 @@
 {
     "name": "cliware",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Front-end framework with cli-like experience, designed specifically for power users.",
     "private": true,
     "dependencies": {
