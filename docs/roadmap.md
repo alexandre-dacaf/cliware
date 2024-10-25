@@ -16,7 +16,7 @@
 - [x] 3.2.2 - Change CommandInput to use the autocomplete logic
 - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
     - [ ] Start with `cols` command
-- [x] Ch2 - Rename terminal-history (print-history) and transient-output (display)
+- [x] Chr2 - Rename terminal-history (print-history) and transient-output (display)
     - [x] Rename related functions on usePrinter and its uses
 
 ## Sprint 3: Refactor and formatting
@@ -31,7 +31,7 @@
 - [x] 5.1.7 - Create specific component inside App to handle terminal switching, creating, deleting, etc
 - [x] 5.2.1 - Create custom hooks for all prompts
 - [x] 5.2.3 - Create custom hooks for the App
-- [x] Ch1 - Replace div-content-editables for inputs in prompts where it makes sense
+- [x] Chr1 - Replace div-content-editables for inputs in prompts where it makes sense
 
 
 ## Sprint 2: All Prompt Types
