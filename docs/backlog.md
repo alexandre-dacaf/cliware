@@ -1,5 +1,6 @@
 # Backlog
 
+
 ## Epic 1: Prompts
 
 - [x] 🧩 **User Story 1.1 - As a dev, have all the different prompts and be able to create basic pipelines with them**
@@ -19,7 +20,8 @@
     - [ ] 1.2.7 - Implement *hints* on Choices
     - [ ] 1.2.8 - Implement *placeholders* on commands and prompts
     - [ ] 1.2.9 - Implement *format()* function or pattern to (mask) input
-    
+
+
 ## Epic 2: Themes & Styling
 
 - [ ] 🧩 **User Story 2.1 - As a dev, have a modularized and SASS/SCSS compliant styling/theming**
@@ -40,6 +42,7 @@
     - [ ] 2.3.4 - Implement action animations
     - [ ] 2.3.5 - Implement output animations
 
+
 ## Epic 3: Commands & Actions
 
 - [ ] 🧩 **User Story 3.1 - As a user, have easy help from commands, default options and aliases for commands**
@@ -56,6 +59,10 @@
 
 - [ ] 🧩 **User Story 3.3 - As a dev, have terminal and global parameters that can be accessed by actionFunction**
     - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
+    - [ ] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
+    - [ ] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions
+    - [ ] 3.3.4 - Create task stream/pipeline context to easily handle state and dispatch, and pass this context to actionFunction on useTaskHandler
+
 
 ## Epic 4: Outputs
 
@@ -65,6 +72,7 @@
     - [ ] 4.1.3 - Implement basic clackjs-like interfaces
     - [ ] 4.1.4 - Implement ways of calling this outputs from tasks (prompts, actions and outputs) and from hooks (maybe events?)
     - [ ] 4.1.5 - Implement callable error output
+
 
 ## Epic 5: Refactoring
 
@@ -94,6 +102,7 @@
         - [ ] 5.3.4.1 - Base prompt must usePromptSubmitter, making the submit function available to the prompts
         - [ ] 5.3.4.2 - Each prompt must create its own validate, clear, etc functions, passing it to the base prompt
 
+
 ## Epic 6: CI/CD
 
 - [ ] 🧩 **User Story 6.1 - As a dev, have automated testing, linting and pre-commit/push handling**
@@ -107,10 +116,19 @@
 
 - [ ] 🧩 **User Story 6.3 - As a dev, have a reliable building process**
 
+
 ## Chores
 - [x] Chr1 - Replace div-content-editables for inputs in prompts where it makes sense
 - [ ] Chr2 - Rename terminal-history (print-history) and transient-output (display)
 
+
 ## Spikes
 
+
 ## Bugs & Fixes
+- [ ] Bug1 - Terminal create, delete and select is inconsistent.
+    - [ ] Bug1.1 - There shouldn't be less than 1 terminal
+    - [ ] Bug1.2 - Terminal select should use indexes, not ids
+    - [ ] Bug1.3 - Terminal create should get the biggest id and create id+1, on last index of array
+    - [ ] Bug1.4 - Terminal delete shouldn't happen when only one terminal (see Bug1.1)
+    - [ ] Bug1.5 - When terminal delete, active or selected index should remain the same because the next terminal will take the deleted one's place

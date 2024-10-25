@@ -15,7 +15,9 @@
 - [x] 3.2.1 - Implement variable to keep track of available commands on CommandInput
 - [x] 3.2.2 - Change CommandInput to use the autocomplete logic
 - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
-    - [ ] Start with `cols` command
+- [ ] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
+- [ ] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions
+- [ ] 3.3.4 - Create task stream/pipeline context to easily handle state and dispatch, and pass this context to actionFunction on useTaskHandler
 - [x] Chr2 - Rename terminal-history (print-history) and transient-output (display)
     - [x] Rename related functions on usePrinter and its uses
 
