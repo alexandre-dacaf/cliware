@@ -1,6 +1,12 @@
 import { ActionFunction } from '../../types';
 
-export const changeTerminalColumns: ActionFunction = (taskKey, taskStream, printOnTerminalHistory, printTransientOutput, clearTransientOutput) => {
+export const changeTerminalColumns: ActionFunction = (
+    taskKey,
+    taskStream,
+    print,
+    display,
+    clearDisplay
+) => {
     if (taskStream) {
         const columns: number = +taskStream.$cmd.args[0];
 

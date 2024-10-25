@@ -13,7 +13,14 @@ export type TogglePromptProps = {
     onEscape: () => void;
 };
 
-const TogglePrompt: React.FC<TogglePromptProps> = ({ message, onSubmit, trueLabel, falseLabel, isActive, onEscape }) => {
+const TogglePrompt: React.FC<TogglePromptProps> = ({
+    message,
+    onSubmit,
+    trueLabel,
+    falseLabel,
+    isActive,
+    onEscape,
+}) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const choices: Choice[] = [
         { label: falseLabel ?? 'No', value: false },
@@ -21,11 +28,11 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({ message, onSubmit, trueLabe
     ];
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const { submit } = usePromptSubmitter(message, onSubmit);
-    const { printInputOnHistory } = usePrinter();
+    const { printInput } = usePrinter();
 
     const handleEnter = () => {
         const print = () => {
-            printInputOnHistory(`${message} ${choices[selectedIndex].label}`);
+            printInput(`${message} ${choices[selectedIndex].label}`);
         };
 
         submit({ data: choices[selectedIndex].value, print });
@@ -38,7 +45,11 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({ message, onSubmit, trueLabe
 
         if (key === 'ArrowLeft' || key === 'ArrowUp' || (key === 'Tab' && isShiftPressed)) {
             setSelectedIndex((prevIndex) => (prevIndex === 0 ? choices.length - 1 : prevIndex - 1));
-        } else if (key === 'ArrowRight' || key === 'ArrowDown' || (key === 'Tab' && !isShiftPressed)) {
+        } else if (
+            key === 'ArrowRight' ||
+            key === 'ArrowDown' ||
+            (key === 'Tab' && !isShiftPressed)
+        ) {
             setSelectedIndex((prevIndex) => (prevIndex === choices.length - 1 ? 0 : prevIndex + 1));
         } else if (key === 'Enter') {
             handleEnter();
@@ -48,7 +59,15 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({ message, onSubmit, trueLabe
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+        const preventDefaultKeys = [
+            'Enter',
+            'Tab',
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'Escape',
+        ];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -63,23 +82,36 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({ message, onSubmit, trueLabe
 
     const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
         const relatedTarget = event.relatedTarget as HTMLElement | null;
-        if (containerRef.current && relatedTarget && !containerRef.current.contains(relatedTarget)) {
+        if (
+            containerRef.current &&
+            relatedTarget &&
+            !containerRef.current.contains(relatedTarget)
+        ) {
             // Focus completelly left containerRef
             containerRef.current.focus();
         }
     };
 
     return (
-        <div ref={containerRef} className="confirm-prompt" tabIndex={0} onKeyDown={handleKeyDown} onBlur={handleBlur}>
+        <div
+            ref={containerRef}
+            className='confirm-prompt'
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+        >
             <div>
-                <span className="confirm-message">{message}</span>
+                <span className='confirm-message'>{message}</span>
                 {choices.map((choice, index) => (
-                    <span key={index} className={`confirm-choice ${selectedIndex === index ? 'selected' : ''}`}>
+                    <span
+                        key={index}
+                        className={`confirm-choice ${selectedIndex === index ? 'selected' : ''}`}
+                    >
                         {choice.label}
                     </span>
                 ))}
             </div>
-            <span className="confirm-navigation-hint">
+            <span className='confirm-navigation-hint'>
                 <em>Use arrow keys to navigate and Enter to confirm.</em>
             </span>
         </div>

@@ -10,11 +10,16 @@ export type PasswordPromptProps = {
     onEscape: () => void;
 };
 
-const PasswordPrompt: React.FC<PasswordPromptProps> = ({ message, onSubmit, isActive, onEscape }) => {
+const PasswordPrompt: React.FC<PasswordPromptProps> = ({
+    message,
+    onSubmit,
+    isActive,
+    onEscape,
+}) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
     const { submit } = usePromptSubmitter(message, onSubmit);
-    const { printInputOnHistory } = usePrinter();
+    const { printInput } = usePrinter();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const currentContent: string = event.target.value;
@@ -23,7 +28,7 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({ message, onSubmit, isAc
 
     const handleEnter = () => {
         const print = () => {
-            printInputOnHistory(`${message} ${'•'.repeat(8)}`);
+            printInput(`${message} ${'•'.repeat(8)}`);
         };
 
         const clear = () => {
@@ -67,12 +72,12 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({ message, onSubmit, isAc
     };
 
     return (
-        <div className="password-prompt">
-            <span className="prompt-message">{message}</span>
+        <div className='password-prompt'>
+            <span className='prompt-message'>{message}</span>
             <input
                 ref={inputRef}
-                type="password"
-                className="password-field"
+                type='password'
+                className='password-field'
                 value={value}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}

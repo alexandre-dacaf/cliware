@@ -9,7 +9,7 @@ const useTaskManager = () => {
     const [task, setTask] = useState<Task | null>(null);
     const [isExecuting, setIsExecuting] = useState<boolean>(false);
     const [taskStream, setTaskStream] = useState<TaskStream>({});
-    const { printErrorOnHistory, printOnTerminalHistory, printTransientOutput, clearTransientOutput } = usePrinter();
+    const { printError, print, display, clearDisplay } = usePrinter();
 
     useEffect(() => {
         if (state.commandBlueprint) {
@@ -78,7 +78,13 @@ const useTaskManager = () => {
         try {
             setIsExecuting(true);
 
-            const response = await task.actionFunction(taskKey, taskStream, printOnTerminalHistory, printTransientOutput, clearTransientOutput);
+            const response = await task.actionFunction(
+                taskKey,
+                taskStream,
+                print,
+                display,
+                clearDisplay
+            );
 
             updateTaskStream(taskKey, response);
 
@@ -96,7 +102,7 @@ const useTaskManager = () => {
 
     const handleError = (error: any) => {
         console.error('Erro no Terminal:', error?.message ?? 'ERROR');
-        printErrorOnHistory(error);
+        printError(error);
         endPipelineAndStandby();
     };
 

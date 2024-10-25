@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { TerminalContext } from 'context/TerminalContext';
-import './TerminalOutputHistory.css';
+import './PrintHistory.css';
 
-const TerminalOutputHistory: React.FC = () => {
+const PrintHistory: React.FC = () => {
     const { state } = useContext(TerminalContext);
 
     return (
-        <div className="history">
-            {state.terminalOutputHistory.map((entry, index) => {
+        <div className='history'>
+            {state.printHistory.map((entry, index) => {
                 return (
                     <div key={index} className={`terminal-${entry.type}`}>
                         {entry.content}
@@ -18,6 +18,6 @@ const TerminalOutputHistory: React.FC = () => {
     );
 };
 
-TerminalOutputHistory.displayName = 'TerminalOutputHistory';
+PrintHistory.displayName = 'PrintHistory';
 
-export default TerminalOutputHistory;
+export default PrintHistory;

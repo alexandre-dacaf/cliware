@@ -4,8 +4,6 @@
 
 > Version 0.4.0
 
-> [!TIP]
-
 - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
 - [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
 - [ ] 1.2.4 - Implement *default* answers on prompts
@@ -18,8 +16,8 @@
 - [x] 3.2.2 - Change CommandInput to use the autocomplete logic
 - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
     - [ ] Start with `cols` command
-- [ ] Ch2 - Rename terminal-history (print-history) and transient-output (display)
-    - [ ] Rename related functions on usePrinter and its uses
+- [x] Ch2 - Rename terminal-history (print-history) and transient-output (display)
+    - [x] Rename related functions on usePrinter and its uses
 
 ## Sprint 3: Refactor and formatting
 

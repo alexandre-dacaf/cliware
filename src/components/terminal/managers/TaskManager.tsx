@@ -7,7 +7,8 @@ interface TaskManagerProps {
 }
 
 const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
-    const { state, currentTaskKey, currentTask, taskStream, handlePromptResponse } = useTaskManager();
+    const { state, currentTaskKey, currentTask, taskStream, handlePromptResponse } =
+        useTaskManager();
 
     const renderCurrentTask = () => {
         if (!state.commandBlueprint) {
@@ -20,7 +21,14 @@ const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
 
         switch (currentTask.type) {
             case 'prompt':
-                return <PromptHandler task={currentTask} taskStream={taskStream} onNext={handlePromptResponse} isActive={isActive} />;
+                return (
+                    <PromptHandler
+                        task={currentTask}
+                        taskStream={taskStream}
+                        onNext={handlePromptResponse}
+                        isActive={isActive}
+                    />
+                );
             case 'action':
                 // 'action' tasks are not rendered directly
                 return null;

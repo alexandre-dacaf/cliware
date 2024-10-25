@@ -12,7 +12,7 @@ interface PromptSubmitArgs {
 type PromptSubmitFunction = (args: PromptSubmitArgs) => void | boolean;
 
 const usePromptSubmitter = (message: string, onPromptSubmit: (data: any) => void) => {
-    const { printInputOnHistory, printTransientOutput, clearTransientOutput } = usePrinter();
+    const { printInput, display, clearDisplay } = usePrinter();
 
     const returnTrue = () => {
         return true;
@@ -48,7 +48,7 @@ const usePromptSubmitter = (message: string, onPromptSubmit: (data: any) => void
         }
 
         output = `${message} ${output}`;
-        printInputOnHistory(output);
+        printInput(output);
     };
 
     const pass = () => {};
@@ -63,27 +63,25 @@ const usePromptSubmitter = (message: string, onPromptSubmit: (data: any) => void
         const checkResult = checkRequired(data);
         if (checkResult !== true) {
             setTimeout(() => {
-                clearTransientOutput();
+                clearDisplay();
             }, 2000);
-            printTransientOutput(checkResult === false ? 'Input required.' : checkResult);
+            display(checkResult === false ? 'Input required.' : checkResult);
             return;
         }
 
         const validateResult = validate(data);
         if (validateResult !== true) {
             setTimeout(() => {
-                clearTransientOutput();
+                clearDisplay();
             }, 2000);
-            printTransientOutput(
-                validateResult === false ? 'Input validation failed.' : validateResult
-            );
+            display(validateResult === false ? 'Input validation failed.' : validateResult);
             return;
         }
 
         print(data);
         onPromptSubmit(data);
         clear();
-        clearTransientOutput();
+        clearDisplay();
     };
 
     return { submit };

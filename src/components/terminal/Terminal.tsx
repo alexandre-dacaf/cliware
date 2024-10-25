@@ -3,8 +3,8 @@ import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
 import { blueprint } from 'blueprints/blueprint';
 import { CommandArgs, CommandBlueprint } from 'types';
 import TaskManager from './managers/TaskManager';
-import TerminalOutputHistory from 'components/outputs/TerminalOutputHistory';
-import TransientOutput from 'components/outputs/TransientOutput';
+import PrintHistory from 'components/outputs/PrintHistory';
+import Display from 'components/outputs/Display';
 import CommandInput from 'components/command-input/CommandInput';
 import usePrinter from 'hooks/printer/usePrinter';
 import './Terminal.css';
@@ -25,7 +25,7 @@ const Terminal: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected })
 
 const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected }) => {
     const { state, dispatch } = useContext(TerminalContext);
-    const { printOnTerminalHistory } = usePrinter();
+    const { print } = usePrinter();
     const terminalRef = useRef<HTMLDivElement>(null);
 
     const availableCommands = useMemo(() => Object.keys(blueprint).sort(), [blueprint]);
@@ -35,7 +35,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
         if (terminalRef.current) {
             terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
         }
-    }, [state.terminalOutputHistory, state.transientOutput]);
+    }, [state.printHistory, state.display]);
 
     const handleCommandSubmit = (commandString: string, commandArgs: CommandArgs) => {
         dispatch({
@@ -50,9 +50,9 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
                 type: 'SET_COMMAND_BLUEPRINT',
                 payload: commandBlueprint,
             });
-            printOnTerminalHistory({ type: 'command', content: `$ ${commandString}` });
+            print({ type: 'command', content: `$ ${commandString}` });
         } else {
-            printOnTerminalHistory([
+            print([
                 { type: 'command', content: `$ ${commandString}` },
                 { type: 'error', content: `Command ${commandArgs.command} not found.` },
             ]);
@@ -69,7 +69,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
             }
             ref={terminalRef}
         >
-            <TerminalOutputHistory />
+            <PrintHistory />
 
             {state.commandBlueprint ? (
                 <TaskManager isActive={isActive} />
@@ -81,7 +81,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
                 />
             )}
 
-            <TransientOutput />
+            <Display />
         </div>
     );
 };

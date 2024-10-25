@@ -8,8 +8,8 @@ export interface HistoryEntry {
 export interface TerminalState {
     commandArgs: CommandArgs | null;
     commandBlueprint: CommandBlueprint | null;
-    terminalOutputHistory: HistoryEntry[];
-    transientOutput: string | null;
+    printHistory: HistoryEntry[];
+    display: string | null;
 }
 
 export type TerminalAction =

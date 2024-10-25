@@ -4,9 +4,9 @@ import { HistoryEntry } from './terminal';
 export type ActionFunction = (
     taskKey: TaskKey,
     taskStream: TaskStream,
-    printOnTerminalHistory: (entry: HistoryEntry) => void,
-    printTransientOutput: (message: string | JSX.Element) => void,
-    clearTransientOutput: () => void
+    print: (entry: HistoryEntry) => void,
+    display: (message: string | JSX.Element) => void,
+    clearDisplay: () => void
 ) => Promise<any> | any;
 
 export interface ActionTask extends BaseTask {
