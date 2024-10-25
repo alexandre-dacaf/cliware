@@ -1,6 +1,15 @@
 import { BaseTask } from './base';
 
-export type PromptType = 'text' | 'toggle' | 'select' | 'multiselect' | 'number' | 'list' | 'date' | 'autocomplete' | 'password';
+export type PromptType =
+    | 'text'
+    | 'toggle'
+    | 'select'
+    | 'multiselect'
+    | 'number'
+    | 'list'
+    | 'date'
+    | 'autocomplete'
+    | 'password';
 
 export interface Choice {
     value?: any;
@@ -64,7 +73,7 @@ export interface DateKeyDownHandler {
 export interface AutoCompletePrompt extends BasePrompt {
     promptType: 'autocomplete';
     choices: Choice[];
-    maxDisplayedOptions?: number;
+    itemsPerPage?: number;
 }
 
 export interface PasswordPrompt extends BasePrompt {

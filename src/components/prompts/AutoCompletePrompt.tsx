@@ -7,13 +7,20 @@ import './AutoCompletePrompt.css';
 export type AutoCompletePromptProps = {
     message: string;
     choices: Choice[];
-    maxDisplayedOptions?: number;
+    itemsPerPage?: number;
     onSubmit: (data: Choice) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
-const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choices, maxDisplayedOptions = 10, onSubmit, isActive, onEscape }) => {
+const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
+    message,
+    choices,
+    itemsPerPage = 10,
+    onSubmit,
+    isActive,
+    onEscape,
+}) => {
     const formattedChoices = useMemo(
         () =>
             choices.map((choice) => ({
@@ -24,7 +31,19 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choice
     );
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const { value, setValue, filteredChoices, selectedIndex, handleChange, selectPrevious, selectNext } = useAutoCompletePrompt(formattedChoices);
+    const {
+        value,
+        setValue,
+        pageChoices,
+        pageIndex,
+        handleChange,
+        selectPrevious,
+        selectNext,
+        nextPage,
+        prevPage,
+        currentPage,
+        totalPages,
+    } = useAutoCompletePrompt(formattedChoices, itemsPerPage);
     const { submit } = usePromptSubmitter(message, onSubmit);
 
     const handleEnter = () => {
@@ -32,18 +51,19 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choice
             setValue('');
         };
 
-        submit({ data: filteredChoices[selectedIndex], clear });
+        submit({ data: pageChoices[pageIndex], clear });
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         const key = event.key;
+
         const isShiftPressed = event.shiftKey;
         preventDefaultEvents(event);
 
-        if ((key === 'Tab' && !isShiftPressed) || key === 'ArrowDown') {
+        if (key === 'ArrowDown') {
             selectNext();
         }
-        if ((key === 'Tab' && isShiftPressed) || key === 'ArrowUp') {
+        if (key === 'ArrowUp') {
             selectPrevious();
         }
         if (key === 'Enter') {
@@ -52,10 +72,16 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choice
         if (key === 'Escape') {
             onEscape();
         }
+        if (key === 'PageDown') {
+            nextPage();
+        }
+        if (key === 'PageUp') {
+            prevPage();
+        }
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape', 'PageDown', 'PageUp'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -77,19 +103,33 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({ message, choice
     };
 
     return (
-        <div className="autocomplete-prompt">
+        <div className='autocomplete-prompt'>
             <div>
-                <span className="autocomplete-message">{message}</span>
-                <input ref={inputRef} className="autocomplete-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
+                <span className='autocomplete-message'>{message}</span>
+                <input
+                    ref={inputRef}
+                    className='autocomplete-field'
+                    value={value}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleBlur}
+                />
             </div>
 
-            <div className="autocomplete-choices">
-                {filteredChoices.slice(0, maxDisplayedOptions).map((choice, index) => (
-                    <span key={index} className={`autocomplete-choice ${selectedIndex === index ? 'selected' : ''}`}>
+            <div className='autocomplete-choices'>
+                {pageChoices.map((choice, index) => (
+                    <span
+                        key={index}
+                        className={`autocomplete-choice ${pageIndex === index ? 'selected' : ''}`}
+                    >
                         {choice.label}
                     </span>
                 ))}
-                {filteredChoices.length > maxDisplayedOptions ? <span className="autocomplete-choice">...</span> : null}
+                {choices.length > itemsPerPage ? (
+                    <em className='autocomplete-pages'>
+                        Page {currentPage + 1}/{totalPages}
+                    </em>
+                ) : null}
             </div>
         </div>
     );

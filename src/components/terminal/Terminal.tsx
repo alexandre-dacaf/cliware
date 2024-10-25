@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext, useMemo } from 'react';
 import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
 import { blueprint } from 'blueprints/blueprint';
 import { CommandArgs, CommandBlueprint } from 'types';
@@ -27,6 +27,8 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     const { state, dispatch } = useContext(TerminalContext);
     const { printOnTerminalHistory } = usePrinter();
     const terminalRef = useRef<HTMLDivElement>(null);
+
+    const availableCommands = useMemo(() => Object.keys(blueprint).sort(), [blueprint]);
 
     useEffect(() => {
         // Scroll to the end of the terminal whenever the history changes
@@ -59,10 +61,25 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     };
 
     return (
-        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
+        <div
+            className={
+                'terminal ' +
+                (isActive ? 'active-terminal ' : ' ') +
+                (isSelected ? 'selected-terminal ' : ' ')
+            }
+            ref={terminalRef}
+        >
             <TerminalOutputHistory />
 
-            {state.commandBlueprint ? <TaskManager isActive={isActive} /> : <CommandInput onSubmit={handleCommandSubmit} isActive={isActive} />}
+            {state.commandBlueprint ? (
+                <TaskManager isActive={isActive} />
+            ) : (
+                <CommandInput
+                    availableCommands={availableCommands}
+                    onSubmit={handleCommandSubmit}
+                    isActive={isActive}
+                />
+            )}
 
             <TransientOutput />
         </div>

@@ -40,8 +40,8 @@
     text-decoration: underline;
 }
 
-.autocomplete-navigation-hint {
-    margin-top: 0.8rem;
-    font-size: 0.8em;
-    color: #768390;
+.autocomplete-pages {
+    margin-top: 0.5rem;
+    font-size: 0.9em;
+    color: var(--neutral-700);
 }

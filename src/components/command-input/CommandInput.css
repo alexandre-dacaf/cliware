@@ -1,11 +1,13 @@
 .command-input-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    outline: none;
     margin-top: 0.8em;
 }
 
 .command-prompt {
-    margin-right: 5px;
+    margin-bottom: 0.6em;
+    font-weight: bold;
     color: #89929b;
 }
 
@@ -22,12 +24,34 @@
     border: none;
     background: transparent;
     font-size: 1rem;
-    color: #d4d4d4;
+    margin-left: 0.5em;
+    color: #c6cdd5;
+    caret-color: #c6cdd5;
     font-family: var(--font);
     white-space: pre;
 }
 
-.command-input:empty::before {
-    content: attr(data-placeholder);
-    color: #768390;
+.div-available-commands {
+    display: flex;
+    flex-direction: column;
+}
+
+.available-command {
+    margin-top: 0.2em;
+}
+
+.available-command.checked {
+    color: var(--success);
+    text-decoration: underline;
+}
+
+.available-command.selected {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.command-pages {
+    margin-top: 0.5rem;
+    font-size: 0.9em;
+    color: var(--neutral-700);
 }

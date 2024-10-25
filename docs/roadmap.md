@@ -5,7 +5,6 @@
 > Version 0.4.0
 
 > [!TIP]
-> - [ ] 3.2.1 - Implement variable to keep track of available commands on CommandInput
 
 - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
 - [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
@@ -15,7 +14,8 @@
 - [ ] 1.2.7 - Implement *hints* on Choices
 - [ ] 1.2.8 - Implement *placeholders* on commands and prompts
 - [ ] 1.2.9 - Implement *mask()* function or pattern to (mask) input
-- [ ] 3.2.2 - Change CommandInput to use the autocomplete logic
+- [x] 3.2.1 - Implement variable to keep track of available commands on CommandInput
+- [x] 3.2.2 - Change CommandInput to use the autocomplete logic
 - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
     - [ ] Start with `cols` command
 - [ ] Ch2 - Rename terminal-history (print-history) and transient-output (display)
