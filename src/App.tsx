@@ -3,6 +3,8 @@ import Terminal from 'components/terminal/Terminal';
 import { AppProvider } from 'context/AppContext';
 import useApp from 'hooks/app/useApp';
 import 'App.css';
+import { stat } from 'fs';
+import useAppDispatcher from 'hooks/app/useAppDispatcher';
 
 const App: React.FC = () => {
     return (
@@ -13,19 +15,18 @@ const App: React.FC = () => {
 };
 
 const TerminalContainer: React.FC = () => {
+    const { state, terminalContainerRef, someTerminalActive, focusSelf } = useApp();
     const {
-        state,
-        terminalContainerRef,
-        columns,
-        terminals,
+        createTerminal,
+        deleteCurrentTerminal,
         selectNextTerminal,
         selectPreviousTerminal,
         activateTerminal,
-        someTerminalActive,
-        createTerminal,
-        deleteTerminal,
-        focusSelf,
-    } = useApp();
+    } = useAppDispatcher();
+
+    useEffect(() => {
+        console.log(state);
+    }, [state]);
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (someTerminalActive()) return;
@@ -42,7 +43,7 @@ const TerminalContainer: React.FC = () => {
         } else if (key === 'Enter') {
             activateTerminal();
         } else if (key === 'Delete') {
-            deleteTerminal();
+            deleteCurrentTerminal();
         } else if (key === 'n') {
             createTerminal();
         }
@@ -55,7 +56,7 @@ const TerminalContainer: React.FC = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [state, terminals]);
+    }, [state]);
 
     const handleBlur = () => {
         if (!someTerminalActive() && terminalContainerRef.current) {
@@ -65,20 +66,28 @@ const TerminalContainer: React.FC = () => {
         }
     };
 
+    const isActive = (terminalId: string) => {
+        return terminalId === state.currentTerminalId && state.currentTerminalState === 'active';
+    };
+
+    const isFocused = (terminalId: string) => {
+        return terminalId === state.currentTerminalId && state.currentTerminalState === 'focused';
+    };
+
     return (
         <div
             ref={terminalContainerRef}
             tabIndex={0}
-            className="terminal-container"
+            className='terminal-container'
             onBlur={handleBlur}
-            style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+            style={{ gridTemplateColumns: `repeat(${state.terminalColumns}, 1fr)` }}
         >
-            {terminals.map((terminal) => (
+            {state.terminalList.map((terminal) => (
                 <Terminal
                     key={terminal.id}
                     terminalId={terminal.id}
-                    isActive={terminal.id === state.activeTerminalId}
-                    isSelected={terminal.id === state.selectedTerminalId}
+                    isActive={isActive(terminal.id)}
+                    isSelected={isFocused(terminal.id)}
                 />
             ))}
         </div>

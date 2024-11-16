@@ -1,121 +1,154 @@
 import { useState, useEffect, useContext } from 'react';
-import { Task, TaskStream } from 'types';
+import { PipelineData, PipelineContext, TaskKey, NextTask, CommandBlueprint } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
+import { AppContext } from 'context/AppContext';
 import usePrinter from 'hooks/printer/usePrinter';
+import useAppDispatcher from 'hooks/app/useAppDispatcher';
 
 const useTaskManager = () => {
-    const { state, dispatch } = useContext(TerminalContext);
-    const [taskKey, setTaskKey] = useState<string | null>(null);
-    const [task, setTask] = useState<Task | null>(null);
-    const [isExecuting, setIsExecuting] = useState<boolean>(false);
-    const [taskStream, setTaskStream] = useState<TaskStream>({});
-    const { printError, print, display, clearDisplay } = usePrinter();
+    const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
+    const [currentPipelineContext, setCurrentPipelineContext] = useState<PipelineContext | null>(null);
+    const printer = usePrinter();
+    const appDispatcher = useAppDispatcher();
 
     useEffect(() => {
-        if (state.commandBlueprint) {
-            const commandBlueprint = state.commandBlueprint;
+        const initiatePipeline = async () => {
+            const commandBlueprint = terminalState.commandBlueprint;
+
+            if (!commandBlueprint) return;
+
             const commandEntrypoint = commandBlueprint.entrypoint;
             const commandPipeline = commandBlueprint.pipeline;
 
-            if (commandPipeline && commandEntrypoint) {
-                const firstTaskKey = commandEntrypoint;
-                setTaskKey(firstTaskKey);
-            }
-        }
-    }, [state.commandBlueprint]);
+            if (!commandEntrypoint || !commandPipeline) return;
 
-    useEffect(() => {
-        if (taskKey && state.commandBlueprint) {
-            const { pipeline } = state.commandBlueprint;
-            const currentTask = pipeline[taskKey];
-            setTask(currentTask);
-        }
-    }, [taskKey]);
+            const startTaskKey = commandEntrypoint;
 
-    useEffect(() => {
-        if (isExecuting) return;
+            const pipelineContext = generatePipelineContext(startTaskKey, commandBlueprint);
+            await startTask(pipelineContext);
+        };
 
-        if (!taskKey || !task) return;
+        initiatePipeline();
+    }, [terminalState.commandBlueprint]);
 
-        switch (task.type) {
+    const generatePipelineContext = (taskKey: TaskKey, commandBlueprint: CommandBlueprint) => {
+        const startPipelineData = Object.keys(commandBlueprint.pipeline).reduce((acc, key) => {
+            acc[key] = null;
+            return acc;
+        }, {} as PipelineData);
+
+        return {
+            currentTaskKey: taskKey,
+            pipelineData: startPipelineData,
+            pipelineBlueprint: commandBlueprint.pipeline,
+            commandArgs: terminalState.commandArgs,
+            printer,
+            appDispatcher,
+        };
+    };
+
+    const startTask = async (pipelineContext: PipelineContext) => {
+        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const currentTaskKey = pipelineContext.currentTaskKey;
+        const currentTask = pipelineBlueprint[currentTaskKey];
+
+        if (!currentTask) return;
+
+        switch (currentTask.type) {
             case 'action':
-                handleActionTask();
+                await handleActionTask(pipelineContext);
                 break;
-            default:
+            case 'prompt':
+                await savePipelineContextForPromptResponse(pipelineContext);
                 break;
-        }
-    }, [task, isExecuting]);
-
-    const goToNextTask = () => {
-        if (!task) return;
-
-        const { next } = task;
-        const commandPipeline = state.commandBlueprint?.pipeline;
-
-        const nextTaskKey = typeof next === 'function' ? next(taskStream) : next;
-
-        if (commandPipeline) {
-            if (!nextTaskKey || !(nextTaskKey in commandPipeline)) {
-                endPipelineAndStandby();
-                return;
-            }
-
-            setTaskKey(nextTaskKey);
         }
     };
 
-    const handlePromptResponse = (data: any) => {
-        if (!taskKey || !task || task.type !== 'prompt') return;
+    const handleActionTask = async (pipelineContext: PipelineContext) => {
+        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const currentTaskKey = pipelineContext.currentTaskKey;
+        const currentTask = pipelineBlueprint[currentTaskKey];
 
-        updateTaskStream(taskKey, data);
-
-        goToNextTask();
-    };
-
-    const handleActionTask = async () => {
-        if (!taskKey || !task || task.type !== 'action') return;
+        if (!currentTask || currentTask.type !== 'action') return;
 
         try {
-            setIsExecuting(true);
+            const pipelineData = pipelineContext.pipelineData;
+            const response = await currentTask.actionFunction(pipelineContext);
 
-            const response = await task.actionFunction(
-                taskKey,
-                taskStream,
-                print,
-                display,
-                clearDisplay
-            );
+            const newPipelineContext = { ...pipelineContext, pipelineData: { ...pipelineData, [currentTaskKey]: response } };
 
-            updateTaskStream(taskKey, response);
-
-            goToNextTask();
+            finishTask(newPipelineContext);
         } catch (error) {
             handleError(error);
-        } finally {
-            setIsExecuting(false);
         }
     };
 
-    const updateTaskStream = (currentTaskKey: string, data: any) => {
-        setTaskStream((prev) => ({ ...prev, [currentTaskKey]: data }));
+    const savePipelineContextForPromptResponse = async (pipelineContext: PipelineContext) => {
+        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const currentTaskKey = pipelineContext.currentTaskKey;
+        const currentTask = pipelineBlueprint[currentTaskKey];
+
+        if (!currentTask || currentTask.type !== 'prompt') return;
+
+        setCurrentPipelineContext(pipelineContext);
+    };
+
+    const handlePromptResponse = (response: any) => {
+        if (currentPipelineContext === null) return;
+
+        const pipelineContext = currentPipelineContext;
+
+        if (!pipelineContext) {
+            endPipelineAndStandby();
+            return;
+        }
+
+        const pipelineData = pipelineContext.pipelineData;
+        const currentTaskKey = pipelineContext.currentTaskKey;
+
+        const newPipelineContext = { ...pipelineContext, pipelineData: { ...pipelineData, [currentTaskKey]: response } };
+        setCurrentPipelineContext(null);
+        finishTask(newPipelineContext);
+    };
+
+    const finishTask = (pipelineContext: PipelineContext) => {
+        const currentTaskKey = pipelineContext.currentTaskKey;
+        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const next = pipelineBlueprint[currentTaskKey].next;
+
+        if (!next) {
+            endPipelineAndStandby();
+            return;
+        }
+
+        let nextTaskKey: NextTask;
+        if (typeof next === 'function') {
+            nextTaskKey = next(pipelineContext);
+        } else {
+            nextTaskKey = next;
+        }
+
+        if (!(nextTaskKey in pipelineBlueprint)) {
+            handleError(`${nextTaskKey} not in pipeline. Check blueprint keys.`);
+        }
+
+        const newPipelineContext = { ...pipelineContext, currentTaskKey: nextTaskKey };
+
+        startTask(newPipelineContext);
     };
 
     const handleError = (error: any) => {
-        console.error('Erro no Terminal:', error?.message ?? 'ERROR');
-        printError(error);
+        printer.printError(error);
         endPipelineAndStandby();
     };
 
     const endPipelineAndStandby = () => {
-        setTaskKey(null);
-        dispatch({ type: 'STANDBY' });
+        terminalDispatch({ type: 'STANDBY' });
     };
 
     return {
-        state,
-        currentTaskKey: taskKey,
-        currentTask: task,
-        taskStream,
+        terminalState,
+        currentPipelineContext,
         handlePromptResponse,
     };
 };

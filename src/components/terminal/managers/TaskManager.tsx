@@ -7,34 +7,26 @@ interface TaskManagerProps {
 }
 
 const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
-    const { state, currentTaskKey, currentTask, taskStream, handlePromptResponse } =
-        useTaskManager();
+    const { terminalState, currentPipelineContext, handlePromptResponse } = useTaskManager();
 
     const renderCurrentTask = () => {
-        if (!state.commandBlueprint) {
-            return null;
-        }
+        if (!currentPipelineContext) return null;
 
-        if (!currentTaskKey || !currentTask) {
-            return null;
-        }
+        const pipelineBlueprint = currentPipelineContext.pipelineBlueprint;
+        const currentTaskKey = currentPipelineContext.currentTaskKey;
+        const currentTask = pipelineBlueprint[currentTaskKey];
 
-        switch (currentTask.type) {
-            case 'prompt':
-                return (
-                    <PromptHandler
-                        task={currentTask}
-                        taskStream={taskStream}
-                        onNext={handlePromptResponse}
-                        isActive={isActive}
-                    />
-                );
-            case 'action':
-                // 'action' tasks are not rendered directly
-                return null;
-            default:
-                return <p>Task type unknown!</p>;
-        }
+        if (!currentTask || currentTask.type !== 'prompt') return null;
+
+        return <PromptHandler task={currentTask} onSubmit={handlePromptResponse} isActive={isActive} />;
+        // switch (currentTask.type) {
+        //     case 'prompt':
+        //     case 'action':
+        //         // 'action' tasks are not rendered directly
+        //         return null;
+        //     default:
+        //         return <p>Task type unknown!</p>;
+        // }
     };
 
     return renderCurrentTask();

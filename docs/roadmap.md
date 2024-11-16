@@ -3,21 +3,22 @@
 ## Sprint 4: Advanced Prompts and Commands
 
 > Version 0.4.0
+> [ ] 1.2.4 - Implement *default* answers on prompts
+
 
 - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
 - [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
-- [ ] 1.2.4 - Implement *default* answers on prompts
 - [ ] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
 - [ ] 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
 - [ ] 1.2.7 - Implement *hints* on Choices
 - [ ] 1.2.8 - Implement *placeholders* on commands and prompts
 - [ ] 1.2.9 - Implement *mask()* function or pattern to (mask) input
+- [x] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
+- [x] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
+- [x] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions
+- [x] 3.3.4 - Create task stream/pipeline context to easily handle state and dispatch, and pass this context to actionFunction on useTaskHandler
 - [x] 3.2.1 - Implement variable to keep track of available commands on CommandInput
 - [x] 3.2.2 - Change CommandInput to use the autocomplete logic
-- [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
-- [ ] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
-- [ ] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions
-- [ ] 3.3.4 - Create task stream/pipeline context to easily handle state and dispatch, and pass this context to actionFunction on useTaskHandler
 - [x] Chr2 - Rename terminal-history (print-history) and transient-output (display)
     - [x] Rename related functions on usePrinter and its uses
 

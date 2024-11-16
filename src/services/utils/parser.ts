@@ -1,4 +1,4 @@
-import { CommandArgs } from '../../types';
+import { CommandArgs } from 'types';
 
 export const parseCommandArguments = (command: string) => {
     const [baseCommand, ...commandArgs] = command.split(' ');

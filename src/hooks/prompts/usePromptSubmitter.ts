@@ -53,13 +53,7 @@ const usePromptSubmitter = (message: string, onPromptSubmit: (data: any) => void
 
     const pass = () => {};
 
-    const submit: PromptSubmitFunction = ({
-        data,
-        checkRequired = returnTrue,
-        validate = returnTrue,
-        print = defaultPrint,
-        clear = pass,
-    }) => {
+    const submit: PromptSubmitFunction = ({ data, checkRequired = returnTrue, validate = returnTrue, print = defaultPrint, clear = pass }) => {
         const checkResult = checkRequired(data);
         if (checkResult !== true) {
             setTimeout(() => {
@@ -81,7 +75,6 @@ const usePromptSubmitter = (message: string, onPromptSubmit: (data: any) => void
         print(data);
         onPromptSubmit(data);
         clear();
-        clearDisplay();
     };
 
     return { submit };

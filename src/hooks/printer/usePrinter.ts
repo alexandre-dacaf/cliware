@@ -1,8 +1,8 @@
-import { HistoryEntry } from 'types';
+import { HistoryEntry, PrinterInterface } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 
-const usePrinter = () => {
+const usePrinter = (): PrinterInterface => {
     const { dispatch } = useContext(TerminalContext);
 
     const print = (payload: HistoryEntry | HistoryEntry[]) => {
@@ -34,7 +34,7 @@ const usePrinter = () => {
     };
 
     const printError = (error: any) => {
-        print({ type: 'error', content: error?.message ?? 'ERROR' });
+        print({ type: 'error', content: error?.message ?? error ?? 'ERROR' });
     };
 
     return {

@@ -1,25 +1,10 @@
-import { ActionFunction } from 'types';
+import { ActionFunction, PipelineContext } from 'types';
 
-export const createTodo: ActionFunction = async (
-    taskKey,
-    taskStream,
-    print,
-    display,
-    clearDisplay
-): Promise<any> => {
-    if (taskStream && print && display && clearDisplay) {
-        display('Executing...');
+export const createTodo: ActionFunction = async (context: PipelineContext): Promise<any> => {
+    context.printer.display('Executando...');
 
-        // Simulate 2s wait
-        await new Promise((resolve) => {
-            setTimeout(resolve, 500);
-        });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // context.printer.clearDisplay();
 
-        clearDisplay();
-
-        print({
-            type: 'output',
-            content: `Tarefa ${JSON.stringify(taskStream)} criada com sucesso!`,
-        });
-    }
+    return { teste: 'abc123' };
 };

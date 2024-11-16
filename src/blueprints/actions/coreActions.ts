@@ -1,32 +1,20 @@
-import { ActionFunction } from '../../types';
+import { PipelineContext, ActionFunction } from '../../types';
 
-export const changeTerminalColumns: ActionFunction = (
-    taskKey,
-    taskStream,
-    print,
-    display,
-    clearDisplay
-) => {
-    if (taskStream) {
-        const columns: number = +taskStream.$cmd.args[0];
+export const changeTerminalColumns: ActionFunction = (context: PipelineContext) => {
+    if (!context.commandArgs || !context.commandArgs.args[0]) return;
 
-        if (!columns) {
-            throw new Error("Insira um número de colunas. Ex.: 'columns 3'.");
-        }
-
-        const event = new CustomEvent('changeTerminalColumns', {
-            detail: { columns },
-        });
-        window.dispatchEvent(event);
+    const columns: number = +context.commandArgs.args[0];
+    if (!columns) {
+        throw new Error("Insira um número de colunas. Ex.: 'columns 3'.");
     }
+
+    context.appDispatcher.changeTerminalColumns(columns);
 };
 
-export const createTerminal = () => {
-    const event = new CustomEvent('createTerminal');
-    window.dispatchEvent(event);
+export const createTerminal = (context: PipelineContext) => {
+    context.appDispatcher.createTerminal();
 };
 
-export const deleteTerminal = () => {
-    const event = new CustomEvent('deleteTerminal');
-    window.dispatchEvent(event);
+export const deleteTerminal = (context: PipelineContext) => {
+    context.appDispatcher.deleteCurrentTerminal();
 };

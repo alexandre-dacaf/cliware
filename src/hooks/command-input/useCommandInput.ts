@@ -8,10 +8,7 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
-    const totalPages = useMemo(
-        () => Math.ceil(filteredCommands.length / itemsPerPage),
-        [filteredCommands, itemsPerPage]
-    );
+    const totalPages = useMemo(() => Math.ceil(filteredCommands.length / itemsPerPage), [filteredCommands, itemsPerPage]);
 
     useEffect(() => {
         setFilteredCommands(availableCommands);
@@ -25,9 +22,7 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
     }, [filteredCommands]);
 
     useEffect(() => {
-        setPageCommands(
-            filteredCommands.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-        );
+        setPageCommands(filteredCommands.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage));
     }, [filteredCommands, currentPage, itemsPerPage]);
 
     useEffect(() => {
@@ -43,8 +38,7 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
             return;
         }
 
-        const normalizeText = (text: string) =>
-            text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizeText = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
         const pattern = new RegExp(normalizeText(inputValue), 'i');
 
@@ -53,6 +47,11 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
         });
 
         setFilteredCommands(newFilteredCommands);
+    };
+
+    const autocomplete = () => {
+        const selectedValue = pageCommands[pageIndex];
+        setValue(selectedValue);
     };
 
     const selectPrevious = () => {
@@ -130,6 +129,7 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
         pageCommands,
         pageIndex,
         handleChange,
+        autocomplete,
         selectPrevious,
         selectNext,
         nextPage,

@@ -17,7 +17,10 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-    const [state, dispatch] = useReducer(appReducer, initialAppState);
+    const [state, dispatch] = useReducer(appReducer, initialAppState, (init) => ({
+        ...init,
+        currentTerminalId: init.terminalList[0].id,
+    }));
 
     return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
 };

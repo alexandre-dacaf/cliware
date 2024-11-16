@@ -10,7 +10,7 @@ import usePrinter from 'hooks/printer/usePrinter';
 import './Terminal.css';
 
 interface TerminalProps {
-    terminalId: number;
+    terminalId: string;
     isActive: boolean;
     isSelected: boolean;
 }
@@ -61,24 +61,13 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     };
 
     return (
-        <div
-            className={
-                'terminal ' +
-                (isActive ? 'active-terminal ' : ' ') +
-                (isSelected ? 'selected-terminal ' : ' ')
-            }
-            ref={terminalRef}
-        >
+        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
             <PrintHistory />
 
             {state.commandBlueprint ? (
                 <TaskManager isActive={isActive} />
             ) : (
-                <CommandInput
-                    availableCommands={availableCommands}
-                    onSubmit={handleCommandSubmit}
-                    isActive={isActive}
-                />
+                <CommandInput availableCommands={availableCommands} onSubmit={handleCommandSubmit} isActive={isActive} />
             )}
 
             <Display />
