@@ -4,6 +4,7 @@ export const changeTerminalColumns: ActionFunction = (context: PipelineContext) 
     if (!context.commandArgs || !context.commandArgs.args[0]) return;
 
     const columns: number = +context.commandArgs.args[0];
+
     if (!columns) {
         throw new Error("Insira um número de colunas. Ex.: 'columns 3'.");
     }

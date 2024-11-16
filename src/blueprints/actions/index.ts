@@ -1,2 +1,2 @@
-export * from "./actions";
-export * from "./coreActions";
+export * from './actions';
+export * from '../core/coreActions';

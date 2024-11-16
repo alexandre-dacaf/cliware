@@ -1,6 +1,6 @@
 import { Blueprint } from 'types';
 import { createTodo } from './actions';
-import { coreCommands } from './commands/core';
+import { coreCommands } from './core/coreCommands';
 
 export const blueprint: Blueprint = {
     ...coreCommands,
@@ -68,7 +68,9 @@ export const blueprint: Blueprint = {
             weeb: {
                 type: 'action',
                 actionFunction: (context) => {
-                    context.printer.printOutput(`Respostas: ${JSON.stringify(context.pipelineData)}`);
+                    context.printer.printOutput(
+                        `Respostas: ${JSON.stringify(context.pipelineData)}`
+                    );
                 },
             },
         },
