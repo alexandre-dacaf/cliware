@@ -20,6 +20,7 @@
     - [ ] 1.2.7 - Implement *hints* on Choices
     - [ ] 1.2.8 - Implement *placeholders* on commands and prompts
     - [ ] 1.2.9 - Implement *format()* function or pattern to (mask) input
+    - [ ] 1.2.10 - Hints bellow hard to understand prompts (autocomplete, number and others). Use SelectPrompt's *select-navigation-hint* as a template
 
 
 ## Epic 2: Themes & Styling

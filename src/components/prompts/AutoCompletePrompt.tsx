@@ -1,40 +1,31 @@
 import React, { useMemo, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
-import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
-import { Choice } from 'types';
+import { Suggestion } from 'types';
 import './AutoCompletePrompt.css';
+import usePrinter from 'hooks/printer/usePrinter';
 
 export type AutoCompletePromptProps = {
     message: string;
-    choices: Choice[];
+    suggestions: Suggestion[];
     itemsPerPage?: number;
-    onSubmit: (data: Choice) => void;
+    onSubmit: (data: Suggestion) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
 const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     message,
-    choices,
+    suggestions,
     itemsPerPage = 10,
     onSubmit,
     isActive,
     onEscape,
 }) => {
-    const formattedChoices = useMemo(
-        () =>
-            choices.map((choice) => ({
-                ...choice,
-                value: choice.value ?? choice.label,
-            })),
-        [choices]
-    );
-
     const inputRef = useRef<HTMLInputElement>(null);
     const {
         value,
         setValue,
-        pageChoices,
+        pageSuggestions,
         pageIndex,
         handleChange,
         selectPrevious,
@@ -43,15 +34,14 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         prevPage,
         currentPage,
         totalPages,
-    } = useAutoCompletePrompt(formattedChoices, itemsPerPage);
-    const { submit } = usePromptSubmitter(message, onSubmit);
+        autocomplete,
+    } = useAutoCompletePrompt(suggestions, itemsPerPage);
+    const { printInput } = usePrinter();
 
     const handleEnter = () => {
-        const clear = () => {
-            setValue('');
-        };
-
-        submit({ data: pageChoices[pageIndex], clear });
+        printInput(`${message} ${value}`);
+        setValue('');
+        onSubmit(value);
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
@@ -68,6 +58,9 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         }
         if (key === 'Enter') {
             handleEnter();
+        }
+        if (key === 'Tab') {
+            autocomplete();
         }
         if (key === 'Escape') {
             onEscape();
@@ -116,16 +109,18 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
                 />
             </div>
 
-            <div className='autocomplete-choices'>
-                {pageChoices.map((choice, index) => (
+            <div className='autocomplete-suggestions'>
+                {pageSuggestions.map((suggestion, index) => (
                     <span
                         key={index}
-                        className={`autocomplete-choice ${pageIndex === index ? 'selected' : ''}`}
+                        className={`autocomplete-suggestion ${
+                            pageIndex === index ? 'selected' : ''
+                        }`}
                     >
-                        {choice.label}
+                        {suggestion}
                     </span>
                 ))}
-                {choices.length > itemsPerPage ? (
+                {suggestions.length > itemsPerPage ? (
                     <em className='autocomplete-pages'>
                         Page {currentPage + 1}/{totalPages}
                     </em>

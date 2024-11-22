@@ -1,7 +1,7 @@
 import React, { useRef, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
 import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
-import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import './NumberPrompt.css';
+import usePrinter from 'hooks/printer/usePrinter';
 
 export type NumberPromptProps = {
     message: string;
@@ -28,25 +28,32 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { value, handleChange, adjustStep, clear } = useNumberPrompt(min, float, decimals);
-    const { submit } = usePromptSubmitter(message, onSubmit);
+    const { printInput, printError } = usePrinter();
 
     const handleEnter = () => {
-        const validate = (inputValue: string) => {
-            const numberContent: number = parseFloat(inputValue);
-            if (isNaN(numberContent)) {
-                return 'Invalid number.';
-            }
-            if (numberContent < min) {
-                return `Minimum value is ${min}.`;
-            }
-            if (numberContent > max) {
-                return `Maximum value is ${max}.`;
-            }
+        const numberValue: number = parseFloat(value);
 
-            return true;
-        };
+        if (isNaN(numberValue)) {
+            printError('Invalid number.');
+            clear();
+            return;
+        }
 
-        submit({ data: parseFloat(value), clear, validate });
+        if (numberValue < min) {
+            printError(`Minimum value is ${min}.`);
+            clear();
+            return;
+        }
+
+        if (numberValue > max) {
+            printError(`Maximum value is ${max}.`);
+            clear();
+            return;
+        }
+
+        printInput(`${message} ${numberValue}`);
+        onSubmit(numberValue);
+        clear();
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
@@ -89,9 +96,16 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     };
 
     return (
-        <div className="number-prompt">
-            <span className="prompt-message">{message}</span>
-            <input ref={inputRef} className="number-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
+        <div className='number-prompt'>
+            <span className='prompt-message'>{message}</span>
+            <input
+                ref={inputRef}
+                className='number-field'
+                value={value}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+            />
         </div>
     );
 };

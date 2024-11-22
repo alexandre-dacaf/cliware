@@ -129,7 +129,9 @@ export interface DatePrompt extends BasePrompt {
 }
 
 export type DateLimitFunction = (value: number) => number;
+
 export type DateAdjustFunction = (amount: number) => void;
+
 export type DateFocusFunction = () => void;
 export interface DateKeyDownHandler {
     adjust: DateAdjustFunction;
@@ -139,9 +141,11 @@ export interface DateKeyDownHandler {
 
 export interface AutoCompletePrompt extends BasePrompt {
     promptType: 'autocomplete';
-    choices: Choice[];
+    suggestions: Suggestion[];
     itemsPerPage?: number;
 }
+
+export type Suggestion = string;
 
 export interface PasswordPrompt extends BasePrompt {
     promptType: 'password';

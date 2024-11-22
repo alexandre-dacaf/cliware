@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Choice } from 'types';
 import usePrinter from 'hooks/printer/usePrinter';
-import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import './TogglePrompt.css';
 
 export type TogglePromptProps = {
@@ -27,15 +26,12 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
         { label: trueLabel ?? 'Yes', value: true },
     ];
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
-    const { submit } = usePromptSubmitter(message, onSubmit);
     const { printInput } = usePrinter();
 
     const handleEnter = () => {
-        const print = () => {
-            printInput(`${message} ${choices[selectedIndex].label}`);
-        };
-
-        submit({ data: choices[selectedIndex].value, print });
+        printInput(`${message} ${choices[selectedIndex].label}`);
+        onSubmit(choices[selectedIndex].value);
+        setSelectedIndex(0);
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {

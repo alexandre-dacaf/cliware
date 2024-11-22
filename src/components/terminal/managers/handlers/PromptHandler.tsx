@@ -1,6 +1,15 @@
 import React, { useContext } from 'react';
 import { PromptTask } from 'types';
-import { TextPrompt, TogglePrompt, SelectPrompt, NumberPrompt, ListPrompt, DatePrompt, AutoCompletePrompt, PasswordPrompt } from 'components/prompts';
+import {
+    TextPrompt,
+    TogglePrompt,
+    SelectPrompt,
+    NumberPrompt,
+    ListPrompt,
+    DatePrompt,
+    AutoCompletePrompt,
+    PasswordPrompt,
+} from 'components/prompts';
 import { AppContext } from 'context/AppContext';
 import './PromptHandler.css';
 
@@ -26,7 +35,14 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
     const renderPrompt = () => {
         switch (task.promptType) {
             case 'text':
-                return <TextPrompt message={task.message} onSubmit={handleSubmit} isActive={isActive} onEscape={deactivateTerminal} />;
+                return (
+                    <TextPrompt
+                        message={task.message}
+                        onSubmit={handleSubmit}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
+                );
             case 'toggle':
                 return (
                     <TogglePrompt
@@ -86,26 +102,40 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                     />
                 );
             case 'date':
-                return <DatePrompt message={task.message} onSubmit={handleSubmit} isActive={isActive} onEscape={deactivateTerminal} />;
+                return (
+                    <DatePrompt
+                        message={task.message}
+                        onSubmit={handleSubmit}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
+                );
             case 'autocomplete':
                 return (
                     <AutoCompletePrompt
                         message={task.message}
                         onSubmit={handleSubmit}
-                        choices={task.choices}
+                        suggestions={task.suggestions}
                         itemsPerPage={task.itemsPerPage}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
                     />
                 );
             case 'password':
-                return <PasswordPrompt message={task.message} onSubmit={handleSubmit} isActive={isActive} onEscape={deactivateTerminal} />;
+                return (
+                    <PasswordPrompt
+                        message={task.message}
+                        onSubmit={handleSubmit}
+                        isActive={isActive}
+                        onEscape={deactivateTerminal}
+                    />
+                );
             default:
                 return <p>Prompt type unknown!</p>;
         }
     };
 
-    return <div className="prompt-component">{renderPrompt()}</div>;
+    return <div className='prompt-component'>{renderPrompt()}</div>;
 };
 
 PromptHandler.displayName = 'PromptHandler';

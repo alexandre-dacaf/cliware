@@ -21,21 +21,21 @@
     margin-left: 1rem;
 }
 
-.autocomplete-choices {
+.autocomplete-suggestions {
     display: flex;
     flex-direction: column;
 }
 
-.autocomplete-choice {
+.autocomplete-suggestion {
     margin-top: 0.2em;
 }
 
-.autocomplete-choice.checked {
+.autocomplete-suggestion.checked {
     color: var(--success);
     text-decoration: underline;
 }
 
-.autocomplete-choice.selected {
+.autocomplete-suggestion.selected {
     color: var(--primary-color);
     text-decoration: underline;
 }

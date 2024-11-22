@@ -7,7 +7,9 @@ import useAppDispatcher from 'hooks/app/useAppDispatcher';
 
 const useTaskManager = () => {
     const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
-    const [currentPipelineContext, setCurrentPipelineContext] = useState<PipelineContext | null>(null);
+    const [currentPipelineContext, setCurrentPipelineContext] = useState<PipelineContext | null>(
+        null
+    );
     const printer = usePrinter();
     const appDispatcher = useAppDispatcher();
 
@@ -32,14 +34,9 @@ const useTaskManager = () => {
     }, [terminalState.commandBlueprint]);
 
     const generatePipelineContext = (taskKey: TaskKey, commandBlueprint: CommandBlueprint) => {
-        const startPipelineData = Object.keys(commandBlueprint.pipeline).reduce((acc, key) => {
-            acc[key] = null;
-            return acc;
-        }, {} as PipelineData);
-
         return {
             currentTaskKey: taskKey,
-            pipelineData: startPipelineData,
+            pipelineData: {},
             pipelineBlueprint: commandBlueprint.pipeline,
             commandArgs: terminalState.commandArgs,
             printer,
@@ -75,7 +72,10 @@ const useTaskManager = () => {
             const pipelineData = pipelineContext.pipelineData;
             const response = await currentTask.actionFunction(pipelineContext);
 
-            const newPipelineContext = { ...pipelineContext, pipelineData: { ...pipelineData, [currentTaskKey]: response } };
+            const newPipelineContext = {
+                ...pipelineContext,
+                pipelineData: { ...pipelineData, [currentTaskKey]: response },
+            };
 
             finishTask(newPipelineContext);
         } catch (error) {
@@ -106,7 +106,10 @@ const useTaskManager = () => {
         const pipelineData = pipelineContext.pipelineData;
         const currentTaskKey = pipelineContext.currentTaskKey;
 
-        const newPipelineContext = { ...pipelineContext, pipelineData: { ...pipelineData, [currentTaskKey]: response } };
+        const newPipelineContext = {
+            ...pipelineContext,
+            pipelineData: { ...pipelineData, [currentTaskKey]: response },
+        };
         setCurrentPipelineContext(null);
         finishTask(newPipelineContext);
     };

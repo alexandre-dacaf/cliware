@@ -1,6 +1,6 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import './ListPrompt.css';
+import usePrinter from 'hooks/printer/usePrinter';
 
 export type ListPromptProps = {
     message: string;
@@ -11,11 +11,18 @@ export type ListPromptProps = {
     onEscape: () => void;
 };
 
-const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', trim = true, onSubmit, isActive, onEscape }) => {
+const ListPrompt: React.FC<ListPromptProps> = ({
+    message,
+    separator = ',',
+    trim = true,
+    onSubmit,
+    isActive,
+    onEscape,
+}) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
-    const { submit } = usePromptSubmitter(message, onSubmit);
+    const { printInput } = usePrinter();
 
     useEffect(() => {
         let splitContent = value.split(separator);
@@ -33,11 +40,10 @@ const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', trim 
     };
 
     const handleEnter = () => {
-        const clear = () => {
-            setValue('');
-        };
-
-        submit({ data: list, clear });
+        const formattedList = JSON.stringify(list);
+        printInput(`${message} ${formattedList}`);
+        setValue('');
+        onSubmit(list);
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
@@ -74,9 +80,16 @@ const ListPrompt: React.FC<ListPromptProps> = ({ message, separator = ',', trim 
     };
 
     return (
-        <div className="text-prompt">
-            <span className="prompt-message">{message}</span>
-            <input ref={inputRef} className="list-field" value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
+        <div className='text-prompt'>
+            <span className='prompt-message'>{message}</span>
+            <input
+                ref={inputRef}
+                className='list-field'
+                value={value}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+            />
         </div>
     );
 };

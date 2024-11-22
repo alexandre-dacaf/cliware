@@ -67,7 +67,7 @@ const useNumberPrompt = (min: number, float: boolean, decimals: number) => {
     };
 
     const clear = () => {
-        setValue('');
+        setValue(formatFloatDecimals(minOrZero));
     };
 
     return { value, handleChange, adjustStep, clear };

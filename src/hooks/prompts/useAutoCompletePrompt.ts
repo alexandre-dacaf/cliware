@@ -1,35 +1,35 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Choice } from 'types';
+import { Suggestion } from 'types';
 
-const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
+const useSelectPrompt = (suggestions: Suggestion[], itemsPerPage: number) => {
     const [value, setValue] = useState<string>('');
-    const [filteredChoices, setFilteredChoices] = useState<Choice[]>([]);
-    const [pageChoices, setPageChoices] = useState<Choice[]>([]);
+    const [filteredSuggestions, setFilteredSuggestions] = useState<Suggestion[]>([]);
+    const [pageSuggestions, setPageSuggestions] = useState<Suggestion[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
     const totalPages = useMemo(
-        () => Math.ceil(filteredChoices.length / itemsPerPage),
-        [filteredChoices, itemsPerPage]
+        () => Math.ceil(filteredSuggestions.length / itemsPerPage),
+        [filteredSuggestions, itemsPerPage]
     );
 
     useEffect(() => {
-        setFilteredChoices(choices);
+        setFilteredSuggestions(suggestions);
         setSelectedIndex(0);
         setCurrentPage(0);
-    }, [choices]);
+    }, [suggestions]);
 
     useEffect(() => {
         setSelectedIndex(0);
         setCurrentPage(0);
-    }, [filteredChoices]);
+    }, [filteredSuggestions]);
 
     useEffect(() => {
-        setPageChoices(
-            filteredChoices.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+        setPageSuggestions(
+            filteredSuggestions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
         );
-    }, [filteredChoices, currentPage, itemsPerPage]);
+    }, [filteredSuggestions, currentPage, itemsPerPage]);
 
     useEffect(() => {
         setPageIndex(selectedIndex - currentPage * itemsPerPage);
@@ -40,7 +40,7 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
         setValue(inputValue);
 
         if (inputValue.trim() === '') {
-            setFilteredChoices(choices);
+            setFilteredSuggestions(suggestions);
             return;
         }
 
@@ -49,21 +49,26 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
 
         const pattern = new RegExp(normalizeText(inputValue), 'i');
 
-        const newFilteredChoices = choices.filter((choice) => {
-            return pattern.test(normalizeText(choice.label));
+        const newFilteredSuggestions = suggestions.filter((suggestion) => {
+            return pattern.test(normalizeText(suggestion));
         });
 
-        setFilteredChoices(newFilteredChoices);
+        setFilteredSuggestions(newFilteredSuggestions);
+    };
+
+    const autocomplete = () => {
+        const selectedSuggestion = pageSuggestions[pageIndex];
+        setValue(selectedSuggestion);
     };
 
     const selectPrevious = () => {
-        if (filteredChoices.length === 0) return;
+        if (filteredSuggestions.length === 0) return;
 
         setSelectedIndex((prevIndex) => {
             const newIndex = prevIndex - 1;
             if (newIndex < 0) {
                 setCurrentPage(totalPages - 1);
-                return filteredChoices.length - 1;
+                return filteredSuggestions.length - 1;
             }
 
             const newPage = Math.floor(newIndex / itemsPerPage);
@@ -76,11 +81,11 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
     };
 
     const selectNext = () => {
-        if (filteredChoices.length === 0) return;
+        if (filteredSuggestions.length === 0) return;
 
         setSelectedIndex((prevIndex) => {
             const newIndex = prevIndex + 1;
-            if (newIndex >= filteredChoices.length) {
+            if (newIndex >= filteredSuggestions.length) {
                 setCurrentPage(0);
                 return 0;
             }
@@ -95,7 +100,7 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
     };
 
     const nextPage = () => {
-        if (filteredChoices.length === 0) return;
+        if (filteredSuggestions.length === 0) return;
 
         setCurrentPage((prevPage) => {
             const newPage = prevPage + 1;
@@ -110,7 +115,7 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
     };
 
     const prevPage = () => {
-        if (filteredChoices.length === 0) return;
+        if (filteredSuggestions.length === 0) return;
 
         setCurrentPage((prevPage) => {
             const newPage = prevPage - 1;
@@ -128,7 +133,7 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
     return {
         value,
         setValue,
-        pageChoices,
+        pageSuggestions,
         pageIndex,
         handleChange,
         selectPrevious,
@@ -137,6 +142,7 @@ const useSelectPrompt = (choices: Choice[], itemsPerPage: number) => {
         prevPage,
         currentPage,
         totalPages,
+        autocomplete,
     };
 };
 

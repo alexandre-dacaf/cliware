@@ -1,5 +1,4 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import usePromptSubmitter from 'hooks/prompts/usePromptSubmitter';
 import usePrinter from 'hooks/printer/usePrinter';
 import './PasswordPrompt.css';
 
@@ -18,7 +17,6 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
-    const { submit } = usePromptSubmitter(message, onSubmit);
     const { printInput } = usePrinter();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,15 +25,9 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     };
 
     const handleEnter = () => {
-        const print = () => {
-            printInput(`${message} ${'•'.repeat(8)}`);
-        };
-
-        const clear = () => {
-            setValue('');
-        };
-
-        submit({ data: value, print, clear });
+        printInput(`${message} ${'•'.repeat(8)}`);
+        onSubmit(value);
+        setValue('');
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
