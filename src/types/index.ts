@@ -91,22 +91,26 @@ export interface BasePrompt extends BaseTask {
 
 export interface TextPrompt extends BasePrompt {
     promptType: 'text';
+    default?: string;
 }
 
 export interface TogglePrompt extends BasePrompt {
     promptType: 'toggle';
     trueLabel?: string;
     falseLabel?: string;
+    default?: boolean;
 }
 
 export interface SelectPrompt extends BasePrompt {
     promptType: 'select';
     choices: Choice[];
+    default?: any;
 }
 
 export interface MultiselectPrompt extends BasePrompt {
     promptType: 'multiselect';
     choices: Choice[];
+    default?: any;
 }
 
 export interface NumberPrompt extends BasePrompt {
@@ -116,6 +120,7 @@ export interface NumberPrompt extends BasePrompt {
     step?: number;
     float?: boolean;
     decimals?: number;
+    default?: number;
 }
 
 export interface ListPrompt extends BasePrompt {
@@ -126,26 +131,15 @@ export interface ListPrompt extends BasePrompt {
 
 export interface DatePrompt extends BasePrompt {
     promptType: 'date';
-}
-
-export type DateLimitFunction = (value: number) => number;
-
-export type DateAdjustFunction = (amount: number) => void;
-
-export type DateFocusFunction = () => void;
-export interface DateKeyDownHandler {
-    adjust: DateAdjustFunction;
-    focusLeft: DateFocusFunction;
-    focusRight: DateFocusFunction;
+    default?: string;
 }
 
 export interface AutoCompletePrompt extends BasePrompt {
     promptType: 'autocomplete';
-    suggestions: Suggestion[];
+    suggestions: string[];
     itemsPerPage?: number;
+    default?: string;
 }
-
-export type Suggestion = string;
 
 export interface PasswordPrompt extends BasePrompt {
     promptType: 'password';

@@ -5,6 +5,7 @@ import './TogglePrompt.css';
 
 export type TogglePromptProps = {
     message: string;
+    defaultValue?: boolean;
     onSubmit: (data: boolean) => void;
     trueLabel?: string;
     falseLabel?: string;
@@ -14,6 +15,7 @@ export type TogglePromptProps = {
 
 const TogglePrompt: React.FC<TogglePromptProps> = ({
     message,
+    defaultValue = false,
     onSubmit,
     trueLabel,
     falseLabel,
@@ -25,13 +27,17 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
         { label: falseLabel ?? 'No', value: false },
         { label: trueLabel ?? 'Yes', value: true },
     ];
-    const [selectedIndex, setSelectedIndex] = useState<number>(0);
+    const [toggle, setToggle] = useState<boolean>(defaultValue);
     const { printInput } = usePrinter();
 
     const handleEnter = () => {
-        printInput(`${message} ${choices[selectedIndex].label}`);
-        onSubmit(choices[selectedIndex].value);
-        setSelectedIndex(0);
+        const selectedChoice = choices.find((choice) => choice.value === toggle);
+
+        if (!selectedChoice) return;
+
+        printInput(`${message} ${selectedChoice.label}`);
+        onSubmit(selectedChoice.value);
+        setToggle(defaultValue);
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
@@ -39,14 +45,14 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
         const isShiftPressed = event.shiftKey;
         preventDefaultEvents(event);
 
-        if (key === 'ArrowLeft' || key === 'ArrowUp' || (key === 'Tab' && isShiftPressed)) {
-            setSelectedIndex((prevIndex) => (prevIndex === 0 ? choices.length - 1 : prevIndex - 1));
-        } else if (
+        if (
+            key === 'ArrowLeft' ||
+            key === 'ArrowUp' ||
             key === 'ArrowRight' ||
             key === 'ArrowDown' ||
-            (key === 'Tab' && !isShiftPressed)
+            key === 'Tab'
         ) {
-            setSelectedIndex((prevIndex) => (prevIndex === choices.length - 1 ? 0 : prevIndex + 1));
+            setToggle((prevToggle) => !prevToggle);
         } else if (key === 'Enter') {
             handleEnter();
         } else if (key === 'Escape') {
@@ -101,7 +107,7 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
                 {choices.map((choice, index) => (
                     <span
                         key={index}
-                        className={`confirm-choice ${selectedIndex === index ? 'selected' : ''}`}
+                        className={`confirm-choice ${choice.value === toggle ? 'selected' : ''}`}
                     >
                         {choice.label}
                     </span>

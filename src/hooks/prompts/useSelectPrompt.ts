@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Choice } from 'types';
 
-const useSelectPrompt = (choices: Choice[], multiselect: boolean) => {
+const useSelectPrompt = (choices: Choice[], multiselect: boolean, defaultValue: any) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
     const [checkedChoices, setCheckedChoices] = useState<Choice[]>([]);
 
     useEffect(() => {
-        setSelectedIndex(0);
+        setSelectedIndex(() => {
+            const defaultIndex = choices.findIndex((choice) => choice.value === defaultValue);
+
+            if (!defaultIndex) return 0;
+
+            return defaultIndex;
+        });
+
         setCheckedIndexes([]);
         setCheckedChoices([]);
     }, [choices]);

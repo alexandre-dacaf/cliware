@@ -38,6 +38,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                 return (
                     <TextPrompt
                         message={task.message}
+                        defaultValue={task.default}
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -49,6 +50,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         message={task.message}
                         trueLabel={task.trueLabel}
                         falseLabel={task.falseLabel}
+                        defaultValue={task.default}
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -58,8 +60,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                 return (
                     <SelectPrompt
                         message={task.message}
-                        onSubmit={handleSubmit}
                         choices={task.choices}
+                        defaultValue={task.default}
+                        onSubmit={handleSubmit}
                         multiselect={false}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -69,8 +72,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                 return (
                     <SelectPrompt
                         message={task.message}
-                        onSubmit={handleSubmit}
                         choices={task.choices}
+                        defaultValue={task.default}
+                        onSubmit={handleSubmit}
                         multiselect={true}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -85,6 +89,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         step={task.step}
                         float={task.float}
                         decimals={task.decimals}
+                        defaultValue={task.default}
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -105,6 +110,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                 return (
                     <DatePrompt
                         message={task.message}
+                        defaultValue={task.default}
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
@@ -114,6 +120,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                 return (
                     <AutoCompletePrompt
                         message={task.message}
+                        defaultValue={task.default}
                         onSubmit={handleSubmit}
                         suggestions={task.suggestions}
                         itemsPerPage={task.itemsPerPage}

@@ -18,15 +18,9 @@ const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
 
         if (!currentTask || currentTask.type !== 'prompt') return null;
 
-        return <PromptHandler task={currentTask} onSubmit={handlePromptResponse} isActive={isActive} />;
-        // switch (currentTask.type) {
-        //     case 'prompt':
-        //     case 'action':
-        //         // 'action' tasks are not rendered directly
-        //         return null;
-        //     default:
-        //         return <p>Task type unknown!</p>;
-        // }
+        return (
+            <PromptHandler task={currentTask} onSubmit={handlePromptResponse} isActive={isActive} />
+        );
     };
 
     return renderCurrentTask();

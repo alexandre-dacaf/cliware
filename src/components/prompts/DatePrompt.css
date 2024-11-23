@@ -4,23 +4,15 @@
 }
 
 .date-field {
-    font-weight: bold;
     outline: none;
-}
-
-.year-field {
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #c6cdd5;
+    caret-color: #c6cdd5;
+    font-family: var(--font);
+    white-space: pre;
     margin-left: 1rem;
-}
-
-.date-field:focus {
-    animation: blink 1s infinite cubic-bezier(0.88, -0.01, 0, 0.99);
-}
-
-@keyframes blink {
-    50% {
-        background-color: #c6cdd5;
-        color: var(--neutral-200);
-    }
 }
 
 .date-field:empty::before {

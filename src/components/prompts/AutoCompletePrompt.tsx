@@ -1,14 +1,14 @@
 import React, { useMemo, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
-import { Suggestion } from 'types';
 import './AutoCompletePrompt.css';
 import usePrinter from 'hooks/printer/usePrinter';
 
 export type AutoCompletePromptProps = {
     message: string;
-    suggestions: Suggestion[];
+    suggestions: string[];
     itemsPerPage?: number;
-    onSubmit: (data: Suggestion) => void;
+    defaultValue?: string;
+    onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
 };
@@ -17,6 +17,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     message,
     suggestions,
     itemsPerPage = 10,
+    defaultValue = '',
     onSubmit,
     isActive,
     onEscape,
@@ -35,7 +36,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         currentPage,
         totalPages,
         autocomplete,
-    } = useAutoCompletePrompt(suggestions, itemsPerPage);
+    } = useAutoCompletePrompt(suggestions, itemsPerPage, defaultValue);
     const { printInput } = usePrinter();
 
     const handleEnter = () => {
@@ -46,8 +47,6 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         const key = event.key;
-
-        const isShiftPressed = event.shiftKey;
         preventDefaultEvents(event);
 
         if (key === 'ArrowDown') {

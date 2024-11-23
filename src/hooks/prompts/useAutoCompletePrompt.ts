@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Suggestion } from 'types';
 
-const useSelectPrompt = (suggestions: Suggestion[], itemsPerPage: number) => {
+const useSelectPrompt = (suggestions: string[], itemsPerPage: number, defaultValue: string) => {
     const [value, setValue] = useState<string>('');
-    const [filteredSuggestions, setFilteredSuggestions] = useState<Suggestion[]>([]);
-    const [pageSuggestions, setPageSuggestions] = useState<Suggestion[]>([]);
+    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+    const [pageSuggestions, setPageSuggestions] = useState<string[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
@@ -16,14 +15,22 @@ const useSelectPrompt = (suggestions: Suggestion[], itemsPerPage: number) => {
 
     useEffect(() => {
         setFilteredSuggestions(suggestions);
-        setSelectedIndex(0);
-        setCurrentPage(0);
     }, [suggestions]);
 
     useEffect(() => {
-        setSelectedIndex(0);
-        setCurrentPage(0);
-    }, [filteredSuggestions]);
+        setValue(defaultValue);
+
+        const index = suggestions.indexOf(defaultValue);
+        console.log(index);
+
+        if (index !== -1) {
+            setSelectedIndex(index);
+            setCurrentPage(Math.floor(index / itemsPerPage));
+        } else {
+            setSelectedIndex(0);
+            setCurrentPage(0);
+        }
+    }, [defaultValue, suggestions, itemsPerPage]);
 
     useEffect(() => {
         setPageSuggestions(

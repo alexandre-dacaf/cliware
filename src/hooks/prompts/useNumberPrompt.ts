@@ -1,16 +1,27 @@
+import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, useMemo } from 'react';
 
-const useNumberPrompt = (min: number, float: boolean, decimals: number) => {
+const useNumberPrompt = (
+    min: number,
+    max: number,
+    float: boolean,
+    decimals: number,
+    defaultValue: number
+) => {
     const [value, setValue] = useState<string>('0');
+    const { clearDisplay } = usePrinter();
 
-    const minOrZero = useMemo(() => Math.max(0, min), [min]);
+    const initValue = useMemo(() => {
+        return Math.max(defaultValue, min);
+    }, [defaultValue, min]);
 
     useEffect(() => {
-        const initValue = minOrZero;
         setValue(formatFloatDecimals(initValue));
-    }, [min]);
+    }, [initValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        clearDisplay();
+
         const inputValue = event.target.value;
 
         if (!isValidInput(inputValue)) {
@@ -24,6 +35,8 @@ const useNumberPrompt = (min: number, float: boolean, decimals: number) => {
         let numberContent = convertToNumber(value);
 
         numberContent += stepAmount;
+
+        numberContent = Math.max(min, Math.min(max, numberContent));
 
         const newStringContent = formatFloatDecimals(numberContent);
 
@@ -63,11 +76,11 @@ const useNumberPrompt = (min: number, float: boolean, decimals: number) => {
 
     const convertToNumber = (value: string): number => {
         const parsed = parseFloat(value);
-        return isNaN(parsed) ? minOrZero : parsed;
+        return isNaN(parsed) ? initValue : parsed;
     };
 
     const clear = () => {
-        setValue(formatFloatDecimals(minOrZero));
+        setValue(formatFloatDecimals(initValue));
     };
 
     return { value, handleChange, adjustStep, clear };

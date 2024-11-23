@@ -10,6 +10,7 @@ export type NumberPromptProps = {
     step?: number;
     float?: boolean;
     decimals?: number;
+    defaultValue?: number;
     onSubmit: (data: number) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -22,31 +23,38 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     step = 1,
     float = false,
     decimals = 2,
+    defaultValue = 0,
     onSubmit,
     isActive,
     onEscape,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { value, handleChange, adjustStep, clear } = useNumberPrompt(min, float, decimals);
-    const { printInput, printError } = usePrinter();
+    const { value, handleChange, adjustStep, clear } = useNumberPrompt(
+        min,
+        max,
+        float,
+        decimals,
+        defaultValue
+    );
+    const { printInput, display } = usePrinter();
 
     const handleEnter = () => {
         const numberValue: number = parseFloat(value);
 
         if (isNaN(numberValue)) {
-            printError('Invalid number.');
+            display('Invalid number.');
             clear();
             return;
         }
 
         if (numberValue < min) {
-            printError(`Minimum value is ${min}.`);
+            display(`Minimum value is ${min}.`);
             clear();
             return;
         }
 
         if (numberValue > max) {
-            printError(`Maximum value is ${max}.`);
+            display(`Maximum value is ${max}.`);
             clear();
             return;
         }

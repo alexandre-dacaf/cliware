@@ -1,79 +1,51 @@
 import React, { useRef, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import { DateKeyDownHandler } from 'types';
 import useDatePrompt from 'hooks/prompts/useDatePrompt';
 import './DatePrompt.css';
 import usePrinter from 'hooks/printer/usePrinter';
 
 export type DatePromptProps = {
     message: string;
+    defaultValue?: string;
     onSubmit: (data: Date) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
-const DatePrompt: React.FC<DatePromptProps> = ({ message, onSubmit, isActive, onEscape }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const currentTime = new Date();
-    const year = currentTime.getFullYear();
-    const month = currentTime.getMonth() + 1;
-    const day = currentTime.getDate();
-    const {
-        date,
-        yearRef,
-        monthRef,
-        dayRef,
-        yearHandler,
-        monthHandler,
-        dayHandler,
-        focusYear,
-        clear,
-    } = useDatePrompt(year, month, day);
-    const { printInput } = usePrinter();
+const DatePrompt: React.FC<DatePromptProps> = ({
+    message,
+    defaultValue = '',
+    onSubmit,
+    isActive,
+    onEscape,
+}) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { stringValue, dateValue, handleChange, clear } = useDatePrompt(defaultValue);
+    const { printInput, display } = usePrinter();
 
     const handleEnter = () => {
-        if (!date) return;
+        if (!dateValue) {
+            display('Invalid date.');
+            return;
+        }
 
-        const formattedDate = date.toISOString().split('T')[0];
-        printInput(`${message} ${formattedDate}`);
+        printInput(`${message} ${stringValue}`);
+        onSubmit(dateValue);
         clear();
-        onSubmit(date);
     };
 
-    const handleKeyDown =
-        (handlers: DateKeyDownHandler) => (event: React.KeyboardEvent<HTMLSpanElement>) => {
-            const key = event.key;
-            const isShiftPressed = event.shiftKey;
-            preventDefaultEvents(event);
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        preventDefaultEvents(event);
 
-            if (key === 'Enter') {
-                handleEnter();
-            } else if (key === 'ArrowUp') {
-                handlers.adjust(1);
-            } else if (key === 'ArrowDown') {
-                handlers.adjust(-1);
-            } else if (key === 'ArrowLeft' || (key === 'Tab' && isShiftPressed)) {
-                handlers.focusLeft();
-            } else if (key === 'ArrowRight' || (key === 'Tab' && !isShiftPressed)) {
-                handlers.focusRight();
-            } else if (key === 'Escape') {
-                onEscape();
-            }
-        };
-
-    const handleYearKeyDown = handleKeyDown(yearHandler);
-    const handleMonthKeyDown = handleKeyDown(monthHandler);
-    const handleDayKeyDown = handleKeyDown(dayHandler);
+        if (event.key === 'Enter') {
+            handleEnter();
+        }
+        if (event.key === 'Escape') {
+            onEscape();
+        }
+    };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = [
-            'Enter',
-            'Tab',
-            'ArrowUp',
-            'ArrowDown',
-            'ArrowLeft',
-            'ArrowRight',
-            'Escape',
-        ];
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -81,43 +53,29 @@ const DatePrompt: React.FC<DatePromptProps> = ({ message, onSubmit, isActive, on
     };
 
     useEffect(() => {
-        focusYear();
+        if (isActive && inputRef.current) {
+            inputRef.current.focus();
+        }
     }, [isActive]);
 
-    const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
-        const relatedTarget = event.relatedTarget as HTMLElement | null;
-        if (
-            containerRef.current &&
-            relatedTarget &&
-            !containerRef.current.contains(relatedTarget)
-        ) {
-            // Focus completelly left containerRef
-            focusYear();
+    const handleBlur = () => {
+        if (isActive && inputRef.current) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 0);
         }
     };
 
     return (
-        <div className='date-prompt' onBlur={handleBlur} ref={containerRef}>
+        <div className='date-prompt'>
             <span className='prompt-message'>{message}</span>
-            <span
-                ref={yearRef}
-                className='date-field year-field'
-                tabIndex={0}
-                onKeyDown={handleYearKeyDown}
-            />
-            -
-            <span
-                ref={monthRef}
-                className='date-field month-field'
-                tabIndex={0}
-                onKeyDown={handleMonthKeyDown}
-            />
-            -
-            <span
-                ref={dayRef}
-                className='date-field day-field'
-                tabIndex={0}
-                onKeyDown={handleDayKeyDown}
+            <input
+                ref={inputRef}
+                className='date-field'
+                value={stringValue}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
             />
         </div>
     );

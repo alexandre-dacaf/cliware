@@ -7,6 +7,7 @@ export type SelectPromptProps = {
     message: string;
     choices: Choice[];
     multiselect: boolean;
+    defaultValue?: any;
     onSubmit: (data: Choice[]) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -16,6 +17,7 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
     message,
     choices,
     multiselect = false,
+    defaultValue,
     onSubmit,
     isActive,
     onEscape,
@@ -37,7 +39,7 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
         selectNext,
         selectPrevious,
         checkSelected,
-    } = useSelectPrompt(formattedChoices, multiselect);
+    } = useSelectPrompt(formattedChoices, multiselect, defaultValue);
 
     const handleEnter = () => {
         onSubmit(checkedChoices);

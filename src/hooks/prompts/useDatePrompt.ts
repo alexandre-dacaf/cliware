@@ -1,115 +1,72 @@
-import { useState, useRef, useEffect } from 'react';
-import { DateLimitFunction, DateKeyDownHandler } from 'types';
+import usePrinter from 'hooks/printer/usePrinter';
+import { useEffect, useState } from 'react';
 
-const useDatePrompt = (initialYear: number, initialMonth: number, initialDay: number) => {
-    const [date, setDate] = useState<Date | null>(null);
-    const [year, setYear] = useState<number>(initialYear ?? 1900);
-    const [month, setMonth] = useState<number>(initialMonth ?? 1);
-    const [day, setDay] = useState<number>(initialDay ?? 1);
-    const yearRef = useRef<HTMLSpanElement>(null);
-    const monthRef = useRef<HTMLSpanElement>(null);
-    const dayRef = useRef<HTMLSpanElement>(null);
+const useDatePrompt = (defaultValue: string) => {
+    const [stringValue, setStringValue] = useState<string>(defaultValue);
+    const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
+    const { clearDisplay } = usePrinter();
 
     useEffect(() => {
-        const monthIndex = month - 1;
-        const newDate = new Date(year, monthIndex, day);
-        setDate(newDate);
+        setStringValue(defaultValue);
+        setDateValue(parseDate(defaultValue));
+    }, [defaultValue]);
 
-        if (yearRef.current) {
-            yearRef.current.innerText = year.toString();
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        clearDisplay();
+
+        let inputValue = event.target.value;
+
+        // Remove non-digit characters
+        inputValue = inputValue.replace(/\D/g, '');
+
+        // Limit to 8 characters (ddmmyyyy)
+        if (inputValue.length > 8) {
+            inputValue = inputValue.slice(0, 8);
         }
 
-        if (monthRef.current) {
-            monthRef.current.innerText = month.toString().padStart(2, '0');
+        // Add slashes
+        if (inputValue.length > 4) {
+            inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2, 4)}/${inputValue.slice(
+                4
+            )}`;
+        } else if (inputValue.length > 2) {
+            inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2)}`;
         }
 
-        if (dayRef.current) {
-            dayRef.current.innerText = day.toString().padStart(2, '0');
-        }
-    }, [year, month, day]);
-
-    useEffect(() => {
-        let dayValue = day;
-        dayValue = applyDayLimits(dayValue);
-        setDay(dayValue);
-    }, [year, month]);
-
-    const adjustYear = (amount: number) => {
-        let yearValue = year + amount;
-        yearValue = applyYearLimits(yearValue);
-        setYear(yearValue);
-    };
-
-    const adjustMonth = (amount: number) => {
-        let monthValue = month + amount;
-        monthValue = applyMonthLimits(monthValue);
-        setMonth(monthValue);
-    };
-
-    const adjustDay = (amount: number) => {
-        let dayValue = day + amount;
-        dayValue = applyDayLimits(dayValue);
-        setDay(dayValue);
-    };
-
-    const applyYearLimits: DateLimitFunction = (yearValue: number) => {
-        if (yearValue < 1) return 1;
-        return yearValue;
-    };
-
-    const applyMonthLimits: DateLimitFunction = (monthValue: number) => {
-        if (monthValue < 1) return 1;
-        if (monthValue > 12) return 12;
-        return monthValue;
-    };
-
-    const applyDayLimits: DateLimitFunction = (dayValue: number) => {
-        if (dayValue < 1) return 1;
-
-        const maxDaysInMonth = new Date(year, month, 0).getDate();
-        if (dayValue > maxDaysInMonth) return maxDaysInMonth;
-
-        return dayValue;
-    };
-
-    const focusYear = () => {
-        yearRef.current?.focus();
-    };
-
-    const focusMonth = () => {
-        monthRef.current?.focus();
-    };
-
-    const focusDay = () => {
-        dayRef.current?.focus();
-    };
-
-    const yearHandler: DateKeyDownHandler = {
-        adjust: adjustYear,
-        focusLeft: focusDay,
-        focusRight: focusMonth,
-    };
-
-    const monthHandler: DateKeyDownHandler = {
-        adjust: adjustMonth,
-        focusLeft: focusYear,
-        focusRight: focusDay,
-    };
-
-    const dayHandler: DateKeyDownHandler = {
-        adjust: adjustDay,
-        focusLeft: focusMonth,
-        focusRight: focusYear,
+        setStringValue(inputValue);
+        setDateValue(parseDate(inputValue));
     };
 
     const clear = () => {
         const currentTime = new Date();
-        setYear(currentTime.getFullYear());
-        setMonth(currentTime.getMonth() + 1);
-        setDay(currentTime.getDate());
+        setDateValue(currentTime);
+        setStringValue(formatDate(currentTime));
     };
 
-    return { date, yearRef, monthRef, dayRef, yearHandler, monthHandler, dayHandler, focusYear, clear };
+    return { stringValue, dateValue, handleChange, clear };
+};
+
+const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // `Date` months start at 0
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+};
+
+const parseDate = (value: string): Date | null => {
+    const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const match = value.match(regex);
+    if (!match) return null;
+
+    const day = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10) - 1; // `Date` months start at 0
+    const year = parseInt(match[3], 10);
+
+    const date = new Date(year, month, day);
+    if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+        return date;
+    }
+    return null;
 };
 
 export default useDatePrompt;

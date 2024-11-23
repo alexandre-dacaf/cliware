@@ -4,14 +4,21 @@ import usePrinter from 'hooks/printer/usePrinter';
 
 export type TextPromptProps = {
     message: string;
+    defaultValue?: string;
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
 };
 
-const TextPrompt: React.FC<TextPromptProps> = ({ message, onSubmit, isActive, onEscape }) => {
+const TextPrompt: React.FC<TextPromptProps> = ({
+    message,
+    defaultValue = '',
+    onSubmit,
+    isActive,
+    onEscape,
+}) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState<string>('');
+    const [value, setValue] = useState<string>(defaultValue);
     const { printInput } = usePrinter();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
