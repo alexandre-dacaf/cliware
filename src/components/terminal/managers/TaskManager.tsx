@@ -7,7 +7,7 @@ interface TaskManagerProps {
 }
 
 const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
-    const { terminalState, currentPipelineContext, handlePromptResponse } = useTaskManager();
+    const { currentPipelineContext, handlePromptResponse } = useTaskManager();
 
     const renderCurrentTask = () => {
         if (!currentPipelineContext) return null;

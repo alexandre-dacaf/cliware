@@ -1,7 +1,6 @@
-import React, { useRef, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
 import './NumberPrompt.css';
-import usePrinter from 'hooks/printer/usePrinter';
 
 export type NumberPromptProps = {
     message: string;

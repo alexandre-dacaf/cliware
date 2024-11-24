@@ -3,7 +3,7 @@
 ## Sprint 4: Advanced Prompts and Commands
 
 > Version 0.4.0
-> 1.2.8 - Implement *placeholders* on commands and prompts
+> 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
 
 
 - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
@@ -11,7 +11,7 @@
 - [x] 1.2.4 - Implement *default* answers on prompts
 - [x] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
 - [ ] 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
-- [ ] 1.2.7 - Implement *hints* on Choices
+- [x] 1.2.7 - Implement *hints* on Choices
 - [x] 1.2.8 - Implement *placeholders* on commands and prompts
 - [ ] 1.2.9 - Implement *mask()* function or pattern to (mask) input
 - [x] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state

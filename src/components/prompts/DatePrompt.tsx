@@ -1,7 +1,6 @@
-import React, { useRef, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import useDatePrompt from 'hooks/prompts/useDatePrompt';
 import './DatePrompt.css';
-import usePrinter from 'hooks/printer/usePrinter';
 
 export type DatePromptProps = {
     message: string;

@@ -137,3 +137,5 @@
 
 ## To Be Defined (TBD)
 - [ ] Tbd1 - Single base prompt component, with input types as children components
+- [ ] Tbd2 - Scroll bottom when prompt is too long
+- [ ] Tbd3 - Handle persistence with PipelineContext (sessionStorage, localStorage and cookies)

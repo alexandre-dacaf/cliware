@@ -1,6 +1,7 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
 import usePrinter from 'hooks/printer/usePrinter';
 import './PasswordPrompt.css';
+import usePasswordPrompt from 'hooks/prompts/usePasswordPrompt';
 
 export type PasswordPromptProps = {
     message: string;
@@ -20,44 +21,12 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     onEscape,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState<string>('');
-    const { printInput, display, clearDisplay } = usePrinter();
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        clearDisplay();
-        const currentContent: string = event.target.value;
-        setValue(currentContent);
-    };
-
-    const submit = () => {
-        if (required && !value) {
-            display('Please fill out this field.');
-            return;
-        }
-
-        printInput(`${message} ${'•'.repeat(8)}`);
-        onSubmit(value);
-        setValue('');
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        preventDefaultEvents(event);
-
-        if (event.key === 'Enter') {
-            submit();
-        }
-        if (event.key === 'Escape') {
-            onEscape();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+    const { value, handleChange, handleKeyDown } = usePasswordPrompt({
+        message,
+        required,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && inputRef.current) {

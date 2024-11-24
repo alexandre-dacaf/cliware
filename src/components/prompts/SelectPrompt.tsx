@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import React, { useRef, useEffect } from 'react';
 import useSelectPrompt from 'hooks/prompts/useSelectPrompt';
 import { Choice } from 'types';
 import './SelectPrompt.css';
@@ -62,16 +62,26 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
             onBlur={handleBlur}
         >
             <div className='select-message'>{message}</div>
-            <div className='select-choices'>
+            <div className='choices-list'>
                 {choices.map((choice, index) => (
-                    <span
-                        key={index}
-                        className={`select-choice ${selectedIndex === index ? 'selected' : ''} ${
-                            checkedIndexes.includes(index) ? 'checked' : ''
-                        }`}
-                    >
-                        {choice.label}
-                    </span>
+                    <div className='choice' key={index}>
+                        <span
+                            className={`choice-label ${selectedIndex === index ? 'selected' : ''} ${
+                                checkedIndexes.includes(index) ? 'checked' : ''
+                            }`}
+                        >
+                            {choice.label}
+                        </span>
+                        {choice.hint ? (
+                            <span
+                                className={`choice-hint ${
+                                    selectedIndex === index ? 'selected' : ''
+                                }`}
+                            >
+                                {choice.hint}
+                            </span>
+                        ) : null}
+                    </div>
                 ))}
             </div>
             <span className='select-navigation-hint'>

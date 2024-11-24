@@ -2,13 +2,14 @@ import React, { useRef, useState, useEffect, KeyboardEvent as ReactKeyboardEvent
 import { Choice } from 'types';
 import usePrinter from 'hooks/printer/usePrinter';
 import './TogglePrompt.css';
+import useTogglePrompt from 'hooks/prompts/useTogglePrompt';
 
 export type TogglePromptProps = {
     message: string;
     defaultValue?: boolean;
-    onSubmit: (data: boolean) => void;
     trueLabel?: string;
     falseLabel?: string;
+    onSubmit: (data: boolean) => void;
     isActive: boolean;
     onEscape: () => void;
 };
@@ -17,64 +18,20 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
     message,
     defaultValue = false,
     onSubmit,
-    trueLabel,
-    falseLabel,
+    trueLabel = 'Yes',
+    falseLabel = 'No',
     isActive,
     onEscape,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const choices: Choice[] = [
-        { label: falseLabel ?? 'No', value: false },
-        { label: trueLabel ?? 'Yes', value: true },
-    ];
-    const [toggle, setToggle] = useState<boolean>(defaultValue);
-    const { printInput } = usePrinter();
-
-    const submit = () => {
-        const selectedChoice = choices.find((choice) => choice.value === toggle);
-
-        if (!selectedChoice) return;
-
-        printInput(`${message} ${selectedChoice.label}`);
-        onSubmit(selectedChoice.value);
-        setToggle(defaultValue);
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const key = event.key;
-        const isShiftPressed = event.shiftKey;
-        preventDefaultEvents(event);
-
-        if (
-            key === 'ArrowLeft' ||
-            key === 'ArrowUp' ||
-            key === 'ArrowRight' ||
-            key === 'ArrowDown' ||
-            key === 'Tab'
-        ) {
-            setToggle((prevToggle) => !prevToggle);
-        } else if (key === 'Enter') {
-            submit();
-        } else if (key === 'Escape') {
-            onEscape();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = [
-            'Enter',
-            'Tab',
-            'ArrowUp',
-            'ArrowDown',
-            'ArrowLeft',
-            'ArrowRight',
-            'Escape',
-        ];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+    const { choices, toggle, handleKeyDown } = useTogglePrompt({
+        message,
+        defaultValue,
+        trueLabel,
+        falseLabel,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && containerRef.current) {

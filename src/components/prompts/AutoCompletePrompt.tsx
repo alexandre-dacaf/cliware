@@ -1,7 +1,6 @@
-import React, { useMemo, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
 import './AutoCompletePrompt.css';
-import usePrinter from 'hooks/printer/usePrinter';
 
 export type AutoCompletePromptProps = {
     message: string;

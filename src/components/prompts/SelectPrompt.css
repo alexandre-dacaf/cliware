@@ -9,23 +9,38 @@
     font-weight: bold;
 }
 
-.select-choices {
+.choices-list {
     display: flex;
     flex-direction: column;
 }
 
-.select-choice {
+.choice {
+    display: flex;
     margin-top: 0.2em;
+    flex-direction: row;
+    align-items: end;
 }
 
-.select-choice.checked {
+.choice-label.checked {
     color: var(--success);
     text-decoration: underline;
 }
 
-.select-choice.selected {
+.choice-label.selected {
     color: var(--primary-color);
     text-decoration: underline;
+}
+
+.choice-hint {
+    display: none;
+    font-size: 0.9em;
+    color: #768390;
+    font-style: italic;
+    margin-left: 0.8em;
+}
+
+.choice-hint.selected {
+    display: inline;
 }
 
 .select-navigation-hint {

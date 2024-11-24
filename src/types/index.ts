@@ -81,6 +81,7 @@ export type PromptType =
 export interface Choice {
     value?: any;
     label: string;
+    hint?: string;
 }
 
 export interface BasePrompt extends BaseTask {

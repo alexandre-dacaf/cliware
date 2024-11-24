@@ -1,6 +1,6 @@
-import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './TextPrompt.css';
-import usePrinter from 'hooks/printer/usePrinter';
+import useTextPrompt from 'hooks/prompts/useTextPrompt';
 
 export type TextPromptProps = {
     message: string;
@@ -24,53 +24,14 @@ const TextPrompt: React.FC<TextPromptProps> = ({
     onEscape,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState<string>('');
-    const { printInput, display, clearDisplay } = usePrinter();
-
-    useEffect(() => {
-        setValue(defaultValue);
-    }, [defaultValue]);
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        clearDisplay();
-        setValue(event.target.value);
-    };
-
-    const submit = () => {
-        let formattedValue = value;
-
-        if (trim) {
-            formattedValue = formattedValue.trim();
-        }
-
-        if (required && !formattedValue) {
-            display('Please fill out this field.');
-            return;
-        }
-
-        printInput(`${message} ${formattedValue}`);
-        onSubmit(formattedValue);
-        setValue('');
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        preventDefaultEvents(event);
-
-        if (event.key === 'Enter') {
-            submit();
-        }
-        if (event.key === 'Escape') {
-            onEscape();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+    const { value, handleChange, handleKeyDown } = useTextPrompt({
+        message,
+        defaultValue,
+        required,
+        trim,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && inputRef.current) {

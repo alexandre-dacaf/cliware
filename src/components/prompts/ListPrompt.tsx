@@ -1,6 +1,7 @@
 import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
 import './ListPrompt.css';
 import usePrinter from 'hooks/printer/usePrinter';
+import useListPrompt from 'hooks/prompts/useListPrompt';
 
 export type ListPromptProps = {
     message: string;
@@ -24,56 +25,14 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     onEscape,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState<string>('');
-    const [list, setList] = useState<string[]>([]);
-    const { printInput, display, clearDisplay } = usePrinter();
-
-    useEffect(() => {
-        let splitContent = value.split(separator);
-
-        if (trim) {
-            splitContent = splitContent.map((item) => item.trim());
-            splitContent = splitContent.filter((i) => i.length > 0);
-        }
-
-        setList(splitContent);
-    }, [value]);
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        clearDisplay();
-        setValue(event.target.value);
-    };
-
-    const submit = () => {
-        if (required && list.length === 0) {
-            display('Please fill out this field.');
-            return;
-        }
-
-        const formattedList = JSON.stringify(list);
-        printInput(`${message} ${formattedList}`);
-        setValue('');
-        onSubmit(list);
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        preventDefaultEvents(event);
-
-        if (event.key === 'Enter') {
-            submit();
-        }
-        if (event.key === 'Escape') {
-            onEscape();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+    const { value, handleChange, handleKeyDown } = useListPrompt({
+        message,
+        separator,
+        trim,
+        required,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && inputRef.current) {
