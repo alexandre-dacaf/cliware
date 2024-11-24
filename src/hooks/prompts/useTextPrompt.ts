@@ -8,6 +8,7 @@ type UseTextPromptProps = {
     trim: boolean;
     onSubmit: (data: string) => void;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const useTextPrompt = ({
@@ -17,6 +18,7 @@ const useTextPrompt = ({
     trim,
     onSubmit,
     onEscape,
+    onAbort,
 }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
     const { printInput, display, clearDisplay } = usePrinter();
@@ -49,12 +51,14 @@ const useTextPrompt = ({
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         preventDefaultEvents(event);
+        const isCtrlPressed = event.ctrlKey;
 
         if (event.key === 'Enter') {
             submit();
-        }
-        if (event.key === 'Escape') {
+        } else if (event.key === 'Escape' && !isCtrlPressed) {
             onEscape();
+        } else if (event.key === 'Escape' && isCtrlPressed) {
+            onAbort();
         }
     };
 

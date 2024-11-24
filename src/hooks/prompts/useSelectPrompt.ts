@@ -10,6 +10,7 @@ type UseSelectPromptProps = {
     required: boolean;
     onSubmit: (data: Choice[] | Choice) => void;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const useSelectPrompt = ({
@@ -20,6 +21,7 @@ const useSelectPrompt = ({
     required,
     onSubmit,
     onEscape,
+    onAbort,
 }: UseSelectPromptProps) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
@@ -59,6 +61,7 @@ const useSelectPrompt = ({
 
         const key = event.key;
         const isShiftPressed = event.shiftKey;
+        const isCtrlPressed = event.ctrlKey;
         preventDefaultEvents(event);
 
         if (
@@ -67,25 +70,22 @@ const useSelectPrompt = ({
             (key === 'Tab' && isShiftPressed)
         ) {
             selectPrevious();
-        }
-        if (
+        } else if (
             event.key === 'ArrowDown' ||
             event.key === 'ArrowRight' ||
             (key === 'Tab' && !isShiftPressed)
         ) {
             selectNext();
-        }
-        if (event.key === ' ' || event.code === 'Space') {
+        } else if (event.key === ' ' || event.code === 'Space') {
             checkSelected();
-        }
-        if (event.key === 'Enter' && multiselect) {
+        } else if (event.key === 'Enter' && multiselect) {
             submit();
-        }
-        if (event.key === 'Enter' && !multiselect) {
+        } else if (event.key === 'Enter' && !multiselect) {
             checkAndSubmit();
-        }
-        if (event.key === 'Escape') {
+        } else if (event.key === 'Escape' && !isCtrlPressed) {
             onEscape();
+        } else if (event.key === 'Escape' && isCtrlPressed) {
+            onAbort();
         }
     };
 

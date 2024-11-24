@@ -9,6 +9,7 @@ type UseAutoCompletePromptProps = {
     required: boolean;
     onSubmit: (data: string) => void;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const useSelectPrompt = ({
@@ -19,6 +20,7 @@ const useSelectPrompt = ({
     required,
     onSubmit,
     onEscape,
+    onAbort,
 }: UseAutoCompletePromptProps) => {
     const [value, setValue] = useState<string>('');
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -171,27 +173,24 @@ const useSelectPrompt = ({
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         const key = event.key;
+        const isCtrlPressed = event.ctrlKey;
         preventDefaultEvents(event);
 
         if (key === 'ArrowDown') {
             selectNext();
-        }
-        if (key === 'ArrowUp') {
+        } else if (key === 'ArrowUp') {
             selectPrevious();
-        }
-        if (key === 'Enter') {
+        } else if (key === 'Enter') {
             submit();
-        }
-        if (key === 'Tab') {
+        } else if (key === 'Tab') {
             autocomplete();
-        }
-        if (key === 'Escape') {
+        } else if (event.key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        }
-        if (key === 'PageDown') {
+        } else if (event.key === 'Escape' && isCtrlPressed) {
+            onAbort();
+        } else if (key === 'PageDown') {
             nextPage();
-        }
-        if (key === 'PageUp') {
+        } else if (key === 'PageUp') {
             prevPage();
         }
     };

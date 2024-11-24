@@ -8,6 +8,7 @@ type UseListPromptProps = {
     required: boolean;
     onSubmit: (data: string[]) => void;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const useListPrompt = ({
@@ -17,6 +18,7 @@ const useListPrompt = ({
     required,
     onSubmit,
     onEscape,
+    onAbort,
 }: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
@@ -52,12 +54,14 @@ const useListPrompt = ({
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
         preventDefaultEvents(event);
+        const isCtrlPressed = event.ctrlKey;
 
         if (event.key === 'Enter') {
             submit();
-        }
-        if (event.key === 'Escape') {
+        } else if (event.key === 'Escape' && !isCtrlPressed) {
             onEscape();
+        } else if (event.key === 'Escape' && isCtrlPressed) {
+            onAbort();
         }
     };
 

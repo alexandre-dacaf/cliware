@@ -15,6 +15,7 @@ export type NumberPromptProps = {
     onSubmit: (data: number) => void;
     isActive: boolean;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const NumberPrompt: React.FC<NumberPromptProps> = ({
@@ -30,6 +31,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     onSubmit,
     isActive,
     onEscape,
+    onAbort,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { value, handleChange, handleKeyDown } = useNumberPrompt({
@@ -43,6 +45,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
         required,
         onSubmit,
         onEscape,
+        onAbort,
     });
 
     useEffect(() => {

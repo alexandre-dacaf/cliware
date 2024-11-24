@@ -9,6 +9,7 @@ type UseTogglePromptProps = {
     falseLabel: string;
     onSubmit: (data: boolean) => void;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const useTogglePrompt = ({
@@ -18,6 +19,7 @@ const useTogglePrompt = ({
     falseLabel,
     onSubmit,
     onEscape,
+    onAbort,
 }: UseTogglePromptProps) => {
     const [toggle, setToggle] = useState<boolean>(defaultValue);
     const { printInput } = usePrinter();
@@ -41,6 +43,7 @@ const useTogglePrompt = ({
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
         const key = event.key;
+        const isCtrlPressed = event.ctrlKey;
         preventDefaultEvents(event);
 
         if (
@@ -53,8 +56,10 @@ const useTogglePrompt = ({
             setToggle((prevToggle) => !prevToggle);
         } else if (key === 'Enter') {
             submit();
-        } else if (key === 'Escape') {
+        } else if (event.key === 'Escape' && !isCtrlPressed) {
             onEscape();
+        } else if (event.key === 'Escape' && isCtrlPressed) {
+            onAbort();
         }
     };
 

@@ -12,6 +12,7 @@ export type AutoCompletePromptProps = {
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
@@ -24,6 +25,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     onSubmit,
     isActive,
     onEscape,
+    onAbort,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const {
@@ -42,6 +44,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         required,
         onSubmit,
         onEscape,
+        onAbort,
     });
 
     useEffect(() => {

@@ -11,6 +11,7 @@ import {
     PasswordPrompt,
 } from 'components/prompts';
 import { AppContext } from 'context/AppContext';
+import { TerminalContext } from 'context/TerminalContext';
 import './PromptHandler.css';
 
 interface PromptHandlerProps {
@@ -20,7 +21,8 @@ interface PromptHandlerProps {
 }
 
 const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit, isActive }) => {
-    const { dispatch } = useContext(AppContext);
+    const { dispatch: appDispatch } = useContext(AppContext);
+    const { dispatch: terminalDispatch } = useContext(TerminalContext);
 
     const handleSubmit = (data: any) => {
         onSubmit(data);
@@ -28,7 +30,13 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
 
     const deactivateTerminal = () => {
         if (isActive) {
-            dispatch({ type: 'DEACTIVATE_TERMINAL' });
+            appDispatch({ type: 'DEACTIVATE_TERMINAL' });
+        }
+    };
+
+    const endPipelineAndStandby = () => {
+        if (isActive) {
+            terminalDispatch({ type: 'STANDBY' });
         }
     };
 
@@ -45,6 +53,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'toggle':
@@ -57,6 +66,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'select':
@@ -69,6 +79,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         multiselect={false}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'multiselect':
@@ -82,6 +93,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         multiselect={true}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'number':
@@ -99,6 +111,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'list':
@@ -112,6 +125,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'date':
@@ -124,6 +138,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'autocomplete':
@@ -138,6 +153,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             case 'password':
@@ -149,6 +165,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         isActive={isActive}
                         onEscape={deactivateTerminal}
+                        onAbort={endPipelineAndStandby}
                     />
                 );
             default:

@@ -12,6 +12,7 @@ type UseNumberPromptProps = {
     required: boolean;
     onSubmit: (data: number) => void;
     onEscape: () => void;
+    onAbort: () => void;
 };
 
 const useNumberPrompt = ({
@@ -25,6 +26,7 @@ const useNumberPrompt = ({
     required,
     onSubmit,
     onEscape,
+    onAbort,
 }: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
     const { printInput, display, clearDisplay } = usePrinter();
@@ -99,18 +101,18 @@ const useNumberPrompt = ({
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
         preventDefaultEvents(event);
+        const isCtrlPressed = event.ctrlKey;
 
         if (event.key === 'Enter') {
             submit();
-        }
-        if (event.key === 'ArrowUp') {
+        } else if (event.key === 'ArrowUp') {
             adjustStep(step);
-        }
-        if (event.key === 'ArrowDown') {
+        } else if (event.key === 'ArrowDown') {
             adjustStep(-step);
-        }
-        if (event.key === 'Escape') {
+        } else if (event.key === 'Escape' && !isCtrlPressed) {
             onEscape();
+        } else if (event.key === 'Escape' && isCtrlPressed) {
+            onAbort();
         }
     };
 
