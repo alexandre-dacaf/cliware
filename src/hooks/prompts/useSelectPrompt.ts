@@ -1,6 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useMemo } from 'react';
-import { Choice } from 'types';
+import { Choice, ValidateFunction } from 'types';
 
 type UseSelectPromptProps = {
     message: string;
@@ -8,6 +8,7 @@ type UseSelectPromptProps = {
     multiselect: boolean;
     defaultValue: any;
     required: boolean;
+    validate: ValidateFunction;
     onSubmit: (data: Choice[] | Choice) => void;
     onEscape: () => void;
     onAbort: () => void;
@@ -19,6 +20,7 @@ const useSelectPrompt = ({
     multiselect,
     defaultValue,
     required,
+    validate,
     onSubmit,
     onEscape,
     onAbort,
@@ -136,10 +138,22 @@ const useSelectPrompt = ({
     };
 
     const submit = () => {
-        console.log(required, checkedChoices.length);
-
         if (required && checkedChoices.length === 0) {
             display('Choose at least one option.');
+            return;
+        }
+
+        // `validation` can be a boolean or a string message
+        // If it's not true, use it as an alert message or use a default alert message
+        const validation = validate(checkedChoices);
+
+        if (validation !== true) {
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
+
+            display(validationMessage);
             return;
         }
 
@@ -149,7 +163,23 @@ const useSelectPrompt = ({
     };
 
     const checkAndSubmit = () => {
-        onSubmit(formattedChoices[selectedIndex]);
+        const selectedChoice = formattedChoices[selectedIndex];
+
+        // `validation` can be a boolean or a string message
+        // If it's not true, use it as an alert message or use a default alert message
+        const validation = validate(selectedChoice);
+
+        if (validation !== true) {
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
+
+            display(validationMessage);
+            return;
+        }
+
+        onSubmit(selectedChoice);
     };
 
     return {

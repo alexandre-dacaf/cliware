@@ -84,11 +84,14 @@ export interface Choice {
     hint?: string;
 }
 
+export type ValidateFunction = (response: any) => boolean | string;
+
 export interface BasePrompt extends BaseTask {
     type: 'prompt';
     message: string;
     promptType: PromptType;
     required?: boolean;
+    validate?: ValidateFunction;
 }
 
 export interface TextPrompt extends BasePrompt {

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './TextPrompt.css';
 import useTextPrompt from 'hooks/prompts/useTextPrompt';
+import { ValidateFunction } from 'types';
 
 export type TextPromptProps = {
     message: string;
@@ -8,8 +9,9 @@ export type TextPromptProps = {
     required?: boolean;
     trim?: boolean;
     placeholder?: string;
-    onSubmit: (data: string) => void;
+    validate?: ValidateFunction;
     isActive: boolean;
+    onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -20,8 +22,9 @@ const TextPrompt: React.FC<TextPromptProps> = ({
     required = false,
     trim = false,
     placeholder = '',
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -31,6 +34,7 @@ const TextPrompt: React.FC<TextPromptProps> = ({
         defaultValue,
         required,
         trim,
+        validate,
         onSubmit,
         onEscape,
         onAbort,

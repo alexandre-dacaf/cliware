@@ -39,6 +39,10 @@ export const blueprint: Blueprint = {
                 placeholder: 'Placeholder...',
                 required: true,
                 trim: true,
+                validate: (respose) => {
+                    if (respose.startsWith('a')) return true;
+                    return false;
+                },
                 next: 'text_q2',
             },
             text_q2: {
@@ -116,6 +120,13 @@ export const blueprint: Blueprint = {
                     { label: 'Falcão', value: 'falcon' },
                 ],
                 default: 'wolf',
+                validate: (response) => {
+                    if (response.value.startsWith('w')) {
+                        return "Select something that doesn't start with a 'w'";
+                    }
+
+                    return true;
+                },
                 next: 'act',
             },
 
@@ -142,6 +153,13 @@ export const blueprint: Blueprint = {
                     { label: 'Dim Sum', value: 'dim_sum' },
                 ],
                 default: 'pizza',
+                validate: (response) => {
+                    if (response.length < 3) {
+                        return 'Select at least 3';
+                    }
+
+                    return true;
+                },
                 required: true,
                 next: 'multiselect_q2',
             },
@@ -183,6 +201,13 @@ export const blueprint: Blueprint = {
                 step: 1,
                 default: 14,
                 required: true,
+                validate: (response) => {
+                    if (response % 2 === 1) {
+                        return 'Insert even number';
+                    }
+
+                    return true;
+                },
                 placeholder: 'Digite...',
                 next: 'number_q2',
             },
@@ -205,6 +230,13 @@ export const blueprint: Blueprint = {
                 trim: true,
                 required: true,
                 placeholder: 'Digite...',
+                validate: (response) => {
+                    if (response.length < 3) {
+                        return 'Insert at lest 3.';
+                    }
+
+                    return true;
+                },
                 next: 'list_q2',
             },
             list_q2: {
@@ -224,6 +256,14 @@ export const blueprint: Blueprint = {
                 default: '01/11/2024',
                 required: true,
                 placeholder: 'Digite...',
+                validate: (response) => {
+                    const today = new Date();
+                    const inputDate = new Date(response);
+                    if (inputDate < today) {
+                        return 'Date cannot be in the past. Please choose a future date.';
+                    }
+                    return true;
+                },
                 next: 'date_q2',
             },
             date_q2: {
@@ -259,6 +299,12 @@ export const blueprint: Blueprint = {
                 default: 'Rússia',
                 itemsPerPage: 5,
                 required: true,
+                validate: (response) => {
+                    if (response.startsWith('a')) {
+                        return "Can't start with a";
+                    }
+                    return true;
+                },
                 placeholder: 'Digite...',
                 next: 'autocomplete_q2',
             },
@@ -294,6 +340,12 @@ export const blueprint: Blueprint = {
                 promptType: 'password',
                 message: 'Digite uma senha (Q1):',
                 required: true,
+                validate: (response) => {
+                    if (response.length < 8) {
+                        return 'At least 8 chars';
+                    }
+                    return true;
+                },
                 placeholder: 'Digite...',
                 next: 'password_q2',
             },

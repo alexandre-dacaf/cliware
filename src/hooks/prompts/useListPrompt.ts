@@ -1,11 +1,13 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
+import { ValidateFunction } from 'types';
 
 type UseListPromptProps = {
     message: string;
     separator: string;
     trim: boolean;
     required: boolean;
+    validate: ValidateFunction;
     onSubmit: (data: string[]) => void;
     onEscape: () => void;
     onAbort: () => void;
@@ -16,6 +18,7 @@ const useListPrompt = ({
     separator,
     trim,
     required,
+    validate,
     onSubmit,
     onEscape,
     onAbort,
@@ -43,6 +46,20 @@ const useListPrompt = ({
     const submit = () => {
         if (required && list.length === 0) {
             display('Please fill out this field.');
+            return;
+        }
+
+        // `validation` can be a boolean or a string message
+        // If it's not true, use it as an alert message or use a default alert message
+        const validation = validate(list);
+
+        if (validation !== true) {
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
+
+            display(validationMessage);
             return;
         }
 

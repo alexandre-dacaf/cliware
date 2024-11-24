@@ -50,8 +50,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         required={task.required}
                         trim={task.trim}
                         placeholder={task.placeholder}
-                        onSubmit={handleSubmit}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -63,8 +64,8 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         trueLabel={task.trueLabel}
                         falseLabel={task.falseLabel}
                         defaultValue={task.default}
-                        onSubmit={handleSubmit}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -72,12 +73,13 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
             case 'select':
                 return (
                     <SelectPrompt
+                        multiselect={false}
                         message={task.message}
                         choices={task.choices}
                         defaultValue={task.default}
-                        onSubmit={handleSubmit}
-                        multiselect={false}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -85,13 +87,14 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
             case 'multiselect':
                 return (
                     <SelectPrompt
+                        multiselect={true}
                         message={task.message}
                         choices={task.choices}
                         defaultValue={task.default}
                         required={task.required}
-                        onSubmit={handleSubmit}
-                        multiselect={true}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -108,8 +111,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         defaultValue={task.default}
                         required={task.required}
                         placeholder={task.placeholder}
-                        onSubmit={handleSubmit}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -122,8 +126,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         trim={task.trim}
                         required={task.required}
                         placeholder={task.placeholder}
-                        onSubmit={handleSubmit}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -135,8 +140,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         defaultValue={task.default}
                         required={task.required}
                         placeholder={task.placeholder}
-                        onSubmit={handleSubmit}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -150,8 +156,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         defaultValue={task.default}
                         required={task.required}
                         placeholder={task.placeholder}
-                        onSubmit={handleSubmit}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />
@@ -162,8 +169,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         message={task.message}
                         required={task.required}
                         placeholder={task.placeholder}
-                        onSubmit={handleSubmit}
+                        validate={task.validate}
                         isActive={isActive}
+                        onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
                     />

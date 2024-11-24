@@ -1,5 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { ValidateFunction } from 'types';
 
 type UseNumberPromptProps = {
     message: string;
@@ -10,6 +11,7 @@ type UseNumberPromptProps = {
     decimals: number;
     defaultValue: number;
     required: boolean;
+    validate: ValidateFunction;
     onSubmit: (data: number) => void;
     onEscape: () => void;
     onAbort: () => void;
@@ -24,6 +26,7 @@ const useNumberPrompt = ({
     decimals,
     defaultValue,
     required,
+    validate,
     onSubmit,
     onEscape,
     onAbort,
@@ -134,6 +137,20 @@ const useNumberPrompt = ({
         if (numberValue > max) {
             display(`Maximum value is ${max}.`);
             clear();
+            return;
+        }
+
+        // `validation` can be a boolean or a string message
+        // If it's not true, use it as an alert message or use a default alert message
+        const validation = validate(numberValue);
+
+        if (validation !== true) {
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
+
+            display(validationMessage);
             return;
         }
 

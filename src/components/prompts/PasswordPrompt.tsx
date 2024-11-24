@@ -2,13 +2,15 @@ import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect
 import usePrinter from 'hooks/printer/usePrinter';
 import './PasswordPrompt.css';
 import usePasswordPrompt from 'hooks/prompts/usePasswordPrompt';
+import { ValidateFunction } from 'types';
 
 export type PasswordPromptProps = {
     message: string;
     required?: boolean;
     placeholder?: string;
-    onSubmit: (data: string) => void;
     isActive: boolean;
+    validate?: ValidateFunction;
+    onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -17,8 +19,9 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     message,
     required = false,
     placeholder = '',
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -26,6 +29,7 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     const { value, handleChange, handleKeyDown } = usePasswordPrompt({
         message,
         required,
+        validate,
         onSubmit,
         onEscape,
         onAbort,

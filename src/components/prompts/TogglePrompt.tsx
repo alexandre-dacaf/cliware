@@ -9,8 +9,8 @@ export type TogglePromptProps = {
     defaultValue?: boolean;
     trueLabel?: string;
     falseLabel?: string;
-    onSubmit: (data: boolean) => void;
     isActive: boolean;
+    onSubmit: (data: boolean) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -18,10 +18,10 @@ export type TogglePromptProps = {
 const TogglePrompt: React.FC<TogglePromptProps> = ({
     message,
     defaultValue = false,
-    onSubmit,
     trueLabel = 'Yes',
     falseLabel = 'No',
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {

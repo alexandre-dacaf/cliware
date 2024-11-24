@@ -2,6 +2,7 @@ import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect
 import './ListPrompt.css';
 import usePrinter from 'hooks/printer/usePrinter';
 import useListPrompt from 'hooks/prompts/useListPrompt';
+import { ValidateFunction } from 'types';
 
 export type ListPromptProps = {
     message: string;
@@ -9,8 +10,9 @@ export type ListPromptProps = {
     trim?: boolean;
     required?: boolean;
     placeholder?: string;
-    onSubmit: (data: string[]) => void;
     isActive: boolean;
+    validate?: ValidateFunction;
+    onSubmit: (data: string[]) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -21,8 +23,9 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     trim = true,
     required = false,
     placeholder = '',
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -32,6 +35,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
         separator,
         trim,
         required,
+        validate,
         onSubmit,
         onEscape,
         onAbort,

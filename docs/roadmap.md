@@ -3,11 +3,11 @@
 ## Sprint 4: Advanced Prompts and Commands
 
 > Version 0.4.0
-> 1.2.2 - Implement *validate()* function to check and alert before submit
+> 1.2.1 - Implement *back()* function to rewind to previous prompt
 
 
 - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
-- [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
+- [x] 1.2.2 - Implement *validate()* function to check and alert before submit
 - [x] 1.2.4 - Implement *default* answers on prompts
 - [x] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
 - [x] 1.2.6 - Implement *cancel()* (renamed abort) function to exit to standy CommandInput

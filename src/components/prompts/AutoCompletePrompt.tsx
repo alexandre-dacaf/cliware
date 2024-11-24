@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
 import './AutoCompletePrompt.css';
+import { ValidateFunction } from 'types';
 
 export type AutoCompletePromptProps = {
     message: string;
@@ -9,8 +10,9 @@ export type AutoCompletePromptProps = {
     defaultValue?: string;
     required?: boolean;
     placeholder?: string;
-    onSubmit: (data: string) => void;
+    validate?: ValidateFunction;
     isActive: boolean;
+    onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -22,8 +24,9 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     defaultValue = '',
     required = false,
     placeholder = '',
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -42,6 +45,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
         itemsPerPage,
         defaultValue,
         required,
+        validate,
         onSubmit,
         onEscape,
         onAbort,

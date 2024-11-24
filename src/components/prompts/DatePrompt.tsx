@@ -1,14 +1,16 @@
 import React, { useRef, useEffect } from 'react';
 import useDatePrompt from 'hooks/prompts/useDatePrompt';
 import './DatePrompt.css';
+import { ValidateFunction } from 'types';
 
 export type DatePromptProps = {
     message: string;
     defaultValue?: string;
     required?: boolean;
     placeholder?: string;
-    onSubmit: (data: Date | null) => void;
     isActive: boolean;
+    validate?: ValidateFunction;
+    onSubmit: (data: Date | null) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -18,8 +20,9 @@ const DatePrompt: React.FC<DatePromptProps> = ({
     defaultValue = '',
     required = false,
     placeholder = '',
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -28,6 +31,7 @@ const DatePrompt: React.FC<DatePromptProps> = ({
         message,
         defaultValue,
         required,
+        validate,
         onSubmit,
         onEscape,
         onAbort,

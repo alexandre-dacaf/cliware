@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
 import './NumberPrompt.css';
+import { ValidateFunction } from 'types';
 
 export type NumberPromptProps = {
     message: string;
@@ -12,8 +13,9 @@ export type NumberPromptProps = {
     defaultValue?: number;
     required?: boolean;
     placeholder?: string;
-    onSubmit: (data: number) => void;
     isActive: boolean;
+    validate?: ValidateFunction;
+    onSubmit: (data: number) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -28,8 +30,9 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     defaultValue = 0,
     required = false,
     placeholder = '',
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -43,6 +46,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
         decimals,
         defaultValue,
         required,
+        validate,
         onSubmit,
         onEscape,
         onAbort,

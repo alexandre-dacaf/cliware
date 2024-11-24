@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import useSelectPrompt from 'hooks/prompts/useSelectPrompt';
-import { Choice } from 'types';
+import { Choice, ValidateFunction } from 'types';
 import './SelectPrompt.css';
 
 export type SelectPromptProps = {
@@ -9,8 +9,9 @@ export type SelectPromptProps = {
     multiselect: boolean;
     defaultValue?: any;
     required?: boolean;
-    onSubmit: (data: Choice[] | Choice) => void;
     isActive: boolean;
+    validate?: ValidateFunction;
+    onSubmit: (data: Choice[] | Choice) => void;
     onEscape: () => void;
     onAbort: () => void;
 };
@@ -21,8 +22,9 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
     multiselect = false,
     defaultValue,
     required = false,
-    onSubmit,
+    validate = () => true,
     isActive,
+    onSubmit,
     onEscape,
     onAbort,
 }) => {
@@ -33,6 +35,7 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
         multiselect,
         defaultValue,
         required,
+        validate,
         onSubmit,
         onEscape,
         onAbort,
