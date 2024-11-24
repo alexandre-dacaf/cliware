@@ -3,15 +3,16 @@
 ## Sprint 4: Advanced Prompts and Commands
 
 > Version 0.4.0
-> [ ] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
+> 1.2.8 - Implement *placeholders* on commands and prompts
 
 
 - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
 - [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
 - [x] 1.2.4 - Implement *default* answers on prompts
+- [x] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
 - [ ] 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
 - [ ] 1.2.7 - Implement *hints* on Choices
-- [ ] 1.2.8 - Implement *placeholders* on commands and prompts
+- [x] 1.2.8 - Implement *placeholders* on commands and prompts
 - [ ] 1.2.9 - Implement *mask()* function or pattern to (mask) input
 - [x] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
 - [x] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
@@ -21,6 +22,7 @@
 - [x] 3.2.2 - Change CommandInput to use the autocomplete logic
 - [x] Chr2 - Rename terminal-history (print-history) and transient-output (display)
     - [x] Rename related functions on usePrinter and its uses
+- [x] Chr3 - Deal with enter when select is not multiselect (should select and submit)
 
 ## Sprint 3: Refactor and formatting
 

@@ -7,6 +7,7 @@ export type ListPromptProps = {
     separator?: string;
     trim?: boolean;
     required?: boolean;
+    placeholder?: string;
     onSubmit: (data: string[]) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -17,6 +18,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     separator = ',',
     trim = true,
     required = false,
+    placeholder = '',
     onSubmit,
     isActive,
     onEscape,
@@ -94,6 +96,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
                 ref={inputRef}
                 className='list-field'
                 value={value}
+                placeholder={placeholder}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}

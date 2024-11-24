@@ -121,7 +121,7 @@
 ## Chores
 - [x] Chr1 - Replace div-content-editables for inputs in prompts where it makes sense
 - [ ] Chr2 - Rename terminal-history (print-history) and transient-output (display)
-- [ ] Chr3 - Deal with enter when select is not multiselect (should select and submit)
+- [x] Chr3 - Deal with enter when select is not multiselect (should select and submit)
 
 
 ## Spikes
@@ -134,3 +134,6 @@
     - [ ] Bug1.3 - Terminal create should get the biggest id and create id+1, on last index of array
     - [ ] Bug1.4 - Terminal delete shouldn't happen when only one terminal (see Bug1.1)
     - [ ] Bug1.5 - When terminal delete, active or selected index should remain the same because the next terminal will take the deleted one's place
+
+## To Be Defined (TBD)
+- [ ] Tbd1 - Single base prompt component, with input types as children components

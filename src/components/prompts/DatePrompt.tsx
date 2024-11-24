@@ -7,6 +7,7 @@ export type DatePromptProps = {
     message: string;
     defaultValue?: string;
     required?: boolean;
+    placeholder?: string;
     onSubmit: (data: Date | null) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -16,6 +17,7 @@ const DatePrompt: React.FC<DatePromptProps> = ({
     message,
     defaultValue = '',
     required = false,
+    placeholder = '',
     onSubmit,
     isActive,
     onEscape,
@@ -50,6 +52,7 @@ const DatePrompt: React.FC<DatePromptProps> = ({
                 ref={inputRef}
                 className='date-field'
                 value={stringValue}
+                placeholder={placeholder}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}

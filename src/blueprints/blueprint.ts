@@ -36,6 +36,7 @@ export const blueprint: Blueprint = {
                 promptType: 'text',
                 message: 'Digite um texto (Q1):',
                 default: 'teste 123',
+                placeholder: 'Placeholder...',
                 required: true,
                 trim: true,
                 next: 'text_q2',
@@ -182,6 +183,7 @@ export const blueprint: Blueprint = {
                 step: 1,
                 default: 14,
                 required: true,
+                placeholder: 'Digite...',
                 next: 'number_q2',
             },
             number_q2: {
@@ -203,6 +205,7 @@ export const blueprint: Blueprint = {
                 separator: ',',
                 trim: true,
                 required: true,
+                placeholder: 'Digite...',
                 next: 'list_q2',
             },
             list_q2: {
@@ -221,6 +224,7 @@ export const blueprint: Blueprint = {
                 message: 'Selecione uma data (Q1):',
                 default: '01/11/2024',
                 required: true,
+                placeholder: 'Digite...',
                 next: 'date_q2',
             },
             date_q2: {
@@ -256,6 +260,7 @@ export const blueprint: Blueprint = {
                 default: 'Rússia',
                 itemsPerPage: 5,
                 required: true,
+                placeholder: 'Digite...',
                 next: 'autocomplete_q2',
             },
             autocomplete_q2: {
@@ -290,6 +295,7 @@ export const blueprint: Blueprint = {
                 promptType: 'password',
                 message: 'Digite uma senha (Q1):',
                 required: true,
+                placeholder: 'Digite...',
                 next: 'password_q2',
             },
             password_q2: {

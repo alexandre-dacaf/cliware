@@ -5,6 +5,7 @@ import './PasswordPrompt.css';
 export type PasswordPromptProps = {
     message: string;
     required?: boolean;
+    placeholder?: string;
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -13,6 +14,7 @@ export type PasswordPromptProps = {
 const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     message,
     required = false,
+    placeholder = '',
     onSubmit,
     isActive,
     onEscape,
@@ -79,6 +81,7 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
                 type='password'
                 className='password-field'
                 value={value}
+                placeholder={placeholder}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}

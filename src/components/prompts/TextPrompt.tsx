@@ -7,6 +7,7 @@ export type TextPromptProps = {
     defaultValue?: string;
     required?: boolean;
     trim?: boolean;
+    placeholder?: string;
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -17,6 +18,7 @@ const TextPrompt: React.FC<TextPromptProps> = ({
     defaultValue = '',
     required = false,
     trim = false,
+    placeholder = '',
     onSubmit,
     isActive,
     onEscape,
@@ -91,6 +93,7 @@ const TextPrompt: React.FC<TextPromptProps> = ({
                 ref={inputRef}
                 className='text-field'
                 value={value}
+                placeholder={placeholder}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}

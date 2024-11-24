@@ -94,6 +94,7 @@ export interface TextPrompt extends BasePrompt {
     promptType: 'text';
     default?: string;
     trim?: boolean;
+    placeholder?: string;
 }
 
 export interface TogglePrompt extends BasePrompt {
@@ -123,17 +124,20 @@ export interface NumberPrompt extends BasePrompt {
     float?: boolean;
     decimals?: number;
     default?: number;
+    placeholder?: string;
 }
 
 export interface ListPrompt extends BasePrompt {
     promptType: 'list';
     separator?: string;
     trim?: boolean;
+    placeholder?: string;
 }
 
 export interface DatePrompt extends BasePrompt {
     promptType: 'date';
     default?: string;
+    placeholder?: string;
 }
 
 export interface AutoCompletePrompt extends BasePrompt {
@@ -141,10 +145,12 @@ export interface AutoCompletePrompt extends BasePrompt {
     suggestions: string[];
     itemsPerPage?: number;
     default?: string;
+    placeholder?: string;
 }
 
 export interface PasswordPrompt extends BasePrompt {
     promptType: 'password';
+    placeholder?: string;
 }
 
 export type PromptTask =

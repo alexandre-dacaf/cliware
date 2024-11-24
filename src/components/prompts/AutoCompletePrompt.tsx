@@ -9,6 +9,7 @@ export type AutoCompletePromptProps = {
     itemsPerPage?: number;
     defaultValue?: string;
     required?: boolean;
+    placeholder?: string;
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -20,6 +21,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     itemsPerPage = 10,
     defaultValue = '',
     required = false,
+    placeholder = '',
     onSubmit,
     isActive,
     onEscape,
@@ -65,6 +67,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
                     ref={inputRef}
                     className='autocomplete-field'
                     value={value}
+                    placeholder={placeholder}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}

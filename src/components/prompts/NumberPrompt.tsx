@@ -12,6 +12,7 @@ export type NumberPromptProps = {
     decimals?: number;
     defaultValue?: number;
     required?: boolean;
+    placeholder?: string;
     onSubmit: (data: number) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -26,6 +27,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     decimals = 2,
     defaultValue = 0,
     required = false,
+    placeholder = '',
     onSubmit,
     isActive,
     onEscape,
@@ -65,6 +67,7 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
                 ref={inputRef}
                 className='number-field'
                 value={value}
+                placeholder={placeholder}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
