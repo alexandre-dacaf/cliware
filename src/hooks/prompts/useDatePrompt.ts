@@ -1,10 +1,24 @@
 import usePrinter from 'hooks/printer/usePrinter';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, KeyboardEvent as ReactKeyboardEvent } from 'react';
 
-const useDatePrompt = (defaultValue: string) => {
+type UseDatePromptProps = {
+    message: string;
+    defaultValue: string;
+    required: boolean;
+    onSubmit: (data: Date | null) => void;
+    onEscape: () => void;
+};
+
+const useDatePrompt = ({
+    message,
+    defaultValue,
+    required,
+    onSubmit,
+    onEscape,
+}: UseDatePromptProps) => {
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
-    const { clearDisplay } = usePrinter();
+    const { printInput, display, clearDisplay } = usePrinter();
 
     useEffect(() => {
         setStringValue(defaultValue);
@@ -37,13 +51,43 @@ const useDatePrompt = (defaultValue: string) => {
         setDateValue(parseDate(inputValue));
     };
 
+    const submit = () => {
+        if (required && !dateValue) {
+            display('Invalid date.');
+            return;
+        }
+
+        printInput(`${message} ${stringValue}`);
+        onSubmit(dateValue);
+        clear();
+    };
+
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        preventDefaultEvents(event);
+
+        if (event.key === 'Enter') {
+            submit();
+        }
+        if (event.key === 'Escape') {
+            onEscape();
+        }
+    };
+
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape'];
+
+        if (preventDefaultKeys.includes(event.key)) {
+            event.preventDefault();
+        }
+    };
+
     const clear = () => {
         const currentTime = new Date();
         setDateValue(currentTime);
         setStringValue(formatDate(currentTime));
     };
 
-    return { stringValue, dateValue, handleChange, clear };
+    return { stringValue, handleChange, handleKeyDown };
 };
 
 const formatDate = (date: Date): string => {

@@ -11,6 +11,7 @@ export type NumberPromptProps = {
     float?: boolean;
     decimals?: number;
     defaultValue?: number;
+    required?: boolean;
     onSubmit: (data: number) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -24,70 +25,24 @@ const NumberPrompt: React.FC<NumberPromptProps> = ({
     float = false,
     decimals = 2,
     defaultValue = 0,
+    required = false,
     onSubmit,
     isActive,
     onEscape,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { value, handleChange, adjustStep, clear } = useNumberPrompt(
-        min,
+    const { value, handleChange, handleKeyDown } = useNumberPrompt({
+        message,
         max,
+        min,
+        step,
         float,
         decimals,
-        defaultValue
-    );
-    const { printInput, display } = usePrinter();
-
-    const handleEnter = () => {
-        const numberValue: number = parseFloat(value);
-
-        if (isNaN(numberValue)) {
-            display('Invalid number.');
-            clear();
-            return;
-        }
-
-        if (numberValue < min) {
-            display(`Minimum value is ${min}.`);
-            clear();
-            return;
-        }
-
-        if (numberValue > max) {
-            display(`Maximum value is ${max}.`);
-            clear();
-            return;
-        }
-
-        printInput(`${message} ${numberValue}`);
-        onSubmit(numberValue);
-        clear();
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        preventDefaultEvents(event);
-
-        if (event.key === 'Enter') {
-            handleEnter();
-        }
-        if (event.key === 'ArrowUp') {
-            adjustStep(step);
-        }
-        if (event.key === 'ArrowDown') {
-            adjustStep(-step);
-        }
-        if (event.key === 'Escape') {
-            onEscape();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+        defaultValue,
+        required,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && inputRef.current) {

@@ -8,7 +8,8 @@ export type SelectPromptProps = {
     choices: Choice[];
     multiselect: boolean;
     defaultValue?: any;
-    onSubmit: (data: Choice[]) => void;
+    required?: boolean;
+    onSubmit: (data: Choice[] | Choice) => void;
     isActive: boolean;
     onEscape: () => void;
 };
@@ -18,78 +19,21 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
     choices,
     multiselect = false,
     defaultValue,
+    required = false,
     onSubmit,
     isActive,
     onEscape,
 }) => {
-    const formattedChoices = useMemo(
-        () =>
-            choices.map((choice) => ({
-                ...choice,
-                value: choice.value ?? choice.label,
-            })),
-        [choices]
-    );
-
     const containerRef = useRef<HTMLDivElement>(null);
-    const {
-        selectedIndex,
-        checkedIndexes,
-        checkedChoices,
-        selectNext,
-        selectPrevious,
-        checkSelected,
-    } = useSelectPrompt(formattedChoices, multiselect, defaultValue);
-
-    const handleEnter = () => {
-        onSubmit(checkedChoices);
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-        const key = event.key;
-        const isShiftPressed = event.shiftKey;
-        preventDefaultEvents(event);
-
-        if (
-            event.key === 'ArrowUp' ||
-            event.key === 'ArrowLeft' ||
-            (key === 'Tab' && isShiftPressed)
-        ) {
-            selectPrevious();
-        }
-        if (
-            event.key === 'ArrowDown' ||
-            event.key === 'ArrowRight' ||
-            (key === 'Tab' && !isShiftPressed)
-        ) {
-            selectNext();
-        }
-        if (event.key === ' ' || event.code === 'Space') {
-            checkSelected();
-        }
-        if (event.key === 'Enter') {
-            handleEnter();
-        }
-        if (event.key === 'Escape') {
-            onEscape();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-        const preventDefaultKeys = [
-            'Enter',
-            'Tab',
-            'ArrowUp',
-            'ArrowDown',
-            'ArrowLeft',
-            'ArrowRight',
-            'Escape',
-        ];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+    const { selectedIndex, checkedIndexes, handleKeyDown } = useSelectPrompt({
+        message,
+        choices,
+        multiselect,
+        defaultValue,
+        required,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && containerRef.current) {

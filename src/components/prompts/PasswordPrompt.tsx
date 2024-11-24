@@ -4,6 +4,7 @@ import './PasswordPrompt.css';
 
 export type PasswordPromptProps = {
     message: string;
+    required?: boolean;
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -11,20 +12,27 @@ export type PasswordPromptProps = {
 
 const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     message,
+    required = false,
     onSubmit,
     isActive,
     onEscape,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
-    const { printInput } = usePrinter();
+    const { printInput, display, clearDisplay } = usePrinter();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        clearDisplay();
         const currentContent: string = event.target.value;
         setValue(currentContent);
     };
 
-    const handleEnter = () => {
+    const submit = () => {
+        if (required && !value) {
+            display('Please fill out this field.');
+            return;
+        }
+
         printInput(`${message} ${'•'.repeat(8)}`);
         onSubmit(value);
         setValue('');
@@ -34,7 +42,7 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
         preventDefaultEvents(event);
 
         if (event.key === 'Enter') {
-            handleEnter();
+            submit();
         }
         if (event.key === 'Escape') {
             onEscape();

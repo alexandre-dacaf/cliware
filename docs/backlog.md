@@ -121,6 +121,7 @@
 ## Chores
 - [x] Chr1 - Replace div-content-editables for inputs in prompts where it makes sense
 - [ ] Chr2 - Rename terminal-history (print-history) and transient-output (display)
+- [ ] Chr3 - Deal with enter when select is not multiselect (should select and submit)
 
 
 ## Spikes

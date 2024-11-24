@@ -1,15 +1,33 @@
 import usePrinter from 'hooks/printer/usePrinter';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
 
-const useNumberPrompt = (
-    min: number,
-    max: number,
-    float: boolean,
-    decimals: number,
-    defaultValue: number
-) => {
+type UseNumberPromptProps = {
+    message: string;
+    max: number;
+    min: number;
+    step: number;
+    float: boolean;
+    decimals: number;
+    defaultValue: number;
+    required: boolean;
+    onSubmit: (data: number) => void;
+    onEscape: () => void;
+};
+
+const useNumberPrompt = ({
+    message,
+    max,
+    min,
+    step,
+    float,
+    decimals,
+    defaultValue,
+    required,
+    onSubmit,
+    onEscape,
+}: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
-    const { clearDisplay } = usePrinter();
+    const { printInput, display, clearDisplay } = usePrinter();
 
     const initValue = useMemo(() => {
         return Math.max(defaultValue, min);
@@ -79,11 +97,62 @@ const useNumberPrompt = (
         return isNaN(parsed) ? initValue : parsed;
     };
 
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        preventDefaultEvents(event);
+
+        if (event.key === 'Enter') {
+            submit();
+        }
+        if (event.key === 'ArrowUp') {
+            adjustStep(step);
+        }
+        if (event.key === 'ArrowDown') {
+            adjustStep(-step);
+        }
+        if (event.key === 'Escape') {
+            onEscape();
+        }
+    };
+
+    const submit = () => {
+        if (required && !value) {
+            display('Please fill out this field.');
+            clear();
+            return;
+        }
+
+        const numberValue: number = parseFloat(value);
+
+        if (numberValue < min) {
+            display(`Minimum value is ${min}.`);
+            clear();
+            return;
+        }
+
+        if (numberValue > max) {
+            display(`Maximum value is ${max}.`);
+            clear();
+            return;
+        }
+
+        printInput(`${message} ${numberValue}`);
+        onSubmit(numberValue);
+        clear();
+    };
+
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
+
+        if (preventDefaultKeys.includes(event.key)) {
+            event.preventDefault();
+        }
+    };
+
     const clear = () => {
         setValue(formatFloatDecimals(initValue));
     };
 
-    return { value, handleChange, adjustStep, clear };
+    return { value, handleChange, handleKeyDown };
 };
 
 export default useNumberPrompt;

@@ -24,10 +24,6 @@ const TerminalContainer: React.FC = () => {
         activateTerminal,
     } = useAppDispatcher();
 
-    useEffect(() => {
-        console.log(state);
-    }, [state]);
-
     const handleKeyDown = (event: KeyboardEvent) => {
         if (someTerminalActive()) return;
 

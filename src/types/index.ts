@@ -87,11 +87,13 @@ export interface BasePrompt extends BaseTask {
     type: 'prompt';
     message: string;
     promptType: PromptType;
+    required?: boolean;
 }
 
 export interface TextPrompt extends BasePrompt {
     promptType: 'text';
     default?: string;
+    trim?: boolean;
 }
 
 export interface TogglePrompt extends BasePrompt {

@@ -8,6 +8,7 @@ export type AutoCompletePromptProps = {
     suggestions: string[];
     itemsPerPage?: number;
     defaultValue?: string;
+    required?: boolean;
     onSubmit: (data: string) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -18,6 +19,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     suggestions,
     itemsPerPage = 10,
     defaultValue = '',
+    required = false,
     onSubmit,
     isActive,
     onEscape,
@@ -25,60 +27,21 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const {
         value,
-        setValue,
         pageSuggestions,
         pageIndex,
         handleChange,
-        selectPrevious,
-        selectNext,
-        nextPage,
-        prevPage,
+        handleKeyDown,
         currentPage,
         totalPages,
-        autocomplete,
-    } = useAutoCompletePrompt(suggestions, itemsPerPage, defaultValue);
-    const { printInput } = usePrinter();
-
-    const handleEnter = () => {
-        printInput(`${message} ${value}`);
-        setValue('');
-        onSubmit(value);
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const key = event.key;
-        preventDefaultEvents(event);
-
-        if (key === 'ArrowDown') {
-            selectNext();
-        }
-        if (key === 'ArrowUp') {
-            selectPrevious();
-        }
-        if (key === 'Enter') {
-            handleEnter();
-        }
-        if (key === 'Tab') {
-            autocomplete();
-        }
-        if (key === 'Escape') {
-            onEscape();
-        }
-        if (key === 'PageDown') {
-            nextPage();
-        }
-        if (key === 'PageUp') {
-            prevPage();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'Escape', 'PageDown', 'PageUp'];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
+    } = useAutoCompletePrompt({
+        message,
+        suggestions,
+        itemsPerPage,
+        defaultValue,
+        required,
+        onSubmit,
+        onEscape,
+    });
 
     useEffect(() => {
         if (isActive && inputRef.current) {

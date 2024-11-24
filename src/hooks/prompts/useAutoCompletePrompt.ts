@@ -1,12 +1,32 @@
-import { useState, useEffect, useMemo } from 'react';
+import usePrinter from 'hooks/printer/usePrinter';
+import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
 
-const useSelectPrompt = (suggestions: string[], itemsPerPage: number, defaultValue: string) => {
+type UseAutoCompletePromptProps = {
+    message: string;
+    suggestions: string[];
+    itemsPerPage: number;
+    defaultValue: string;
+    required: boolean;
+    onSubmit: (data: string) => void;
+    onEscape: () => void;
+};
+
+const useSelectPrompt = ({
+    message,
+    suggestions,
+    itemsPerPage,
+    defaultValue,
+    required,
+    onSubmit,
+    onEscape,
+}: UseAutoCompletePromptProps) => {
     const [value, setValue] = useState<string>('');
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const [pageSuggestions, setPageSuggestions] = useState<string[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
+    const { printInput, display, clearDisplay } = usePrinter();
 
     const totalPages = useMemo(
         () => Math.ceil(filteredSuggestions.length / itemsPerPage),
@@ -21,7 +41,6 @@ const useSelectPrompt = (suggestions: string[], itemsPerPage: number, defaultVal
         setValue(defaultValue);
 
         const index = suggestions.indexOf(defaultValue);
-        console.log(index);
 
         if (index !== -1) {
             setSelectedIndex(index);
@@ -43,6 +62,8 @@ const useSelectPrompt = (suggestions: string[], itemsPerPage: number, defaultVal
     }, [selectedIndex, currentPage, itemsPerPage]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        clearDisplay();
+
         const inputValue = event.target.value;
         setValue(inputValue);
 
@@ -137,19 +158,60 @@ const useSelectPrompt = (suggestions: string[], itemsPerPage: number, defaultVal
         });
     };
 
+    const submit = () => {
+        if (required && !value) {
+            display('Please fill out this field.');
+            return;
+        }
+
+        printInput(`${message} ${value}`);
+        setValue('');
+        onSubmit(value);
+    };
+
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const key = event.key;
+        preventDefaultEvents(event);
+
+        if (key === 'ArrowDown') {
+            selectNext();
+        }
+        if (key === 'ArrowUp') {
+            selectPrevious();
+        }
+        if (key === 'Enter') {
+            submit();
+        }
+        if (key === 'Tab') {
+            autocomplete();
+        }
+        if (key === 'Escape') {
+            onEscape();
+        }
+        if (key === 'PageDown') {
+            nextPage();
+        }
+        if (key === 'PageUp') {
+            prevPage();
+        }
+    };
+
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape', 'PageDown', 'PageUp'];
+
+        if (preventDefaultKeys.includes(event.key)) {
+            event.preventDefault();
+        }
+    };
+
     return {
         value,
-        setValue,
         pageSuggestions,
         pageIndex,
         handleChange,
-        selectPrevious,
-        selectNext,
-        nextPage,
-        prevPage,
+        handleKeyDown,
         currentPage,
         totalPages,
-        autocomplete,
     };
 };
 

@@ -30,7 +30,7 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
     const [toggle, setToggle] = useState<boolean>(defaultValue);
     const { printInput } = usePrinter();
 
-    const handleEnter = () => {
+    const submit = () => {
         const selectedChoice = choices.find((choice) => choice.value === toggle);
 
         if (!selectedChoice) return;
@@ -54,7 +54,7 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
         ) {
             setToggle((prevToggle) => !prevToggle);
         } else if (key === 'Enter') {
-            handleEnter();
+            submit();
         } else if (key === 'Escape') {
             onEscape();
         }

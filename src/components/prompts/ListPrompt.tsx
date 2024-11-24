@@ -6,6 +6,7 @@ export type ListPromptProps = {
     message: string;
     separator?: string;
     trim?: boolean;
+    required?: boolean;
     onSubmit: (data: string[]) => void;
     isActive: boolean;
     onEscape: () => void;
@@ -15,6 +16,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     message,
     separator = ',',
     trim = true,
+    required = false,
     onSubmit,
     isActive,
     onEscape,
@@ -22,7 +24,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
-    const { printInput } = usePrinter();
+    const { printInput, display, clearDisplay } = usePrinter();
 
     useEffect(() => {
         let splitContent = value.split(separator);
@@ -36,10 +38,16 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     }, [value]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        clearDisplay();
         setValue(event.target.value);
     };
 
-    const handleEnter = () => {
+    const submit = () => {
+        if (required && list.length === 0) {
+            display('Please fill out this field.');
+            return;
+        }
+
         const formattedList = JSON.stringify(list);
         printInput(`${message} ${formattedList}`);
         setValue('');
@@ -50,7 +58,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
         preventDefaultEvents(event);
 
         if (event.key === 'Enter') {
-            handleEnter();
+            submit();
         }
         if (event.key === 'Escape') {
             onEscape();
