@@ -9,6 +9,7 @@
     --success: #7ce38b;
     --info: #cea5fb;
     --danger: #fa7970;
+    --light: #c9c9c9;
     --font: 'Fira Code', 'Courier New', Courier, monospace;
 }
 
@@ -16,6 +17,7 @@ body {
     background-color: var(--neutral-100);
     color: #c9c9c9;
     font-family: var(--font);
+    font-size: 15px;
     margin: 0;
     padding: 0;
     height: 100vh;

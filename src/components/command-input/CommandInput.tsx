@@ -1,4 +1,10 @@
-import React, { useRef, useState, useContext, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import React, {
+    useRef,
+    useState,
+    useContext,
+    useEffect,
+    KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
 import { AppContext } from 'context/AppContext';
 import useCommandInput from 'hooks/command-input/useCommandInput';
 import { parseCommandArguments } from 'services/utils/parser';
@@ -12,11 +18,28 @@ interface CommandInputProps {
     isActive: boolean;
 }
 
-const CommandInput: React.FC<CommandInputProps> = ({ availableCommands, itemsPerPage = 10, onSubmit, isActive }) => {
+const CommandInput: React.FC<CommandInputProps> = ({
+    availableCommands,
+    itemsPerPage = 10,
+    onSubmit,
+    isActive,
+}) => {
     const { dispatch } = useContext(AppContext);
     const inputRef = useRef<HTMLInputElement>(null);
-    const { value, setValue, pageCommands, pageIndex, handleChange, autocomplete, selectPrevious, selectNext, nextPage, prevPage, currentPage, totalPages } =
-        useCommandInput(availableCommands, itemsPerPage);
+    const {
+        value,
+        setValue,
+        pageCommands,
+        pageIndex,
+        handleChange,
+        autocomplete,
+        selectPrevious,
+        selectNext,
+        nextPage,
+        prevPage,
+        currentPage,
+        totalPages,
+    } = useCommandInput(availableCommands, itemsPerPage);
 
     const handleEnter = () => {
         const commandArgs: CommandArgs = parseCommandArguments(value);
@@ -82,14 +105,24 @@ const CommandInput: React.FC<CommandInputProps> = ({ availableCommands, itemsPer
     return (
         <div className='command-input-container'>
             <div>
-                <span className='command-prompt'>$</span>
-                <input ref={inputRef} className='command-input' value={value} onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} />
+                <span className='command-prompt'>&gt;</span>
+                <input
+                    ref={inputRef}
+                    className='command-input'
+                    value={value}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleBlur}
+                />
             </div>
 
             {isActive ? (
                 <div className='div-available-commands'>
                     {pageCommands.map((command, index) => (
-                        <span key={index} className={`available-command ${pageIndex === index ? 'selected' : ''}`}>
+                        <span
+                            key={index}
+                            className={`available-command ${pageIndex === index ? 'selected' : ''}`}
+                        >
                             {command}
                         </span>
                     ))}

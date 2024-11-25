@@ -67,12 +67,18 @@
 
 ## Epic 4: Outputs
 
-- [ ] 🧩 **User Story 4.1 - As a dev, have a centralized way of handling outputs (much like PromptComponent centralizes prompt handling)**
-    - [ ] 4.1.1 - Implement basic components for the outputs present in the terminal history (terminal-command, terminal-input, terminal-output, terminal-error)
-    - [ ] 4.1.2 - Implement basic printing with tables
-    - [ ] 4.1.3 - Implement basic clackjs-like interfaces
-    - [ ] 4.1.4 - Implement ways of calling this outputs from tasks (prompts, actions and outputs) and from hooks (maybe events?)
-    - [ ] 4.1.5 - Implement callable error output
+- [ ] 🧩 **User Story 4.1 - As a dev, have multiple outputs for various use cases**
+    - [ ] 4.1.1 - Implement card-like appearance for the inputs (prompts and command-input)
+    - [ ] 4.1.2 - Implement card-like appearance for the groups of outputs related to a single command (adjust in terminal-history)
+    - [ ] 4.1.3 - Make sure the terminal is always scrolling to the bottom
+    - [ ] 4.1.4 - Implement basic printing with tables
+    - [ ] 4.1.5 - Implement toast (upper corner or inline?)
+    - [ ] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
+    - [ ] 4.1.7 - Implement progress bar
+    - [ ] 4.1.8 - Implement JSON output
+    - [ ] 4.1.9 - Implement spinner
+    - [ ] 4.1.10 - Implement output to file (first csv, json and txt only)
+    - [ ] 4.1.11 - Implement output to clipboard
 
 
 ## Epic 5: Refactoring
@@ -129,10 +135,10 @@
 
 ## Bugs & Fixes
 - [ ] Bug1 - Terminal create, delete and select is inconsistent.
-    - [ ] Bug1.1 - There shouldn't be less than 1 terminal
-    - [ ] Bug1.2 - Terminal select should use indexes, not ids
-    - [ ] Bug1.3 - Terminal create should get the biggest id and create id+1, on last index of array
-    - [ ] Bug1.4 - Terminal delete shouldn't happen when only one terminal (see Bug1.1)
+    - [x] Bug1.1 - There shouldn't be less than 1 terminal
+    - [x] Bug1.2 - Terminal select should use indexes, not ids
+    - [x] Bug1.3 - Terminal create should get the biggest id and create id+1, on last index of array
+    - [x] Bug1.4 - Terminal delete shouldn't happen when only one terminal (see Bug1.1)
     - [ ] Bug1.5 - When terminal delete, active or selected index should remain the same because the next terminal will take the deleted one's place
 
 ## To Be Defined (TBD)

@@ -10,23 +10,22 @@ import usePrinter from 'hooks/printer/usePrinter';
 import './Terminal.css';
 
 interface TerminalProps {
-    terminalId: string;
     isActive: boolean;
     isSelected: boolean;
 }
 
-const Terminal: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected }) => {
+const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     return (
         <TerminalProvider>
-            <TerminalBody terminalId={terminalId} isActive={isActive} isSelected={isSelected} />
+            <TerminalBody isActive={isActive} isSelected={isSelected} />
         </TerminalProvider>
     );
 };
 
-const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelected }) => {
-    const { state, dispatch } = useContext(TerminalContext);
-    const { print } = usePrinter();
+const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     const terminalRef = useRef<HTMLDivElement>(null);
+    const { state, dispatch } = useContext(TerminalContext);
+    const { createHistoryGroup, print } = usePrinter();
 
     const availableCommands = useMemo(() => Object.keys(blueprint).sort(), [blueprint]);
 
@@ -38,11 +37,6 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     }, [state.printHistory, state.display]);
 
     const handleCommandSubmit = (commandString: string, commandArgs: CommandArgs) => {
-        dispatch({
-            type: 'SET_COMMAND_ARGS',
-            payload: commandArgs,
-        });
-
         const commandBlueprint: CommandBlueprint = blueprint[commandArgs.command];
 
         if (commandBlueprint) {
@@ -50,10 +44,10 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
                 type: 'SET_COMMAND_BLUEPRINT',
                 payload: commandBlueprint,
             });
-            print({ type: 'command', content: `$ ${commandString}` });
+            createHistoryGroup({ type: 'command', content: `> ${commandString}` });
         } else {
             print([
-                { type: 'command', content: `$ ${commandString}` },
+                { type: 'command', content: `> ${commandString}` },
                 { type: 'error', content: `Command ${commandArgs.command} not found.` },
             ]);
             dispatch({ type: 'STANDBY' });
@@ -61,16 +55,43 @@ const TerminalBody: React.FC<TerminalProps> = ({ terminalId, isActive, isSelecte
     };
 
     return (
-        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
+        <div
+            className={
+                'terminal ' +
+                (isActive ? 'active-terminal ' : ' ') +
+                (isSelected ? 'selected-terminal ' : ' ')
+            }
+            ref={terminalRef}
+        >
             <PrintHistory />
 
-            {state.commandBlueprint ? (
-                <TaskManager isActive={isActive} />
-            ) : (
-                <CommandInput availableCommands={availableCommands} onSubmit={handleCommandSubmit} isActive={isActive} />
-            )}
-
-            <Display />
+            <div className='current-command-container'>
+                {state.printHistory
+                    .filter((group) => group.id === state.currentHistoryGroupId)
+                    .map((group) => {
+                        return (
+                            <div key={group.id} className='current-history-group'>
+                                {group.entries.map((entry, index) => {
+                                    return (
+                                        <div key={index} className={`terminal-${entry.type}`}>
+                                            {entry.content}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+                {state.commandBlueprint ? (
+                    <TaskManager isActive={isActive} />
+                ) : (
+                    <CommandInput
+                        availableCommands={availableCommands}
+                        onSubmit={handleCommandSubmit}
+                        isActive={isActive}
+                    />
+                )}
+                <Display />
+            </div>
         </div>
     );
 };

@@ -181,6 +181,7 @@ const useSelectPrompt = ({
             return;
         }
 
+        printInput(`${message} ${selectedChoice.label}`);
         onSubmit(selectedChoice);
     };
 

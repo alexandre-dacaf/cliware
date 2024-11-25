@@ -1,12 +1,26 @@
 import { HistoryEntry, PrinterInterface } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const usePrinter = (): PrinterInterface => {
-    const { dispatch } = useContext(TerminalContext);
+    const { state, dispatch } = useContext(TerminalContext);
 
-    const print = (payload: HistoryEntry | HistoryEntry[]) => {
-        dispatch({ type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY', payload });
+    const createHistoryGroup = (initialEntries?: HistoryEntry | HistoryEntry[]) => {
+        const newGroupId = uuidv4();
+        const entries = initialEntries ?? [];
+
+        dispatch({
+            type: 'CREATE_NEW_HISTORY_GROUP',
+            payload: { currentGroupId: state.currentHistoryGroupId, newGroupId, entries },
+        });
+    };
+
+    const print = (entries: HistoryEntry | HistoryEntry[]) => {
+        dispatch({
+            type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY',
+            payload: { currentGroupId: state.currentHistoryGroupId, entries: entries },
+        });
     };
 
     const display = (output: string | JSX.Element) => {
@@ -20,7 +34,7 @@ const usePrinter = (): PrinterInterface => {
     };
 
     const printCommand = (message: string) => {
-        print({ type: 'command', content: `$ ${message}` });
+        print({ type: 'command', content: `> ${message}` });
     };
 
     const printInput = (message: string) => {
@@ -38,6 +52,7 @@ const usePrinter = (): PrinterInterface => {
     };
 
     return {
+        createHistoryGroup,
         print,
         printCommand,
         printInput,

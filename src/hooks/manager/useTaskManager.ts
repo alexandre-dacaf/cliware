@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
-import { PipelineData, PipelineContext, TaskKey, NextTask, CommandBlueprint } from 'types';
+import { PipelineContext, TaskKey, CommandBlueprint } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
-import { AppContext } from 'context/AppContext';
 import usePrinter from 'hooks/printer/usePrinter';
 import useAppDispatcher from 'hooks/app/useAppDispatcher';
 

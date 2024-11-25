@@ -7,13 +7,21 @@ const PrintHistory: React.FC = () => {
 
     return (
         <div className='history'>
-            {state.printHistory.map((entry, index) => {
-                return (
-                    <div key={index} className={`terminal-${entry.type}`}>
-                        {entry.content}
-                    </div>
-                );
-            })}
+            {state.printHistory
+                .filter((group) => group.id !== state.currentHistoryGroupId)
+                .map((group) => {
+                    return (
+                        <div key={group.id} className='history-group'>
+                            {group.entries.map((entry, index) => {
+                                return (
+                                    <div key={index} className={`terminal-${entry.type}`}>
+                                        {entry.content}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
         </div>
     );
 };

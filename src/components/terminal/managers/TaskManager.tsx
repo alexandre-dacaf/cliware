@@ -1,6 +1,7 @@
 import React from 'react';
 import { PromptHandler } from './handlers/PromptHandler';
 import useTaskManager from 'hooks/manager/useTaskManager';
+import { CommandBlueprint } from 'types';
 
 interface TaskManagerProps {
     isActive: boolean;

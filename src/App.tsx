@@ -81,7 +81,6 @@ const TerminalContainer: React.FC = () => {
             {state.terminalList.map((terminal) => (
                 <Terminal
                     key={terminal.id}
-                    terminalId={terminal.id}
                     isActive={isActive(terminal.id)}
                     isSelected={isFocused(terminal.id)}
                 />

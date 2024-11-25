@@ -40,7 +40,8 @@ export interface Blueprint {
 
 //#region Actions
 export interface PrinterInterface {
-    print: (payload: HistoryEntry | HistoryEntry[]) => void;
+    createHistoryGroup: (initialEntries?: HistoryEntry | HistoryEntry[]) => void;
+    print: (entries: HistoryEntry | HistoryEntry[]) => void;
     printCommand: (message: string) => void;
     printInput: (message: string) => void;
     printOutput: (output: string | JSX.Element) => void;
@@ -240,10 +241,15 @@ export interface HistoryEntry {
     type: 'command' | 'input' | 'output' | 'error';
     content: string | JSX.Element;
 }
+
+export type HistoryGroupId = string | null;
+export type HistoryGroup = { id: HistoryGroupId; entries: HistoryEntry[] };
+
 export interface TerminalState {
     commandArgs: CommandArgs | null;
     commandBlueprint: CommandBlueprint | null;
-    printHistory: HistoryEntry[];
+    currentHistoryGroupId: HistoryGroupId;
+    printHistory: HistoryGroup[];
     display: string | null;
 }
 
@@ -251,7 +257,18 @@ export type TerminalAction =
     | { type: 'STANDBY' }
     | { type: 'SET_COMMAND_ARGS'; payload: CommandArgs }
     | { type: 'SET_COMMAND_BLUEPRINT'; payload: CommandBlueprint }
-    | { type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY'; payload: HistoryEntry | HistoryEntry[] }
+    | {
+          type: 'CREATE_NEW_HISTORY_GROUP';
+          payload: {
+              currentGroupId: HistoryGroupId;
+              newGroupId: string;
+              entries: HistoryEntry | HistoryEntry[];
+          };
+      }
+    | {
+          type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY';
+          payload: { currentGroupId: HistoryGroupId; entries: HistoryEntry | HistoryEntry[] };
+      }
     | { type: 'SET_TRANSIENT_OUTPUT'; payload: string }
     | { type: 'CLEAR_TRANSIENT_OUTPUT' };
 //#endregion

@@ -1,3 +1,4 @@
 .active-terminal .terminal-transient {
     color: var(--warning);
+    padding: 1em;
 }
