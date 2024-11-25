@@ -10,6 +10,7 @@ type UseDatePromptProps = {
     onSubmit: (data: Date | null) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useDatePrompt = ({
@@ -20,6 +21,7 @@ const useDatePrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseDatePromptProps) => {
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
@@ -82,15 +84,18 @@ const useDatePrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        preventDefaultEvents(event);
+        const key = event.key;
         const isCtrlPressed = event.ctrlKey;
+        preventDefaultEvents(event);
 
-        if (event.key === 'Enter') {
+        if (key === 'Enter') {
             submit();
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 

@@ -13,6 +13,7 @@ export type TogglePromptProps = {
     onSubmit: (data: boolean) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const TogglePrompt: React.FC<TogglePromptProps> = ({
@@ -24,6 +25,7 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { choices, toggle, handleKeyDown } = useTogglePrompt({
@@ -34,6 +36,7 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
         onSubmit,
         onEscape,
         onAbort,
+        onGoBack,
     });
 
     useEffect(() => {

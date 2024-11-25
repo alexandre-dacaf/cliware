@@ -9,6 +9,7 @@ type UsePasswordPromptProps = {
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const usePasswordPrompt = ({
@@ -18,6 +19,7 @@ const usePasswordPrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UsePasswordPromptProps) => {
     const [value, setValue] = useState<string>('');
     const { printInput, display, clearDisplay } = usePrinter();
@@ -54,15 +56,18 @@ const usePasswordPrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        preventDefaultEvents(event);
+        const key = event.key;
         const isCtrlPressed = event.ctrlKey;
+        preventDefaultEvents(event);
 
-        if (event.key === 'Enter') {
+        if (key === 'Enter') {
             submit();
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 

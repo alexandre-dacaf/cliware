@@ -7,7 +7,7 @@ interface TaskManagerProps {
 }
 
 const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
-    const { currentPipelineContext, handlePromptResponse } = useTaskManager();
+    const { currentPipelineContext, handlePromptResponse, handlePromptGoBack } = useTaskManager();
 
     const renderCurrentTask = () => {
         if (!currentPipelineContext) return null;
@@ -19,7 +19,12 @@ const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
         if (!currentTask || currentTask.type !== 'prompt') return null;
 
         return (
-            <PromptHandler task={currentTask} onSubmit={handlePromptResponse} isActive={isActive} />
+            <PromptHandler
+                task={currentTask}
+                onSubmit={handlePromptResponse}
+                onGoBack={handlePromptGoBack}
+                isActive={isActive}
+            />
         );
     };
 

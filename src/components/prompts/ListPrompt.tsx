@@ -15,6 +15,7 @@ export type ListPromptProps = {
     onSubmit: (data: string[]) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const ListPrompt: React.FC<ListPromptProps> = ({
@@ -28,6 +29,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { value, handleChange, handleKeyDown } = useListPrompt({
@@ -39,6 +41,7 @@ const ListPrompt: React.FC<ListPromptProps> = ({
         onSubmit,
         onEscape,
         onAbort,
+        onGoBack,
     });
 
     useEffect(() => {

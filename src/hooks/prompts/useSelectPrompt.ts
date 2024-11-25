@@ -12,6 +12,7 @@ type UseSelectPromptProps = {
     onSubmit: (data: Choice[] | Choice) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useSelectPrompt = ({
@@ -24,6 +25,7 @@ const useSelectPrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseSelectPromptProps) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
@@ -67,27 +69,27 @@ const useSelectPrompt = ({
         preventDefaultEvents(event);
 
         if (
-            event.key === 'ArrowUp' ||
-            event.key === 'ArrowLeft' ||
-            (key === 'Tab' && isShiftPressed)
+            (key === 'ArrowUp' || key === 'ArrowLeft' || (key === 'Tab' && isShiftPressed)) &&
+            !isCtrlPressed
         ) {
             selectPrevious();
         } else if (
-            event.key === 'ArrowDown' ||
-            event.key === 'ArrowRight' ||
-            (key === 'Tab' && !isShiftPressed)
+            (key === 'ArrowDown' || key === 'ArrowRight' || (key === 'Tab' && !isShiftPressed)) &&
+            !isCtrlPressed
         ) {
             selectNext();
-        } else if (event.key === ' ' || event.code === 'Space') {
+        } else if (key === ' ' || event.code === 'Space') {
             checkSelected();
-        } else if (event.key === 'Enter' && multiselect) {
+        } else if (key === 'Enter' && multiselect) {
             submit();
-        } else if (event.key === 'Enter' && !multiselect) {
+        } else if (key === 'Enter' && !multiselect) {
             checkAndSubmit();
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 

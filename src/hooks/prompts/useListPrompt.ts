@@ -11,6 +11,7 @@ type UseListPromptProps = {
     onSubmit: (data: string[]) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useListPrompt = ({
@@ -22,6 +23,7 @@ const useListPrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
@@ -70,15 +72,18 @@ const useListPrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        preventDefaultEvents(event);
+        const key = event.key;
         const isCtrlPressed = event.ctrlKey;
+        preventDefaultEvents(event);
 
-        if (event.key === 'Enter') {
+        if (key === 'Enter') {
             submit();
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 

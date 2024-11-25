@@ -51,6 +51,7 @@ export interface PrinterInterface {
 
 export interface PipelineContext {
     currentTaskKey: TaskKey;
+    taskKeyBreadcrumbs: TaskKey[];
     pipelineData: PipelineData;
     pipelineBlueprint: PipelineBlueprint;
     commandArgs: CommandArgs | null;

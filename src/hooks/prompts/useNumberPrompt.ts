@@ -15,6 +15,7 @@ type UseNumberPromptProps = {
     onSubmit: (data: number) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useNumberPrompt = ({
@@ -30,6 +31,7 @@ const useNumberPrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
     const { printInput, display, clearDisplay } = usePrinter();
@@ -103,19 +105,22 @@ const useNumberPrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
-        preventDefaultEvents(event);
+        const key = event.key;
         const isCtrlPressed = event.ctrlKey;
+        preventDefaultEvents(event);
 
-        if (event.key === 'Enter') {
+        if (key === 'Enter') {
             submit();
-        } else if (event.key === 'ArrowUp') {
+        } else if (key === 'ArrowUp' && !isCtrlPressed) {
             adjustStep(step);
-        } else if (event.key === 'ArrowDown') {
+        } else if (key === 'ArrowDown' && !isCtrlPressed) {
             adjustStep(-step);
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 

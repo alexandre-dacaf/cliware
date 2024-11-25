@@ -14,6 +14,7 @@ export type SelectPromptProps = {
     onSubmit: (data: Choice[] | Choice) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const SelectPrompt: React.FC<SelectPromptProps> = ({
@@ -27,6 +28,7 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { selectedIndex, checkedIndexes, handleKeyDown } = useSelectPrompt({
@@ -39,6 +41,7 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
         onSubmit,
         onEscape,
         onAbort,
+        onGoBack,
     });
 
     useEffect(() => {

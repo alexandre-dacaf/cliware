@@ -39,10 +39,6 @@ export const blueprint: Blueprint = {
                 placeholder: 'Placeholder...',
                 required: true,
                 trim: true,
-                validate: (respose) => {
-                    if (respose.startsWith('a')) return true;
-                    return false;
-                },
                 next: 'text_q2',
             },
             text_q2: {

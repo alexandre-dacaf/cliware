@@ -13,6 +13,7 @@ export type DatePromptProps = {
     onSubmit: (data: Date | null) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const DatePrompt: React.FC<DatePromptProps> = ({
@@ -25,6 +26,7 @@ const DatePrompt: React.FC<DatePromptProps> = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { stringValue, handleChange, handleKeyDown } = useDatePrompt({
@@ -35,6 +37,7 @@ const DatePrompt: React.FC<DatePromptProps> = ({
         onSubmit,
         onEscape,
         onAbort,
+        onGoBack,
     });
 
     useEffect(() => {

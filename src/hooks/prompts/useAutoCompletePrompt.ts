@@ -12,6 +12,7 @@ type UseAutoCompletePromptProps = {
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useSelectPrompt = ({
@@ -24,6 +25,7 @@ const useSelectPrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseAutoCompletePromptProps) => {
     const [value, setValue] = useState<string>('');
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -195,16 +197,18 @@ const useSelectPrompt = ({
 
         if (key === 'ArrowDown') {
             selectNext();
-        } else if (key === 'ArrowUp') {
+        } else if (key === 'ArrowUp' && !isCtrlPressed) {
             selectPrevious();
-        } else if (key === 'Enter') {
+        } else if (key === 'Enter' && !isCtrlPressed) {
             submit();
         } else if (key === 'Tab') {
             autocomplete();
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         } else if (key === 'PageDown') {
             nextPage();
         } else if (key === 'PageUp') {

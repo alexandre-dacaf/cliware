@@ -13,6 +13,7 @@ export type PasswordPromptProps = {
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const PasswordPrompt: React.FC<PasswordPromptProps> = ({
@@ -24,6 +25,7 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { value, handleChange, handleKeyDown } = usePasswordPrompt({
@@ -33,6 +35,7 @@ const PasswordPrompt: React.FC<PasswordPromptProps> = ({
         onSubmit,
         onEscape,
         onAbort,
+        onGoBack,
     });
 
     useEffect(() => {

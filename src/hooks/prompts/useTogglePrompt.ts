@@ -10,6 +10,7 @@ type UseTogglePromptProps = {
     onSubmit: (data: boolean) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useTogglePrompt = ({
@@ -20,6 +21,7 @@ const useTogglePrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseTogglePromptProps) => {
     const [toggle, setToggle] = useState<boolean>(defaultValue);
     const { printInput } = usePrinter();
@@ -47,11 +49,12 @@ const useTogglePrompt = ({
         preventDefaultEvents(event);
 
         if (
-            key === 'ArrowLeft' ||
-            key === 'ArrowUp' ||
-            key === 'ArrowRight' ||
-            key === 'ArrowDown' ||
-            key === 'Tab'
+            (key === 'ArrowLeft' ||
+                key === 'ArrowUp' ||
+                key === 'ArrowRight' ||
+                key === 'ArrowDown' ||
+                key === 'Tab') &&
+            !isCtrlPressed
         ) {
             setToggle((prevToggle) => !prevToggle);
         } else if (key === 'Enter') {
@@ -60,6 +63,8 @@ const useTogglePrompt = ({
             onEscape();
         } else if (event.key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (event.key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 

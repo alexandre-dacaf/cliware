@@ -14,6 +14,7 @@ export type TextPromptProps = {
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const TextPrompt: React.FC<TextPromptProps> = ({
@@ -27,6 +28,7 @@ const TextPrompt: React.FC<TextPromptProps> = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { value, handleChange, handleKeyDown } = useTextPrompt({
@@ -38,6 +40,7 @@ const TextPrompt: React.FC<TextPromptProps> = ({
         onSubmit,
         onEscape,
         onAbort,
+        onGoBack,
     });
 
     useEffect(() => {

@@ -11,6 +11,7 @@ type UseTextPromptProps = {
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
+    onGoBack: () => void;
 };
 
 const useTextPrompt = ({
@@ -22,6 +23,7 @@ const useTextPrompt = ({
     onSubmit,
     onEscape,
     onAbort,
+    onGoBack,
 }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
     const { printInput, display, clearDisplay } = usePrinter();
@@ -67,20 +69,23 @@ const useTextPrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        preventDefaultEvents(event);
+        const key = event.key;
         const isCtrlPressed = event.ctrlKey;
+        preventDefaultEvents(event);
 
-        if (event.key === 'Enter') {
+        if (key === 'Enter') {
             submit();
-        } else if (event.key === 'Escape' && !isCtrlPressed) {
+        } else if (key === 'Escape' && !isCtrlPressed) {
             onEscape();
-        } else if (event.key === 'Escape' && isCtrlPressed) {
+        } else if (key === 'Escape' && isCtrlPressed) {
             onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
         }
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'Escape'];
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape'];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();

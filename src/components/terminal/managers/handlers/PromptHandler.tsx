@@ -17,15 +17,25 @@ import './PromptHandler.css';
 interface PromptHandlerProps {
     task: PromptTask;
     onSubmit: (data: any) => void;
+    onGoBack: () => void;
     isActive: boolean;
 }
 
-const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit, isActive }) => {
+const PromptHandler: React.FC<PromptHandlerProps> = ({
+    task,
+    onSubmit: onSubmit,
+    isActive,
+    onGoBack,
+}) => {
     const { dispatch: appDispatch } = useContext(AppContext);
     const { dispatch: terminalDispatch } = useContext(TerminalContext);
 
     const handleSubmit = (data: any) => {
         onSubmit(data);
+    };
+
+    const handleGoBack = () => {
+        onGoBack();
     };
 
     const deactivateTerminal = () => {
@@ -55,6 +65,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'toggle':
@@ -68,6 +79,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'select':
@@ -82,6 +94,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'multiselect':
@@ -97,6 +110,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'number':
@@ -116,6 +130,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'list':
@@ -131,6 +146,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'date':
@@ -145,6 +161,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'autocomplete':
@@ -161,6 +178,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             case 'password':
@@ -174,6 +192,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit,
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
                         onAbort={endPipelineAndStandby}
+                        onGoBack={handleGoBack}
                     />
                 );
             default:
