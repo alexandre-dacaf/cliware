@@ -31,10 +31,12 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
 
     useEffect(() => {
         // Scroll to the end of the terminal whenever the history changes
-        if (terminalRef.current) {
-            terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
-        }
-    }, [state.printHistory, state.display]);
+        setTimeout(() => {
+            if (terminalRef.current) {
+                terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
+            }
+        }, 100);
+    }, [state]);
 
     const handleCommandSubmit = (commandString: string, commandArgs: CommandArgs) => {
         const commandBlueprint: CommandBlueprint = blueprint[commandArgs.command];

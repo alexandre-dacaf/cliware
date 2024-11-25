@@ -22,18 +22,18 @@
     color: var(--danger);
 }
 
-table {
+.terminal-table {
     margin: 1em 0;
     border-collapse: collapse;
     color: var(--neutral-800);
 }
 
-thead {
+.terminal-table thead {
     font-weight: normal;
 }
 
-th,
-td {
+.terminal-table th,
+.terminal-table td {
     padding: 0.5em;
     border: 1px solid var(--neutral-400);
 }

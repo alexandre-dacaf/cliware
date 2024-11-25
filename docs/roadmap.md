@@ -7,7 +7,7 @@
 
 - [x] 4.1.1 - Implement card-like appearance for the inputs (prompts and command-input)
 - [x] 4.1.2 - Implement card-like appearance for the groups of outputs related to a single command (adjust in terminal-history)
-- [ ] 4.1.3 - Make sure the terminal is always scrolling to the bottom
+- [x] 4.1.3 - Make sure the terminal is always scrolling to the bottom
 - [x] 4.1.4 - Implement basic printing with tables
 - [ ] 4.1.5 - Implement toast (upper corner or inline?)
 - [ ] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
