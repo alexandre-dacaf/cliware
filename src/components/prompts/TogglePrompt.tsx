@@ -4,7 +4,7 @@ import usePrinter from 'hooks/printer/usePrinter';
 import './TogglePrompt.css';
 import useTogglePrompt from 'hooks/prompts/useTogglePrompt';
 
-export type TogglePromptProps = {
+interface TogglePromptProps {
     message: string;
     defaultValue?: boolean;
     trueLabel?: string;
@@ -14,7 +14,7 @@ export type TogglePromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const TogglePrompt: React.FC<TogglePromptProps> = ({
     message,

@@ -3,7 +3,7 @@ import useSelectPrompt from 'hooks/prompts/useSelectPrompt';
 import { Choice, ValidateFunction } from 'types';
 import './SelectPrompt.css';
 
-export type SelectPromptProps = {
+interface SelectPromptProps {
     message: string;
     choices: Choice[];
     multiselect: boolean;
@@ -15,7 +15,7 @@ export type SelectPromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const SelectPrompt: React.FC<SelectPromptProps> = ({
     message,

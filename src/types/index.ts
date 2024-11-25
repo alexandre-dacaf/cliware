@@ -39,17 +39,6 @@ export interface Blueprint {
 //#endregion
 
 //#region Actions
-export interface PrinterInterface {
-    createHistoryGroup: (initialEntries?: HistoryEntry | HistoryEntry[]) => void;
-    print: (entries: HistoryEntry | HistoryEntry[]) => void;
-    printCommand: (message: string) => void;
-    printInput: (message: string) => void;
-    printOutput: (output: string | JSX.Element) => void;
-    printError: (error: any) => void;
-    display: (output: string | JSX.Element) => void;
-    clearDisplay: () => void;
-}
-
 export interface PipelineContext {
     currentTaskKey: TaskKey;
     taskKeyBreadcrumbs: TaskKey[];
@@ -237,13 +226,53 @@ export interface AppDispatcherInterface {
 }
 
 // Terminal
-export interface HistoryEntry {
-    type: 'command' | 'input' | 'output' | 'error';
-    content: string | JSX.Element;
+export interface PrinterInterface {
+    createHistoryGroup: (initialEntries?: HistoryEntry | HistoryEntry[]) => void;
+    print: (entries: HistoryEntry | HistoryEntry[]) => void;
+    printCommand: (message: string) => void;
+    printInput: (message: string) => void;
+    printOutput: (output: string) => void;
+    printError: (error: any) => void;
+    printTable: (tableContent: TableContent) => void;
+    display: (output: string) => void;
+    clearDisplay: () => void;
 }
 
+export interface BaseEntry {
+    type: string;
+    content: any;
+}
+
+export interface StringEntry extends BaseEntry {
+    type: 'command' | 'input' | 'output' | 'error';
+    content: string;
+}
+
+export type TableColumn = {
+    key: string;
+    header: string;
+};
+
+export type TableData = Record<string, any>;
+
+export type TableContent = {
+    columns: TableColumn[];
+    data: TableData[];
+};
+
+export interface TableEntry extends BaseEntry {
+    type: 'table';
+    content: TableContent;
+}
+
+export type HistoryEntry = StringEntry | TableEntry;
+
 export type HistoryGroupId = string | null;
-export type HistoryGroup = { id: HistoryGroupId; entries: HistoryEntry[] };
+
+export interface HistoryGroup {
+    id: HistoryGroupId;
+    entries: HistoryEntry[];
+}
 
 export interface TerminalState {
     commandArgs: CommandArgs | null;

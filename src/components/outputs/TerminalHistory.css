@@ -1,0 +1,11 @@
+.history {
+    color: var(--neutral-800);
+}
+
+.history-group {
+    background-color: #1119;
+    padding: 1em;
+    border-radius: 0.4em;
+    margin-top: 0.6em;
+    box-shadow: inset rgba(0, 0, 0, 0.16) 0px 3px 6px, inset rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}

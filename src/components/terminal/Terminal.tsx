@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useContext, useMemo } from 'react';
-import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
 import { blueprint } from 'blueprints/blueprint';
+import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
 import { CommandArgs, CommandBlueprint } from 'types';
+import { TerminalHistory, TerminalHistoryGroup } from 'components/outputs/TerminalHistory';
 import TaskManager from './managers/TaskManager';
-import PrintHistory from 'components/outputs/PrintHistory';
 import Display from 'components/outputs/Display';
 import CommandInput from 'components/command-input/CommandInput';
 import usePrinter from 'hooks/printer/usePrinter';
@@ -63,22 +63,14 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
             }
             ref={terminalRef}
         >
-            <PrintHistory />
+            <TerminalHistory />
 
             <div className='current-command-container'>
                 {state.printHistory
                     .filter((group) => group.id === state.currentHistoryGroupId)
                     .map((group) => {
                         return (
-                            <div key={group.id} className='current-history-group'>
-                                {group.entries.map((entry, index) => {
-                                    return (
-                                        <div key={index} className={`terminal-${entry.type}`}>
-                                            {entry.content}
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                            <TerminalHistoryGroup group={group} className='current-history-group' />
                         );
                     })}
                 {state.commandBlueprint ? (

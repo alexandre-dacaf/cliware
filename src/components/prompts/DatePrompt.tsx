@@ -3,7 +3,7 @@ import useDatePrompt from 'hooks/prompts/useDatePrompt';
 import './DatePrompt.css';
 import { ValidateFunction } from 'types';
 
-export type DatePromptProps = {
+interface DatePromptProps {
     message: string;
     defaultValue?: string;
     required?: boolean;
@@ -14,7 +14,7 @@ export type DatePromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const DatePrompt: React.FC<DatePromptProps> = ({
     message,

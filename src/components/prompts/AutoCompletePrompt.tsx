@@ -3,7 +3,7 @@ import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
 import './AutoCompletePrompt.css';
 import { ValidateFunction } from 'types';
 
-export type AutoCompletePromptProps = {
+interface AutoCompletePromptProps {
     message: string;
     suggestions: string[];
     itemsPerPage?: number;
@@ -16,7 +16,7 @@ export type AutoCompletePromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     message,

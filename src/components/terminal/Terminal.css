@@ -41,13 +41,13 @@
 .current-command-container {
     margin-top: 1em;
     background-color: #ffffff0f;
-    border-radius: 0.7em;
+    border-radius: 0.4em;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .current-history-group {
     background-color: #1119;
     padding: 1em;
-    border-radius: 0.7em;
+    border-radius: 0.4em;
     box-shadow: inset rgba(0, 0, 0, 0.23) 0px -6px 8px;
 }

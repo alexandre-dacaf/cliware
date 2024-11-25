@@ -4,7 +4,7 @@ import './PasswordPrompt.css';
 import usePasswordPrompt from 'hooks/prompts/usePasswordPrompt';
 import { ValidateFunction } from 'types';
 
-export type PasswordPromptProps = {
+interface PasswordPromptProps {
     message: string;
     required?: boolean;
     placeholder?: string;
@@ -14,7 +14,7 @@ export type PasswordPromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const PasswordPrompt: React.FC<PasswordPromptProps> = ({
     message,

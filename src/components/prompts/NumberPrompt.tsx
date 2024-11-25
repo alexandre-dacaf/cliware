@@ -3,7 +3,7 @@ import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
 import './NumberPrompt.css';
 import { ValidateFunction } from 'types';
 
-export type NumberPromptProps = {
+interface NumberPromptProps {
     message: string;
     max?: number;
     min?: number;
@@ -19,7 +19,7 @@ export type NumberPromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const NumberPrompt: React.FC<NumberPromptProps> = ({
     message,

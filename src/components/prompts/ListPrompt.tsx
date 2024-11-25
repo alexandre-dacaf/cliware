@@ -4,7 +4,7 @@ import usePrinter from 'hooks/printer/usePrinter';
 import useListPrompt from 'hooks/prompts/useListPrompt';
 import { ValidateFunction } from 'types';
 
-export type ListPromptProps = {
+interface ListPromptProps {
     message: string;
     separator?: string;
     trim?: boolean;
@@ -16,7 +16,7 @@ export type ListPromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const ListPrompt: React.FC<ListPromptProps> = ({
     message,

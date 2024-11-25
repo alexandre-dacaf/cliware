@@ -1,0 +1,39 @@
+.active-terminal .loading {
+    color: var(--warning);
+}
+
+.active-terminal .terminal-command {
+    color: var(--primary-color);
+}
+
+.selected-terminal .terminal-command {
+    color: var(--success);
+}
+
+.active-terminal .terminal-input {
+    color: var(--neutral-700);
+}
+
+.active-terminal .terminal-output {
+    color: var(--info);
+}
+
+.active-terminal .terminal-error {
+    color: var(--danger);
+}
+
+table {
+    margin: 1em 0;
+    border-collapse: collapse;
+    color: var(--neutral-800);
+}
+
+thead {
+    font-weight: normal;
+}
+
+th,
+td {
+    padding: 0.5em;
+    border: 1px solid var(--neutral-400);
+}

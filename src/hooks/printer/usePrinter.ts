@@ -1,4 +1,4 @@
-import { HistoryEntry, PrinterInterface } from 'types';
+import { HistoryEntry, PrinterInterface, TableContent } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +23,7 @@ const usePrinter = (): PrinterInterface => {
         });
     };
 
-    const display = (output: string | JSX.Element) => {
+    const display = (output: string) => {
         if (typeof output === 'string') {
             dispatch({ type: 'SET_TRANSIENT_OUTPUT', payload: output });
         }
@@ -41,7 +41,7 @@ const usePrinter = (): PrinterInterface => {
         print({ type: 'input', content: message });
     };
 
-    const printOutput = (output: string | JSX.Element) => {
+    const printOutput = (output: string) => {
         if (typeof output === 'string') {
             print({ type: 'output', content: output });
         }
@@ -51,6 +51,10 @@ const usePrinter = (): PrinterInterface => {
         print({ type: 'error', content: error?.message ?? error ?? 'ERROR' });
     };
 
+    const printTable = (tableContent: TableContent) => {
+        print({ type: 'table', content: tableContent });
+    };
+
     return {
         createHistoryGroup,
         print,
@@ -58,6 +62,7 @@ const usePrinter = (): PrinterInterface => {
         printInput,
         printOutput,
         printError,
+        printTable,
         display,
         clearDisplay,
     };

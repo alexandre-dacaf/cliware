@@ -3,7 +3,7 @@ import './TextPrompt.css';
 import useTextPrompt from 'hooks/prompts/useTextPrompt';
 import { Mask, ValidateFunction } from 'types';
 
-export type TextPromptProps = {
+interface TextPromptProps {
     message: string;
     defaultValue?: string;
     required?: boolean;
@@ -16,7 +16,7 @@ export type TextPromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
-};
+}
 
 const TextPrompt: React.FC<TextPromptProps> = ({
     message,
