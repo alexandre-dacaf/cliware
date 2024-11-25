@@ -61,6 +61,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         trim={task.trim}
                         placeholder={task.placeholder}
                         validate={task.validate}
+                        mask={task.mask}
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}

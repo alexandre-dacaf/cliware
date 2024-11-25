@@ -35,7 +35,6 @@ export const blueprint: Blueprint = {
                 type: 'prompt',
                 promptType: 'text',
                 message: 'Digite um texto (Q1):',
-                default: 'teste 123',
                 placeholder: 'Placeholder...',
                 required: true,
                 trim: true,

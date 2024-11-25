@@ -1,5 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useEffect, useState, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { getMaskFunction } from 'services/utils';
 import { ValidateFunction } from 'types';
 
 type UseDatePromptProps = {
@@ -37,22 +38,7 @@ const useDatePrompt = ({
 
         let inputValue = event.target.value;
 
-        // Remove non-digit characters
-        inputValue = inputValue.replace(/\D/g, '');
-
-        // Limit to 8 characters (ddmmyyyy)
-        if (inputValue.length > 8) {
-            inputValue = inputValue.slice(0, 8);
-        }
-
-        // Add slashes
-        if (inputValue.length > 4) {
-            inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2, 4)}/${inputValue.slice(
-                4
-            )}`;
-        } else if (inputValue.length > 2) {
-            inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2)}`;
-        }
+        inputValue = getMaskFunction('date')(inputValue);
 
         setStringValue(inputValue);
         setDateValue(parseDate(inputValue));

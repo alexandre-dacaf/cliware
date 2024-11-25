@@ -12,14 +12,14 @@
     - [x] 1.1.6 - Implement basic password prompt
 
 - [ ] 🧩 **User Story 1.2 - As a dev, have advanced options and properties with the prompts**
-    - [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
-    - [ ] 1.2.2 - Implement *validate()* function to check and alert before submit
-    - [ ] 1.2.4 - Implement *default* answers on prompts
-    - [ ] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
-    - [ ] 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
-    - [ ] 1.2.7 - Implement *hints* on Choices
-    - [ ] 1.2.8 - Implement *placeholders* on commands and prompts
-    - [ ] 1.2.9 - Implement *format()* function or pattern to (mask) input
+    - [x] 1.2.1 - Implement *back()* function to rewind to previous prompt
+    - [x] 1.2.2 - Implement *validate()* function to check and alert before submit
+    - [x] 1.2.4 - Implement *default* answers on prompts
+    - [x] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
+    - [x] 1.2.6 - Implement *cancel()* function to exit to standy CommandInput
+    - [x] 1.2.7 - Implement *hints* on Choices
+    - [x] 1.2.8 - Implement *placeholders* on commands and prompts
+    - [x] 1.2.9 - Implement *format()* function or pattern to (mask) input
     - [ ] 1.2.10 - Hints bellow hard to understand prompts (autocomplete, number and others). Use SelectPrompt's *select-navigation-hint* as a template
 
 
@@ -54,15 +54,15 @@
     - [ ] 3.1.5 - Make auto-doc and auto-help required
 
 - [ ] 🧩 **User Story 3.2 - As a user, have autocomplete on commands and default command options**
-    - [ ] 3.2.1 - Implement variable to keep track of available commands on CommandInput
-    - [ ] 3.2.2 - Change CommandInput to use the autocomplete logic
+    - [x] 3.2.1 - Implement variable to keep track of available commands on CommandInput
+    - [x] 3.2.2 - Change CommandInput to use the autocomplete logic
     - [ ] 3.2.3 - Implement command history to go back to previous used commands (with history limit parametrized)
 
 - [ ] 🧩 **User Story 3.3 - As a dev, have terminal and global parameters that can be accessed by actionFunction**
-    - [ ] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
-    - [ ] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
-    - [ ] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions
-    - [ ] 3.3.4 - Create task stream/pipeline context to easily handle state and dispatch, and pass this context to actionFunction on useTaskHandler
+    - [x] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
+    - [x] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
+    - [x] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions
+    - [x] 3.3.4 - Create task stream/pipeline context to easily handle state and dispatch, and pass this context to actionFunction on useTaskHandler
 
 
 ## Epic 4: Outputs
@@ -120,7 +120,7 @@
 
 ## Chores
 - [x] Chr1 - Replace div-content-editables for inputs in prompts where it makes sense
-- [ ] Chr2 - Rename terminal-history (print-history) and transient-output (display)
+- [x] Chr2 - Rename terminal-history (print-history) and transient-output (display)
 - [x] Chr3 - Deal with enter when select is not multiselect (should select and submit)
 
 

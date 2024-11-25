@@ -87,6 +87,26 @@ export interface Choice {
 
 export type ValidateFunction = (response: any) => boolean | string;
 
+export type MaskTemplate =
+    | 'cpf'
+    | 'cnpj'
+    | 'phone'
+    | 'cep'
+    | 'date'
+    | 'time'
+    | 'datetime'
+    | 'credit-card'
+    | 'currency-BRL'
+    | 'currency-USD'
+    | 'currency-EUR'
+    | 'currency-GBP'
+    | 'currency-JPY'
+    | 'ipv4-address'
+    | 'ipv6-address'
+    | 'hex-color';
+export type MaskFunction = (value: string) => string;
+export type Mask = MaskTemplate | MaskFunction;
+
 export interface BasePrompt extends BaseTask {
     type: 'prompt';
     message: string;
@@ -99,6 +119,7 @@ export interface TextPrompt extends BasePrompt {
     promptType: 'text';
     default?: string;
     trim?: boolean;
+    mask?: Mask;
     placeholder?: string;
 }
 

@@ -3,8 +3,6 @@
 ## Sprint 4: Advanced Prompts and Commands
 
 > Version 0.4.0
-> 1.2.9 - Implement *mask()* function or pattern to (mask) input
-
 
 - [x] 1.2.1 - Implement *back()* function to rewind to previous prompt
 - [x] 1.2.2 - Implement *validate()* function to check and alert before submit
@@ -13,7 +11,7 @@
 - [x] 1.2.6 - Implement *cancel()* (renamed abort) function to exit to standy CommandInput
 - [x] 1.2.7 - Implement *hints* on Choices
 - [x] 1.2.8 - Implement *placeholders* on commands and prompts
-- [ ] 1.2.9 - Implement *mask()* function or pattern to (mask) input
+- [x] 1.2.9 - Implement *mask()* function or pattern to (mask) input
 - [x] 3.3.1 - Find a way for actionFunctions to read and update app and terminal state
 - [x] 3.3.2 - On useTaskHandler, pass usePrinter as an argument to actionFunctions
 - [x] 3.3.3 - On useTaskHandler, pass app and terminal context to actionFunctions

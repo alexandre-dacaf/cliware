@@ -1,6 +1,7 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { ValidateFunction } from 'types';
+import { getMaskFunction } from 'services/utils';
+import { Mask, ValidateFunction } from 'types';
 
 type UseTextPromptProps = {
     message: string;
@@ -8,6 +9,7 @@ type UseTextPromptProps = {
     required: boolean;
     trim: boolean;
     validate: ValidateFunction;
+    mask: Mask;
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
@@ -20,6 +22,7 @@ const useTextPrompt = ({
     required,
     trim,
     validate,
+    mask,
     onSubmit,
     onEscape,
     onAbort,
@@ -34,7 +37,27 @@ const useTextPrompt = ({
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         clearDisplay();
-        setValue(event.target.value);
+
+        let inputValue = event.target.value;
+        inputValue = getMaskFunction(mask)(inputValue);
+
+        setValue(inputValue);
+    };
+
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const key = event.key;
+        const isCtrlPressed = event.ctrlKey;
+        preventDefaultEvents(event);
+
+        if (key === 'Enter') {
+            submit();
+        } else if (key === 'Escape' && !isCtrlPressed) {
+            onEscape();
+        } else if (key === 'Escape' && isCtrlPressed) {
+            onAbort();
+        } else if (key === 'ArrowUp' && isCtrlPressed) {
+            onGoBack();
+        }
     };
 
     const submit = () => {
@@ -66,22 +89,6 @@ const useTextPrompt = ({
         printInput(`${message} ${formattedValue}`);
         onSubmit(formattedValue);
         setValue('');
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const key = event.key;
-        const isCtrlPressed = event.ctrlKey;
-        preventDefaultEvents(event);
-
-        if (key === 'Enter') {
-            submit();
-        } else if (key === 'Escape' && !isCtrlPressed) {
-            onEscape();
-        } else if (key === 'Escape' && isCtrlPressed) {
-            onAbort();
-        } else if (key === 'ArrowUp' && isCtrlPressed) {
-            onGoBack();
-        }
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
