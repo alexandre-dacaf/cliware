@@ -3,10 +3,10 @@
 ## Sprint 4: Advanced Prompts and Commands
 
 > Version 0.4.0
-> 1.2.1 - Implement *back()* function to rewind to previous prompt
+> 1.2.9 - Implement *mask()* function or pattern to (mask) input
 
 
-- [ ] 1.2.1 - Implement *back()* function to rewind to previous prompt
+- [x] 1.2.1 - Implement *back()* function to rewind to previous prompt
 - [x] 1.2.2 - Implement *validate()* function to check and alert before submit
 - [x] 1.2.4 - Implement *default* answers on prompts
 - [x] 1.2.5 - Implement *required* property, which will probably be a simple type of validate()
