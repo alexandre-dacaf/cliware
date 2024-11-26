@@ -34,7 +34,7 @@ const useNumberPrompt = ({
     onGoBack,
 }: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
-    const { printInput, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, display, clearDisplay } = usePrinter();
 
     const initValue = useMemo(() => {
         return Math.max(defaultValue, min);
@@ -159,7 +159,7 @@ const useNumberPrompt = ({
             return;
         }
 
-        printInput(`${message} ${numberValue}`);
+        printPromptResponse(`${message} ${numberValue}`);
         onSubmit(numberValue);
         clear();
     };

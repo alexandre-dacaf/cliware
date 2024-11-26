@@ -2,33 +2,23 @@ import {
     HistoryEntry,
     PrinterInterface,
     SpinnerProps,
-    TableContent,
+    TableEntryContent,
     GenerateSpinnerConfigProps,
+    TextSpan,
+    Command,
 } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { generateSpinnerConfig, getExtensionFromMimeType, hasValidExtension } from 'services';
+import {
+    ensureArray,
+    generateSpinnerConfig,
+    getExtensionFromMimeType,
+    hasValidExtension,
+} from 'services';
 
 const usePrinter = (): PrinterInterface => {
     const { state, dispatch } = useContext(TerminalContext);
-
-    const createHistoryGroup = (initialEntries?: HistoryEntry | HistoryEntry[]) => {
-        const newGroupId = uuidv4();
-        const entries = initialEntries ?? [];
-
-        dispatch({
-            type: 'CREATE_NEW_HISTORY_GROUP',
-            payload: { currentGroupId: state.currentHistoryGroupId, newGroupId, entries },
-        });
-    };
-
-    const print = (entries: HistoryEntry | HistoryEntry[]) => {
-        dispatch({
-            type: 'ADD_ENTRY_TO_TERMINAL_HISTORY',
-            payload: { currentGroupId: state.currentHistoryGroupId, entries: entries },
-        });
-    };
 
     const display = (output: string, spinner?: GenerateSpinnerConfigProps) => {
         const spinnerConfig: SpinnerProps | null = generateSpinnerConfig(spinner);
@@ -46,25 +36,57 @@ const usePrinter = (): PrinterInterface => {
         dispatch({ type: 'CLEAR_DISPLAY' });
     };
 
+    const print = (entries: HistoryEntry | HistoryEntry[]) => {
+        dispatch({
+            type: 'ADD_ENTRY_TO_TERMINAL_HISTORY',
+            payload: { currentGroupId: state.currentHistoryGroupId, entries },
+        });
+    };
+
+    const printText = (content: TextSpan | TextSpan[]) => {
+        const contentArray = ensureArray(content);
+        print({ type: 'text', content: contentArray });
+    };
+
     const printCommand = (message: string) => {
-        print({ type: 'command', content: `> ${message}` });
+        printText({ color: 'blue', text: `> ${message}` });
     };
 
-    const printInput = (message: string) => {
-        print({ type: 'input', content: message });
+    const printCommandNotFound = (commandString: string) => {
+        const newGroupId = uuidv4();
+
+        dispatch({
+            type: 'COMMAND_NOT_FOUND',
+            payload: {
+                currentGroupId: state.currentHistoryGroupId,
+                newGroupId,
+                commandString,
+            },
+        });
     };
 
-    const printOutput = (output: string) => {
-        if (typeof output === 'string') {
-            print({ type: 'output', content: output });
+    const printPromptResponse = (message: string) => {
+        printText({ color: 'neutral-800', text: message });
+    };
+
+    const printSuccess = (message: string) => {
+        if (typeof message === 'string') {
+            printText({ color: 'green', text: message });
+        }
+    };
+
+    const printAlert = (message: string) => {
+        if (typeof message === 'string') {
+            printText({ color: 'yellow', text: message });
         }
     };
 
     const printError = (error: any) => {
-        print({ type: 'error', content: error?.message ?? error ?? 'ERROR' });
+        const text = error?.message ?? error ?? 'ERROR';
+        printText({ color: 'red', text });
     };
 
-    const printTable = (tableContent: TableContent) => {
+    const printTable = (tableContent: TableEntryContent) => {
         print({ type: 'table', content: tableContent });
     };
 
@@ -75,9 +97,9 @@ const usePrinter = (): PrinterInterface => {
     const copyToClipboard = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
-            printOutput('Texto copiado para a área de transferência!');
+            printText({ color: 'purple', text: 'Texto copiado para a área de transferência!' });
         } catch (error) {
-            printError('Falha ao copiar para a área de transferência.');
+            printText({ color: 'red', text: 'Falha ao copiar para a área de transferência!' });
         }
     };
 
@@ -98,9 +120,12 @@ const usePrinter = (): PrinterInterface => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            printOutput(`File ${finalFilename} has been generated and is ready for download.`);
+            printText({
+                color: 'purple',
+                text: `File ${finalFilename} has been generated and is ready for download.`,
+            });
         } catch (error) {
-            printError('Error generating file.');
+            printText({ color: 'red', text: 'Error generating file.' });
         }
     };
 
@@ -110,7 +135,7 @@ const usePrinter = (): PrinterInterface => {
 
     const downloadAsCsv = (
         filename: string,
-        tableContent: TableContent,
+        tableContent: TableEntryContent,
         separator: string = ','
     ) => {
         const { columns, data } = tableContent;
@@ -140,11 +165,13 @@ const usePrinter = (): PrinterInterface => {
     };
 
     return {
-        createHistoryGroup,
         print,
+        printText,
         printCommand,
-        printInput,
-        printOutput,
+        printCommandNotFound,
+        printPromptResponse,
+        printSuccess,
+        printAlert,
         printError,
         printTable,
         printJson,

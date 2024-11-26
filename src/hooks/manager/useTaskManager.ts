@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { PipelineContext, TaskKey, CommandBlueprint } from 'types';
+import { PipelineContext, TaskKey, Command } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import usePrinter from 'hooks/printer/usePrinter';
 import useAppDispatcher from 'hooks/app/useAppDispatcher';
@@ -14,33 +14,30 @@ const useTaskManager = () => {
 
     useEffect(() => {
         const initiatePipeline = async () => {
-            const commandBlueprint = terminalState.commandBlueprint;
+            const command = terminalState.command;
 
-            if (!commandBlueprint) return;
+            if (!command) return;
 
-            const commandEntrypoint = commandBlueprint.entrypoint;
-            const commandPipeline = commandBlueprint.pipeline;
+            const commandEntrypoint = command.entrypoint;
+            const commandPipeline = command.pipeline;
 
             if (!commandEntrypoint || !commandPipeline) return;
 
             const startTaskKey = commandEntrypoint;
 
-            const pipelineContext = generatePipelineContext(startTaskKey, commandBlueprint);
+            const pipelineContext = generatePipelineContext(startTaskKey, command);
             await startTask(pipelineContext);
         };
 
         initiatePipeline();
-    }, [terminalState.commandBlueprint]);
+    }, [terminalState.command]);
 
-    const generatePipelineContext = (
-        taskKey: TaskKey,
-        commandBlueprint: CommandBlueprint
-    ): PipelineContext => {
+    const generatePipelineContext = (taskKey: TaskKey, command: Command): PipelineContext => {
         return {
             currentTaskKey: taskKey,
-            taskKeyBreadcrumbs: [],
+            taskBreadcrumbs: [],
             pipelineData: {},
-            pipelineBlueprint: commandBlueprint.pipeline,
+            pipeline: command.pipeline,
             commandArgs: terminalState.commandArgs,
             printer,
             appDispatcher,
@@ -48,9 +45,9 @@ const useTaskManager = () => {
     };
 
     const startTask = async (pipelineContext: PipelineContext) => {
-        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const pipeline = pipelineContext.pipeline;
         const currentTaskKey = pipelineContext.currentTaskKey;
-        const currentTask = pipelineBlueprint[currentTaskKey];
+        const currentTask = pipeline[currentTaskKey];
 
         if (!currentTask) return;
 
@@ -65,9 +62,9 @@ const useTaskManager = () => {
     };
 
     const handleActionTask = async (pipelineContext: PipelineContext) => {
-        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const pipeline = pipelineContext.pipeline;
         const currentTaskKey = pipelineContext.currentTaskKey;
-        const currentTask = pipelineBlueprint[currentTaskKey];
+        const currentTask = pipeline[currentTaskKey];
 
         if (!currentTask || currentTask.type !== 'action') return;
 
@@ -87,9 +84,9 @@ const useTaskManager = () => {
     };
 
     const savePipelineContextForLater = async (pipelineContext: PipelineContext) => {
-        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
+        const pipeline = pipelineContext.pipeline;
         const currentTaskKey = pipelineContext.currentTaskKey;
-        const currentTask = pipelineBlueprint[currentTaskKey];
+        const currentTask = pipeline[currentTaskKey];
 
         if (!currentTask || currentTask.type !== 'prompt') return;
 
@@ -119,7 +116,7 @@ const useTaskManager = () => {
             return;
         }
 
-        const breadcrumbs = currentPipelineContext.taskKeyBreadcrumbs;
+        const breadcrumbs = currentPipelineContext.taskBreadcrumbs;
         const previousTaskKey = breadcrumbs[breadcrumbs.length - 1];
 
         if (!previousTaskKey) {
@@ -134,13 +131,13 @@ const useTaskManager = () => {
             )
         );
 
-        currentPipelineContext.printer.printInput('Returning to the previous prompt...');
+        currentPipelineContext.printer.printPromptResponse('Returning to the previous prompt...');
 
         const newPipelineContext: PipelineContext = {
             ...currentPipelineContext,
             pipelineData: newPipelineData,
             currentTaskKey: previousTaskKey,
-            taskKeyBreadcrumbs: breadcrumbs.slice(0, -1),
+            taskBreadcrumbs: breadcrumbs.slice(0, -1),
         };
 
         setCurrentPipelineContext(null);
@@ -149,8 +146,8 @@ const useTaskManager = () => {
 
     const finishTask = (pipelineContext: PipelineContext) => {
         const currentTaskKey = pipelineContext.currentTaskKey;
-        const pipelineBlueprint = pipelineContext.pipelineBlueprint;
-        const next = pipelineBlueprint[currentTaskKey].next;
+        const pipeline = pipelineContext.pipeline;
+        const next = pipeline[currentTaskKey].next;
 
         if (!next) {
             endPipelineAndStandby();
@@ -159,16 +156,16 @@ const useTaskManager = () => {
 
         const nextTaskKey: TaskKey = typeof next === 'function' ? next(pipelineContext) : next;
 
-        if (!(nextTaskKey in pipelineBlueprint)) {
+        if (!(nextTaskKey in pipeline)) {
             handleError(`${nextTaskKey} not in pipeline. Check blueprint keys.`);
         }
 
-        const breadcrumbs = pipelineContext.taskKeyBreadcrumbs;
+        const breadcrumbs = pipelineContext.taskBreadcrumbs;
 
         const newPipelineContext: PipelineContext = {
             ...pipelineContext,
             currentTaskKey: nextTaskKey,
-            taskKeyBreadcrumbs: [...breadcrumbs, currentTaskKey],
+            taskBreadcrumbs: [...breadcrumbs, currentTaskKey],
         };
 
         startTask(newPipelineContext);

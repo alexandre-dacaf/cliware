@@ -29,7 +29,7 @@ const useTextPrompt = ({
     onGoBack,
 }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
-    const { printInput, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, display, clearDisplay } = usePrinter();
 
     useEffect(() => {
         setValue(defaultValue);
@@ -86,7 +86,7 @@ const useTextPrompt = ({
             return;
         }
 
-        printInput(`${message} ${formattedValue}`);
+        printPromptResponse(`${message} ${formattedValue}`);
         onSubmit(formattedValue);
         setValue('');
     };

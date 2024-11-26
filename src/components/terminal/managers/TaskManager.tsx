@@ -1,7 +1,7 @@
 import React from 'react';
 import { PromptHandler } from './handlers/PromptHandler';
 import useTaskManager from 'hooks/manager/useTaskManager';
-import { CommandBlueprint } from 'types';
+import { Command } from 'types';
 
 interface TaskManagerProps {
     isActive: boolean;
@@ -13,9 +13,9 @@ const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
     const renderCurrentTask = () => {
         if (!currentPipelineContext) return null;
 
-        const pipelineBlueprint = currentPipelineContext.pipelineBlueprint;
+        const pipeline = currentPipelineContext.pipeline;
         const currentTaskKey = currentPipelineContext.currentTaskKey;
-        const currentTask = pipelineBlueprint[currentTaskKey];
+        const currentTask = pipeline[currentTaskKey];
 
         if (!currentTask || currentTask.type !== 'prompt') return null;
 

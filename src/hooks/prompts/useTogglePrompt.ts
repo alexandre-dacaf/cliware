@@ -24,7 +24,7 @@ const useTogglePrompt = ({
     onGoBack,
 }: UseTogglePromptProps) => {
     const [toggle, setToggle] = useState<boolean>(defaultValue);
-    const { printInput } = usePrinter();
+    const { printPromptResponse } = usePrinter();
     const choices: Choice[] = useMemo(
         () => [
             { label: falseLabel, value: false },
@@ -38,7 +38,7 @@ const useTogglePrompt = ({
 
         if (!selectedChoice) return;
 
-        printInput(`${message} ${selectedChoice.label}`);
+        printPromptResponse(`${message} ${selectedChoice.label}`);
         onSubmit(selectedChoice.value);
         setToggle(defaultValue);
     };

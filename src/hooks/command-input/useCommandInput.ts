@@ -1,6 +1,28 @@
-import { useState, useEffect, useMemo } from 'react';
+import { AppContext } from 'context/AppContext';
+import {
+    useState,
+    useEffect,
+    useMemo,
+    KeyboardEvent as ReactKeyboardEvent,
+    useContext,
+} from 'react';
+import { parseCommandArguments } from 'services/parser';
+import { CommandArgs } from 'types';
 
-const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
+interface UseCommandInputProps {
+    availableCommands: string[];
+    itemsPerPage: number;
+    onSubmit: (commandString: string, commandArgs: CommandArgs) => void;
+    isActive: boolean;
+}
+
+const useCommandInput = ({
+    availableCommands,
+    itemsPerPage,
+    onSubmit,
+    isActive,
+}: UseCommandInputProps) => {
+    const { dispatch } = useContext(AppContext);
     const [value, setValue] = useState<string>('');
     const [filteredCommands, setFilteredCommands] = useState<string[]>([]);
     const [pageCommands, setPageCommands] = useState<string[]>([]);
@@ -8,7 +30,10 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
-    const totalPages = useMemo(() => Math.ceil(filteredCommands.length / itemsPerPage), [filteredCommands, itemsPerPage]);
+    const totalPages = useMemo(
+        () => Math.ceil(filteredCommands.length / itemsPerPage),
+        [filteredCommands, itemsPerPage]
+    );
 
     useEffect(() => {
         setFilteredCommands(availableCommands);
@@ -22,7 +47,9 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
     }, [filteredCommands]);
 
     useEffect(() => {
-        setPageCommands(filteredCommands.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage));
+        setPageCommands(
+            filteredCommands.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+        );
     }, [filteredCommands, currentPage, itemsPerPage]);
 
     useEffect(() => {
@@ -38,7 +65,8 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
             return;
         }
 
-        const normalizeText = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizeText = (text: string) =>
+            text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
         const pattern = new RegExp(normalizeText(inputValue), 'i');
 
@@ -123,19 +151,62 @@ const useCommandInput = (availableCommands: string[], itemsPerPage: number) => {
         });
     };
 
+    const submit = () => {
+        const commandString = value;
+        const commandArgs: CommandArgs = parseCommandArguments(commandString);
+        onSubmit(commandString, commandArgs);
+        setValue('');
+    };
+
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const key = event.key;
+        preventDefaultEvents(event);
+
+        if (key === 'ArrowDown') {
+            selectNext();
+        }
+        if (key === 'ArrowUp') {
+            selectPrevious();
+        }
+        if (key === 'Tab') {
+            autocomplete();
+        }
+        if (key === 'Enter') {
+            submit();
+        }
+        if (key === 'Escape') {
+            deactivateTerminal();
+        }
+        if (key === 'PageDown') {
+            nextPage();
+        }
+        if (key === 'PageUp') {
+            prevPage();
+        }
+    };
+
+    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        const preventDefaultKeys = ['Enter', 'Tab', 'Escape', 'PageDown', 'PageUp'];
+
+        if (preventDefaultKeys.includes(event.key)) {
+            event.preventDefault();
+        }
+    };
+
+    const deactivateTerminal = () => {
+        if (isActive) {
+            dispatch({ type: 'DEACTIVATE_TERMINAL' });
+        }
+    };
+
     return {
         value,
-        setValue,
         pageCommands,
         pageIndex,
         handleChange,
-        autocomplete,
-        selectPrevious,
-        selectNext,
-        nextPage,
-        prevPage,
         currentPage,
         totalPages,
+        handleKeyDown,
     };
 };
 

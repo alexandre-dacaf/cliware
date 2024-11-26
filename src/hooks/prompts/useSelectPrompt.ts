@@ -30,7 +30,7 @@ const useSelectPrompt = ({
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
     const [checkedChoices, setCheckedChoices] = useState<Choice[]>([]);
-    const { printInput, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, display, clearDisplay } = usePrinter();
 
     const formattedChoices = useMemo(
         () =>
@@ -78,7 +78,7 @@ const useSelectPrompt = ({
             !isCtrlPressed
         ) {
             selectNext();
-        } else if (key === ' ' || event.code === 'Space') {
+        } else if ((key === ' ' || event.code === 'Space') && multiselect) {
             checkSelected();
         } else if (key === 'Enter' && multiselect) {
             submit();
@@ -160,7 +160,7 @@ const useSelectPrompt = ({
         }
 
         const formattedCheckedChoices = checkedChoices.map((choice) => choice.label).join(', ');
-        printInput(`${message} ${formattedCheckedChoices}`);
+        printPromptResponse(`${message} ${formattedCheckedChoices}`);
         onSubmit(checkedChoices);
     };
 
@@ -181,7 +181,7 @@ const useSelectPrompt = ({
             return;
         }
 
-        printInput(`${message} ${selectedChoice.label}`);
+        printPromptResponse(`${message} ${selectedChoice.label}`);
         onSubmit(selectedChoice);
     };
 

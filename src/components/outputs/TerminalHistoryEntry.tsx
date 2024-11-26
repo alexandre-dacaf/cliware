@@ -1,6 +1,7 @@
 import React from 'react';
 import './TerminalHistoryEntry.css';
-import { HistoryEntry, TableContent, TableEntry } from 'types';
+import { HistoryEntry, TableEntryContent, TableEntry, TextSpan } from 'types';
+import { ensureArray } from 'services';
 
 interface TerminalHistoryEntryProps {
     entry: HistoryEntry;
@@ -8,14 +9,8 @@ interface TerminalHistoryEntryProps {
 
 const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) => {
     switch (entry.type) {
-        case 'command':
-            return <div className={`terminal-command`}>{entry.content}</div>;
-        case 'error':
-            return <div className={`terminal-error`}>{entry.content}</div>;
-        case 'input':
-            return <div className={`terminal-input`}>{entry.content}</div>;
-        case 'output':
-            return <div className={`terminal-output`}>{entry.content}</div>;
+        case 'text':
+            return <TextView content={entry.content} />;
         case 'table':
             return <TableView tableContent={entry.content} />;
         case 'json':
@@ -25,16 +20,40 @@ const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) =>
     }
 };
 
+interface TextViewProps {
+    content: TextSpan | TextSpan[];
+}
+
+const TextView: React.FC<TextViewProps> = ({ content }) => {
+    const contentArray = ensureArray(content);
+
+    return (
+        <div className='terminal-text'>
+            {contentArray.map((textEntryContent, index) => {
+                const color = textEntryContent.color ?? 'neutral-500';
+                const className = `terminal-output terminal__${color}`;
+                const style = { color: `var(--${color})` };
+
+                return (
+                    <span key={index} className={className}>
+                        {textEntryContent.text}
+                    </span>
+                );
+            })}
+        </div>
+    );
+};
+
 interface JsonViewProps {
     json: object;
 }
 
 const JsonView: React.FC<JsonViewProps> = ({ json }) => {
-    return <pre className='json-container'>{JSON.stringify(json, null, 2)}</pre>;
+    return <pre className='terminal-json'>{JSON.stringify(json, null, 2)}</pre>;
 };
 
 interface TableViewProps {
-    tableContent: TableContent;
+    tableContent: TableEntryContent;
 }
 
 const TableView: React.FC<TableViewProps> = ({ tableContent }) => {

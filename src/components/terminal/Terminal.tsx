@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useContext, useMemo } from 'react';
 import { blueprint } from 'blueprints/blueprint';
 import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
-import { CommandArgs, CommandBlueprint } from 'types';
+import { CommandArgs, Command } from 'types';
 import { TerminalHistory, TerminalHistoryGroup } from 'components/outputs/TerminalHistory';
 import TaskManager from './managers/TaskManager';
 import Display from 'components/outputs/Display';
 import CommandInput from 'components/command-input/CommandInput';
 import usePrinter from 'hooks/printer/usePrinter';
+import { v4 as uuidv4 } from 'uuid';
 import './Terminal.css';
 
 interface TerminalProps {
@@ -24,10 +25,10 @@ const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
 
 const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     const terminalRef = useRef<HTMLDivElement>(null);
-    const { state, dispatch } = useContext(TerminalContext);
-    const { createHistoryGroup, print } = usePrinter();
+    const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
+    const { printCommandNotFound } = usePrinter();
 
-    const availableCommands = useMemo(() => Object.keys(blueprint).sort(), [blueprint]);
+    const availableCommands = useRef(Object.keys(blueprint).sort());
 
     useEffect(() => {
         // Scroll to the end of the terminal whenever the history changes
@@ -36,24 +37,28 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
                 terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
             }
         }, 100);
-    }, [state]);
+    }, [terminalState]);
 
     const handleCommandSubmit = (commandString: string, commandArgs: CommandArgs) => {
-        const commandBlueprint: CommandBlueprint = blueprint[commandArgs.command];
+        const command: Command = blueprint[commandArgs.command];
 
-        if (commandBlueprint) {
-            dispatch({
-                type: 'SET_COMMAND_BLUEPRINT',
-                payload: commandBlueprint,
-            });
-            createHistoryGroup({ type: 'command', content: `> ${commandString}` });
-        } else {
-            print([
-                { type: 'command', content: `> ${commandString}` },
-                { type: 'error', content: `Command ${commandArgs.command} not found.` },
-            ]);
-            dispatch({ type: 'STANDBY' });
+        if (!command) {
+            printCommandNotFound(commandString);
+            return;
         }
+
+        const newGroupId = uuidv4();
+
+        terminalDispatch({
+            type: 'START_NEW_COMMAND',
+            payload: {
+                currentGroupId: terminalState.currentHistoryGroupId,
+                newGroupId,
+                commandString,
+                command,
+                commandArgs,
+            },
+        });
     };
 
     return (
@@ -68,18 +73,18 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
             <TerminalHistory />
 
             <div className='current-command-container'>
-                {state.printHistory
-                    .filter((group) => group.id === state.currentHistoryGroupId)
+                {terminalState.printHistory
+                    .filter((group) => group.id === terminalState.currentHistoryGroupId)
                     .map((group) => {
                         return (
                             <TerminalHistoryGroup group={group} className='current-history-group' />
                         );
                     })}
-                {state.commandBlueprint ? (
+                {terminalState.command ? (
                     <TaskManager isActive={isActive} />
                 ) : (
                     <CommandInput
-                        availableCommands={availableCommands}
+                        availableCommands={availableCommands.current}
                         onSubmit={handleCommandSubmit}
                         isActive={isActive}
                     />

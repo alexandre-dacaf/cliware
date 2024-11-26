@@ -27,7 +27,7 @@ const useListPrompt = ({
 }: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
-    const { printInput, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, display, clearDisplay } = usePrinter();
 
     useEffect(() => {
         let splitContent = value.split(separator);
@@ -66,7 +66,7 @@ const useListPrompt = ({
         }
 
         const formattedList = JSON.stringify(list);
-        printInput(`${message} ${formattedList}`);
+        printPromptResponse(`${message} ${formattedList}`);
         setValue('');
         onSubmit(list);
     };

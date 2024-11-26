@@ -1,13 +1,5 @@
-import React, {
-    useRef,
-    useState,
-    useContext,
-    useEffect,
-    KeyboardEvent as ReactKeyboardEvent,
-} from 'react';
-import { AppContext } from 'context/AppContext';
+import React, { useRef, useEffect } from 'react';
 import useCommandInput from 'hooks/command-input/useCommandInput';
-import { parseCommandArguments } from 'services/parser';
 import { CommandArgs } from 'types';
 import './CommandInput.css';
 
@@ -24,69 +16,9 @@ const CommandInput: React.FC<CommandInputProps> = ({
     onSubmit,
     isActive,
 }) => {
-    const { dispatch } = useContext(AppContext);
     const inputRef = useRef<HTMLInputElement>(null);
-    const {
-        value,
-        setValue,
-        pageCommands,
-        pageIndex,
-        handleChange,
-        autocomplete,
-        selectPrevious,
-        selectNext,
-        nextPage,
-        prevPage,
-        currentPage,
-        totalPages,
-    } = useCommandInput(availableCommands, itemsPerPage);
-
-    const handleEnter = () => {
-        const commandArgs: CommandArgs = parseCommandArguments(value);
-        onSubmit(value, commandArgs);
-        setValue('');
-    };
-
-    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const key = event.key;
-        preventDefaultEvents(event);
-
-        if (key === 'ArrowDown') {
-            selectNext();
-        }
-        if (key === 'ArrowUp') {
-            selectPrevious();
-        }
-        if (key === 'Tab') {
-            autocomplete();
-        }
-        if (key === 'Enter') {
-            handleEnter();
-        }
-        if (key === 'Escape') {
-            deactivateTerminal();
-        }
-        if (key === 'PageDown') {
-            nextPage();
-        }
-        if (key === 'PageUp') {
-            prevPage();
-        }
-    };
-
-    const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'Escape', 'PageDown', 'PageUp'];
-
-        if (preventDefaultKeys.includes(event.key)) {
-            event.preventDefault();
-        }
-    };
-
-    const deactivateTerminal = () => {
-        if (isActive) {
-            dispatch({ type: 'DEACTIVATE_TERMINAL' });
-        }
-    };
+    const { value, pageCommands, pageIndex, handleChange, currentPage, totalPages, handleKeyDown } =
+        useCommandInput({ availableCommands, itemsPerPage, onSubmit, isActive });
 
     useEffect(() => {
         if (isActive && inputRef.current) {

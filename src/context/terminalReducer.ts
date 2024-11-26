@@ -1,8 +1,9 @@
-import { TerminalState, TerminalAction, HistoryGroup } from 'types';
+import { ensureArray } from 'services';
+import { TerminalState, TerminalAction, HistoryGroup, HistoryEntry } from 'types';
 
 export const initialTerminalState: TerminalState = {
     commandArgs: null,
-    commandBlueprint: null,
+    command: null,
     currentHistoryGroupId: null,
     printHistory: [],
     display: null,
@@ -14,37 +15,61 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
             return {
                 ...state,
                 commandArgs: null,
-                commandBlueprint: null,
+                command: null,
                 display: null,
                 currentHistoryGroupId: null,
             };
         }
-        case 'SET_COMMAND_ARGS': {
-            return { ...state, commandArgs: action.payload };
-        }
-        case 'SET_COMMAND_BLUEPRINT': {
-            return { ...state, commandBlueprint: action.payload };
-        }
-        case 'CREATE_NEW_HISTORY_GROUP': {
-            const currentGroupId = action.payload.currentGroupId;
+        case 'START_NEW_COMMAND': {
+            const { currentGroupId, newGroupId, commandString, command, commandArgs } =
+                action.payload;
 
             if (currentGroupId !== state.currentHistoryGroupId) {
                 return state;
             }
 
-            const newGroupId = action.payload.newGroupId;
-            const initialEntries = action.payload.entries;
-            const initialEntriesArray = Array.isArray(initialEntries)
-                ? initialEntries
-                : [initialEntries];
+            const entries: HistoryEntry[] = [
+                { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
+            ];
 
-            const newHistoryGroup: HistoryGroup = { id: newGroupId, entries: initialEntriesArray };
+            const newHistoryGroup: HistoryGroup = { id: newGroupId, entries };
             const history = state.printHistory;
 
             return {
                 ...state,
                 currentHistoryGroupId: newGroupId,
                 printHistory: [...history, newHistoryGroup],
+                command,
+                commandArgs,
+            };
+        }
+        case 'COMMAND_NOT_FOUND': {
+            const { currentGroupId, newGroupId, commandString } = action.payload;
+
+            if (currentGroupId !== state.currentHistoryGroupId) {
+                return state;
+            }
+
+            const cmd = commandString.split(' ')[0];
+
+            const entries: HistoryEntry[] = [
+                { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
+                {
+                    type: 'text',
+                    content: { color: 'red', text: `Command '${cmd}' not found.` },
+                },
+            ];
+
+            const newHistoryGroup: HistoryGroup = { id: newGroupId, entries };
+            const history = state.printHistory;
+
+            return {
+                ...state,
+                printHistory: [...history, newHistoryGroup],
+                commandArgs: null,
+                command: null,
+                display: null,
+                currentHistoryGroupId: null,
             };
         }
         case 'ADD_ENTRY_TO_TERMINAL_HISTORY': {
@@ -73,9 +98,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
 
             // Entries can be HistoryEntry or HistoryEntry[]. Makes sure it's an array
             const payloadEntries = action.payload.entries;
-            const payloadEntriesArray = Array.isArray(payloadEntries)
-                ? payloadEntries
-                : [payloadEntries];
+            const payloadEntriesArray = ensureArray(payloadEntries);
 
             // Inserts all payload entries at the end of the currentGroup.entries array
             const newHistoryGroup = {

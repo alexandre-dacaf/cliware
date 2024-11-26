@@ -1,25 +1,153 @@
-.active-terminal .loading {
-    color: var(--yellow);
+.terminal-output {
+    color: var(--neutral-800);
 }
 
-.active-terminal .terminal-command {
+.active-terminal .terminal__blue {
     color: var(--blue);
 }
 
-.selected-terminal .terminal-command {
+.active-terminal .terminal__blue-dark {
+    color: var(--blue-dark);
+}
+
+.active-terminal .terminal__blue-light {
+    color: var(--blue-light);
+}
+
+.active-terminal .terminal__green {
     color: var(--green);
 }
 
-.active-terminal .terminal-input {
-    color: var(--neutral-700);
+.active-terminal .terminal__green-dark {
+    color: var(--green-dark);
 }
 
-.active-terminal .terminal-output {
+.active-terminal .terminal__green-light {
+    color: var(--green-light);
+}
+
+.active-terminal .terminal__red {
+    color: var(--red);
+}
+
+.active-terminal .terminal__red-dark {
+    color: var(--red-dark);
+}
+
+.active-terminal .terminal__red-light {
+    color: var(--red-light);
+}
+
+.active-terminal .terminal__yellow {
+    color: var(--yellow);
+}
+
+.active-terminal .terminal__yellow-dark {
+    color: var(--yellow-dark);
+}
+
+.active-terminal .terminal__yellow-light {
+    color: var(--yellow-light);
+}
+
+.active-terminal .terminal__purple {
     color: var(--purple);
 }
 
-.active-terminal .terminal-error {
-    color: var(--red);
+.active-terminal .terminal__purple-dark {
+    color: var(--purple-dark);
+}
+
+.active-terminal .terminal__purple-light {
+    color: var(--purple-light);
+}
+
+.active-terminal .terminal__orange {
+    color: var(--orange);
+}
+
+.active-terminal .terminal__orange-dark {
+    color: var(--orange-dark);
+}
+
+.active-terminal .terminal__orange-light {
+    color: var(--orange-light);
+}
+
+.active-terminal .terminal__teal {
+    color: var(--teal);
+}
+
+.active-terminal .terminal__teal-dark {
+    color: var(--teal-dark);
+}
+
+.active-terminal .terminal__teal-light {
+    color: var(--teal-light);
+}
+
+.active-terminal .terminal__cyan {
+    color: var(--cyan);
+}
+
+.active-terminal .terminal__cyan-dark {
+    color: var(--cyan-dark);
+}
+
+.active-terminal .terminal__cyan-light {
+    color: var(--cyan-light);
+}
+
+.active-terminal .terminal__pink {
+    color: var(--pink);
+}
+
+.active-terminal .terminal__pink-dark {
+    color: var(--pink-dark);
+}
+
+.active-terminal .terminal__pink-light {
+    color: var(--pink-light);
+}
+
+.active-terminal .terminal__neutral-100 {
+    color: var(--neutral-100);
+}
+
+.active-terminal .terminal__neutral-200 {
+    color: var(--neutral-200);
+}
+
+.active-terminal .terminal__neutral-300 {
+    color: var(--neutral-300);
+}
+
+.active-terminal .terminal__neutral-400 {
+    color: var(--neutral-400);
+}
+
+.active-terminal .terminal__neutral-500 {
+    color: var(--neutral-500);
+}
+
+.active-terminal .terminal__neutral-600 {
+    color: var(--neutral-600);
+}
+
+.active-terminal .terminal__neutral-700 {
+    color: var(--neutral-700);
+}
+
+.active-terminal .terminal__neutral-800 {
+    color: var(--neutral-800);
+}
+
+.active-terminal .terminal__neutral-900 {
+    color: var(--neutral-900);
+}
+
+.active-terminal .terminal__neutral-light {
+    color: var(--neutral-light);
 }
 
 .terminal-table {
@@ -38,12 +166,16 @@
     border: 1px solid var(--neutral-400);
 }
 
-.json-container {
+.terminal-json {
     background-color: var(--neutral-100);
-    color: var(--blue);
+    color: var(--neutral-800);
     padding: 1em;
     border-radius: 0.5em;
     overflow-x: auto;
     white-space: pre-wrap;
     line-height: 1.5;
+}
+
+.active-terminal .terminal-json {
+    color: var(--blue);
 }

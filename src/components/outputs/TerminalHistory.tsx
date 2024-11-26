@@ -11,8 +11,10 @@ export const TerminalHistory: React.FC = () => {
         <div className='history'>
             {state.printHistory
                 .filter((group) => group.id !== state.currentHistoryGroupId)
-                .map((group) => {
-                    return <TerminalHistoryGroup group={group} className='history-group' />;
+                .map((group, index) => {
+                    return (
+                        <TerminalHistoryGroup key={index} group={group} className='history-group' />
+                    );
                 })}
         </div>
     );

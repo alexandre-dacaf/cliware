@@ -26,7 +26,7 @@ const useDatePrompt = ({
 }: UseDatePromptProps) => {
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
-    const { printInput, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, display, clearDisplay } = usePrinter();
 
     useEffect(() => {
         setStringValue(defaultValue);
@@ -64,7 +64,7 @@ const useDatePrompt = ({
             return;
         }
 
-        printInput(`${message} ${stringValue}`);
+        printPromptResponse(`${message} ${stringValue}`);
         onSubmit(dateValue);
         clear();
     };

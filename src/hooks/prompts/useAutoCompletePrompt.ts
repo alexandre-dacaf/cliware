@@ -33,7 +33,7 @@ const useSelectPrompt = ({
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const { printInput, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, display, clearDisplay } = usePrinter();
 
     const totalPages = useMemo(
         () => Math.ceil(filteredSuggestions.length / itemsPerPage),
@@ -185,7 +185,7 @@ const useSelectPrompt = ({
             return;
         }
 
-        printInput(`${message} ${value}`);
+        printPromptResponse(`${message} ${value}`);
         setValue('');
         onSubmit(value);
     };

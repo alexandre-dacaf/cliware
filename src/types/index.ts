@@ -24,26 +24,26 @@ export interface PipelineData {
 //#region Tasks
 export type Task = PromptTask | ActionTask;
 
-export interface PipelineBlueprint {
+export interface Pipeline {
     [taskKey: TaskKey]: Task;
 }
 
-export interface CommandBlueprint {
+export interface Command {
     entrypoint: string;
-    pipeline: PipelineBlueprint;
+    pipeline: Pipeline;
 }
 
 export interface Blueprint {
-    [command: string]: CommandBlueprint;
+    [command: string]: Command;
 }
 //#endregion
 
 //#region Actions
 export interface PipelineContext {
     currentTaskKey: TaskKey;
-    taskKeyBreadcrumbs: TaskKey[];
+    taskBreadcrumbs: TaskKey[];
     pipelineData: PipelineData;
-    pipelineBlueprint: PipelineBlueprint;
+    pipeline: Pipeline;
     commandArgs: CommandArgs | null;
     printer: PrinterInterface;
     appDispatcher: AppDispatcherInterface;
@@ -227,17 +227,19 @@ export interface AppDispatcherInterface {
 
 // Terminal
 export interface PrinterInterface {
-    createHistoryGroup: (initialEntries?: HistoryEntry | HistoryEntry[]) => void;
     print: (entries: HistoryEntry | HistoryEntry[]) => void;
+    printText: (content: TextSpan | TextSpan[]) => void;
     printCommand: (message: string) => void;
-    printInput: (message: string) => void;
-    printOutput: (output: string) => void;
+    printCommandNotFound: (commandString: string) => void;
+    printPromptResponse: (message: string) => void;
+    printSuccess: (message: string) => void;
+    printAlert: (message: string) => void;
     printError: (error: any) => void;
-    printTable: (tableContent: TableContent) => void;
+    printTable: (tableContent: TableEntryContent) => void;
     printJson: (json: object) => void;
     copyToClipboard: (text: string) => void;
     downloadAsTxt: (filename: string, content: string) => void;
-    downloadAsCsv: (filename: string, tableContent: TableContent, separator?: string) => void;
+    downloadAsCsv: (filename: string, tableContent: TableEntryContent, separator?: string) => void;
     downloadAsJson: (filename: string, json: object) => void;
     display: (output: string, spinner?: GenerateSpinnerConfigProps) => void;
     clearDisplay: () => void;
@@ -269,20 +271,76 @@ export interface GenerateSpinnerConfigProps {
     interval?: number;
 }
 
+export type HistoryEntry = TextEntry | JsonEntry | TableEntry;
+
 export interface BaseEntry {
     type: string;
     content: any;
 }
 
-export interface StringEntry extends BaseEntry {
-    type: 'command' | 'input' | 'output' | 'error';
-    content: string;
+export interface TextEntry extends BaseEntry {
+    type: 'text';
+    content: TextSpan | TextSpan[];
 }
+
+export interface TextSpan {
+    color?: TextSpanColor;
+    text: string;
+}
+
+export type TextSpanColor =
+    | 'blue'
+    | 'blue-dark'
+    | 'blue-light'
+    | 'green'
+    | 'green-dark'
+    | 'green-light'
+    | 'red'
+    | 'red-dark'
+    | 'red-light'
+    | 'yellow'
+    | 'yellow-dark'
+    | 'yellow-light'
+    | 'purple'
+    | 'purple-dark'
+    | 'purple-light'
+    | 'orange'
+    | 'orange-dark'
+    | 'orange-light'
+    | 'teal'
+    | 'teal-dark'
+    | 'teal-light'
+    | 'cyan'
+    | 'cyan-dark'
+    | 'cyan-light'
+    | 'pink'
+    | 'pink-dark'
+    | 'pink-light'
+    | 'neutral-100'
+    | 'neutral-200'
+    | 'neutral-300'
+    | 'neutral-400'
+    | 'neutral-500'
+    | 'neutral-600'
+    | 'neutral-700'
+    | 'neutral-800'
+    | 'neutral-900'
+    | 'neutral-light';
 
 export interface JsonEntry extends BaseEntry {
     type: 'json';
     content: object;
 }
+
+export interface TableEntry extends BaseEntry {
+    type: 'table';
+    content: TableEntryContent;
+}
+
+export type TableEntryContent = {
+    columns: TableColumn[];
+    data: TableData[];
+};
 
 export type TableColumn = {
     key: string;
@@ -290,18 +348,6 @@ export type TableColumn = {
 };
 
 export type TableData = Record<string, any>;
-
-export type TableContent = {
-    columns: TableColumn[];
-    data: TableData[];
-};
-
-export interface TableEntry extends BaseEntry {
-    type: 'table';
-    content: TableContent;
-}
-
-export type HistoryEntry = StringEntry | JsonEntry | TableEntry;
 
 export type HistoryGroupId = string | null;
 
@@ -317,7 +363,7 @@ export interface Display {
 
 export interface TerminalState {
     commandArgs: CommandArgs | null;
-    commandBlueprint: CommandBlueprint | null;
+    command: Command | null;
     currentHistoryGroupId: HistoryGroupId;
     printHistory: HistoryGroup[];
     display: Display | null;
@@ -325,15 +371,19 @@ export interface TerminalState {
 
 export type TerminalAction =
     | { type: 'STANDBY' }
-    | { type: 'SET_COMMAND_ARGS'; payload: CommandArgs }
-    | { type: 'SET_COMMAND_BLUEPRINT'; payload: CommandBlueprint }
     | {
-          type: 'CREATE_NEW_HISTORY_GROUP';
+          type: 'START_NEW_COMMAND';
           payload: {
               currentGroupId: HistoryGroupId;
               newGroupId: string;
-              entries: HistoryEntry | HistoryEntry[];
+              commandString: string;
+              command: Command;
+              commandArgs: CommandArgs;
           };
+      }
+    | {
+          type: 'COMMAND_NOT_FOUND';
+          payload: { currentGroupId: HistoryGroupId; newGroupId: string; commandString: string };
       }
     | {
           type: 'ADD_ENTRY_TO_TERMINAL_HISTORY';

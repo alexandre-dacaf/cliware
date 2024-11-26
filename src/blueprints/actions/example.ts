@@ -1,4 +1,4 @@
-import { ActionFunction, PipelineContext, TableContent } from 'types';
+import { ActionFunction, PipelineContext, TableEntryContent } from 'types';
 
 export const createTodo: ActionFunction = async (context: PipelineContext): Promise<any> => {
     context.printer.display('Executando...', { name: 'dots3' });
