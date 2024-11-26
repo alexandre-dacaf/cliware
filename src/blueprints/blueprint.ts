@@ -361,7 +361,7 @@ export const blueprint: Blueprint = {
             result: {
                 type: 'action',
                 actionFunction: (context) => {
-                    context.printer.printJson(JSON.stringify(context.pipelineData, null, 2));
+                    context.printer.printJson(context.pipelineData);
                 },
             },
         },

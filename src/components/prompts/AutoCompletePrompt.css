@@ -31,12 +31,12 @@
 }
 
 .autocomplete-suggestion.checked {
-    color: var(--success);
+    color: var(--green);
     text-decoration: underline;
 }
 
 .autocomplete-suggestion.selected {
-    color: var(--primary-color);
+    color: var(--blue);
     text-decoration: underline;
 }
 

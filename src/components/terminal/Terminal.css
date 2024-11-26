@@ -31,11 +31,11 @@
 }
 
 .active-terminal {
-    border: solid 1px var(--primary-color);
+    border: solid 1px var(--blue);
 }
 
 .selected-terminal {
-    border: solid 1px var(--success);
+    border: solid 1px var(--green);
 }
 
 .current-command-container {

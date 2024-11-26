@@ -19,26 +19,18 @@ const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) =>
         case 'table':
             return <TableView tableContent={entry.content} />;
         case 'json':
-            return <JsonView jsonString={entry.content} />;
+            return <JsonView json={entry.content} />;
         default:
             return null;
     }
 };
 
 interface JsonViewProps {
-    jsonString: string;
+    json: object;
 }
 
-const JsonView: React.FC<JsonViewProps> = ({ jsonString }) => {
-    let parsedJson: any;
-
-    try {
-        parsedJson = JSON.parse(jsonString);
-    } catch (error) {
-        return <div className='terminal-error'>Invalid JSON</div>;
-    }
-
-    return <pre className='json-container'>{JSON.stringify(parsedJson, null, 2)}</pre>;
+const JsonView: React.FC<JsonViewProps> = ({ json }) => {
+    return <pre className='json-container'>{JSON.stringify(json, null, 2)}</pre>;
 };
 
 interface TableViewProps {

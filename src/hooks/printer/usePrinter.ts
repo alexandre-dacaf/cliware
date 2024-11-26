@@ -68,8 +68,8 @@ const usePrinter = (): PrinterInterface => {
         print({ type: 'table', content: tableContent });
     };
 
-    const printJson = (jsonString: string) => {
-        print({ type: 'json', content: jsonString });
+    const printJson = (json: object) => {
+        print({ type: 'json', content: json });
     };
 
     const copyToClipboard = async (text: string) => {
@@ -134,8 +134,8 @@ const usePrinter = (): PrinterInterface => {
         downloadFile(filename, csvContent, 'text/csv');
     };
 
-    const downloadAsJson = (filename: string, jsonContent: object) => {
-        const jsonString = JSON.stringify(jsonContent, null, 2);
+    const downloadAsJson = (filename: string, json: object) => {
+        const jsonString = JSON.stringify(json, null, 2);
         downloadFile(filename, jsonString, 'application/json');
     };
 

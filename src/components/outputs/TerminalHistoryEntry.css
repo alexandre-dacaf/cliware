@@ -1,13 +1,13 @@
 .active-terminal .loading {
-    color: var(--warning);
+    color: var(--yellow);
 }
 
 .active-terminal .terminal-command {
-    color: var(--primary-color);
+    color: var(--blue);
 }
 
 .selected-terminal .terminal-command {
-    color: var(--success);
+    color: var(--green);
 }
 
 .active-terminal .terminal-input {
@@ -15,11 +15,11 @@
 }
 
 .active-terminal .terminal-output {
-    color: var(--info);
+    color: var(--purple);
 }
 
 .active-terminal .terminal-error {
-    color: var(--danger);
+    color: var(--red);
 }
 
 .terminal-table {
@@ -40,7 +40,7 @@
 
 .json-container {
     background-color: var(--neutral-100);
-    color: var(--primary-color);
+    color: var(--blue);
     padding: 1em;
     border-radius: 0.5em;
     overflow-x: auto;

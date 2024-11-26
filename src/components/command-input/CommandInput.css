@@ -12,11 +12,11 @@
 }
 
 .active-terminal .command-prompt {
-    color: var(--primary-color);
+    color: var(--blue);
 }
 
 .selected-terminal .command-prompt {
-    color: var(--success);
+    color: var(--green);
 }
 
 .command-input {
@@ -41,12 +41,12 @@
 }
 
 .available-command.checked {
-    color: var(--success);
+    color: var(--green);
     text-decoration: underline;
 }
 
 .available-command.selected {
-    color: var(--primary-color);
+    color: var(--blue);
     text-decoration: underline;
 }
 

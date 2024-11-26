@@ -234,11 +234,11 @@ export interface PrinterInterface {
     printOutput: (output: string) => void;
     printError: (error: any) => void;
     printTable: (tableContent: TableContent) => void;
-    printJson: (jsonString: string) => void;
+    printJson: (json: object) => void;
     copyToClipboard: (text: string) => void;
     downloadAsTxt: (filename: string, content: string) => void;
     downloadAsCsv: (filename: string, tableContent: TableContent, separator?: string) => void;
-    downloadAsJson: (filename: string, jsonContent: object) => void;
+    downloadAsJson: (filename: string, json: object) => void;
     display: (output: string, spinner?: GenerateSpinnerConfigProps) => void;
     clearDisplay: () => void;
 }
@@ -275,8 +275,13 @@ export interface BaseEntry {
 }
 
 export interface StringEntry extends BaseEntry {
-    type: 'command' | 'input' | 'output' | 'error' | 'json';
+    type: 'command' | 'input' | 'output' | 'error';
     content: string;
+}
+
+export interface JsonEntry extends BaseEntry {
+    type: 'json';
+    content: object;
 }
 
 export type TableColumn = {
@@ -296,7 +301,7 @@ export interface TableEntry extends BaseEntry {
     content: TableContent;
 }
 
-export type HistoryEntry = StringEntry | TableEntry;
+export type HistoryEntry = StringEntry | JsonEntry | TableEntry;
 
 export type HistoryGroupId = string | null;
 

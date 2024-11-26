@@ -22,12 +22,12 @@
 }
 
 .choice-label.checked {
-    color: var(--success);
+    color: var(--green);
     text-decoration: underline;
 }
 
 .choice-label.selected {
-    color: var(--primary-color);
+    color: var(--blue);
     text-decoration: underline;
 }
 
