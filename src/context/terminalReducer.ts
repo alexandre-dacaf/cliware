@@ -47,7 +47,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 printHistory: [...history, newHistoryGroup],
             };
         }
-        case 'ADD_OUTPUT_TO_TERMINAL_HISTORY': {
+        case 'ADD_ENTRY_TO_TERMINAL_HISTORY': {
             const currentGroupId = state.currentHistoryGroupId;
 
             if (!currentGroupId) {
@@ -93,10 +93,10 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 printHistory: [...remainingGroups, newHistoryGroup],
             };
         }
-        case 'SET_TRANSIENT_OUTPUT': {
+        case 'SET_DISPLAY': {
             return { ...state, display: action.payload };
         }
-        case 'CLEAR_TRANSIENT_OUTPUT': {
+        case 'CLEAR_DISPLAY': {
             return { ...state, display: null };
         }
         default: {

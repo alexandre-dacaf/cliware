@@ -239,8 +239,34 @@ export interface PrinterInterface {
     downloadAsTxt: (filename: string, content: string) => void;
     downloadAsCsv: (filename: string, tableContent: TableContent, separator?: string) => void;
     downloadAsJson: (filename: string, jsonContent: object) => void;
-    display: (output: string) => void;
+    display: (output: string, spinner?: GenerateSpinnerConfigProps) => void;
     clearDisplay: () => void;
+}
+
+export interface SpinnerProps {
+    frames: string[];
+    interval: number;
+}
+
+export type DefaultSpinnerNames =
+    | 'dots'
+    | 'dots2'
+    | 'dots3'
+    | 'dots4'
+    | 'dots5'
+    | 'dots6'
+    | 'dots7'
+    | 'dots8'
+    | 'dots9'
+    | 'line'
+    | 'arc'
+    | 'arc2'
+    | 'circleHalves';
+
+export interface GenerateSpinnerConfigProps {
+    name?: DefaultSpinnerNames;
+    frames?: string[];
+    interval?: number;
 }
 
 export interface BaseEntry {
@@ -279,12 +305,17 @@ export interface HistoryGroup {
     entries: HistoryEntry[];
 }
 
+export interface Display {
+    output: string;
+    spinner: SpinnerProps | null;
+}
+
 export interface TerminalState {
     commandArgs: CommandArgs | null;
     commandBlueprint: CommandBlueprint | null;
     currentHistoryGroupId: HistoryGroupId;
     printHistory: HistoryGroup[];
-    display: string | null;
+    display: Display | null;
 }
 
 export type TerminalAction =
@@ -300,9 +331,9 @@ export type TerminalAction =
           };
       }
     | {
-          type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY';
+          type: 'ADD_ENTRY_TO_TERMINAL_HISTORY';
           payload: { currentGroupId: HistoryGroupId; entries: HistoryEntry | HistoryEntry[] };
       }
-    | { type: 'SET_TRANSIENT_OUTPUT'; payload: string }
-    | { type: 'CLEAR_TRANSIENT_OUTPUT' };
+    | { type: 'SET_DISPLAY'; payload: Display }
+    | { type: 'CLEAR_DISPLAY' };
 //#endregion

@@ -13,7 +13,7 @@
 - [ ] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
 - [ ] 4.1.7 - Implement progress bar
 - [x] 4.1.8 - Implement JSON output
-- [ ] 4.1.9 - Implement spinner
+- [x] 4.1.9 - Implement spinner
 - [x] 4.1.10 - Implement output to file (first csv, json and txt only)
 - [x] 4.1.11 - Implement output to clipboard
 

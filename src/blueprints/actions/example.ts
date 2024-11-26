@@ -1,7 +1,7 @@
 import { ActionFunction, PipelineContext, TableContent } from 'types';
 
 export const createTodo: ActionFunction = async (context: PipelineContext): Promise<any> => {
-    context.printer.display('Executando...');
+    context.printer.display('Executando...', { name: 'dots3' });
 
     // // Definindo colunas com mais diversidade
     // const columns = [
@@ -101,5 +101,5 @@ export const createTodo: ActionFunction = async (context: PipelineContext): Prom
 
     // context.printer.downloadAsCsv('arquivo-teste.csv', tableContent);
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 };

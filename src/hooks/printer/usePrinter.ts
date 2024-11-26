@@ -1,8 +1,14 @@
-import { HistoryEntry, PrinterInterface, TableContent } from 'types';
+import {
+    HistoryEntry,
+    PrinterInterface,
+    SpinnerProps,
+    TableContent,
+    GenerateSpinnerConfigProps,
+} from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { getExtensionFromMimeType, hasValidExtension } from 'services';
+import { generateSpinnerConfig, getExtensionFromMimeType, hasValidExtension } from 'services';
 
 const usePrinter = (): PrinterInterface => {
     const { state, dispatch } = useContext(TerminalContext);
@@ -19,19 +25,25 @@ const usePrinter = (): PrinterInterface => {
 
     const print = (entries: HistoryEntry | HistoryEntry[]) => {
         dispatch({
-            type: 'ADD_OUTPUT_TO_TERMINAL_HISTORY',
+            type: 'ADD_ENTRY_TO_TERMINAL_HISTORY',
             payload: { currentGroupId: state.currentHistoryGroupId, entries: entries },
         });
     };
 
-    const display = (output: string) => {
-        if (typeof output === 'string') {
-            dispatch({ type: 'SET_TRANSIENT_OUTPUT', payload: output });
-        }
+    const display = (output: string, spinner?: GenerateSpinnerConfigProps) => {
+        const spinnerConfig: SpinnerProps | null = generateSpinnerConfig(spinner);
+
+        dispatch({
+            type: 'SET_DISPLAY',
+            payload: {
+                output,
+                spinner: spinnerConfig,
+            },
+        });
     };
 
     const clearDisplay = () => {
-        dispatch({ type: 'CLEAR_TRANSIENT_OUTPUT' });
+        dispatch({ type: 'CLEAR_DISPLAY' });
     };
 
     const printCommand = (message: string) => {
