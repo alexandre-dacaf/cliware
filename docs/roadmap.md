@@ -12,10 +12,16 @@
 - [ ] 4.1.5 - Implement toast (upper corner or inline?)
 - [ ] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
 - [ ] 4.1.7 - Implement progress bar
-- [ ] 4.1.8 - Implement JSON output
+- [x] 4.1.8 - Implement JSON output
 - [ ] 4.1.9 - Implement spinner
-- [ ] 4.1.10 - Implement output to file (first csv, json and txt only)
-- [ ] 4.1.11 - Implement output to clipboard
+- [x] 4.1.10 - Implement output to file (first csv, json and txt only)
+- [x] 4.1.11 - Implement output to clipboard
+
+### Extras:
+- [ ] Ext1 - Update the color palette to have all the colors needed
+- [ ] Ext2 - Change output types to represent colors, not use cases (green, not sucess. Devs should decide what each color means)
+- [ ] Ext3 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
+- [ ] Ext4 - Allow mouse select of outputs? If so, make it.
 
 ## Sprint 4: Advanced Prompts and Commands
 

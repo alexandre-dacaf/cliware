@@ -1,6 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { getMaskFunction } from 'services/utils';
+import { getMaskFunction } from 'services';
 import { Mask, ValidateFunction } from 'types';
 
 type UseTextPromptProps = {

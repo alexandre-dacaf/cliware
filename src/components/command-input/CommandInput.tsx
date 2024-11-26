@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { AppContext } from 'context/AppContext';
 import useCommandInput from 'hooks/command-input/useCommandInput';
-import { parseCommandArguments } from 'services/utils/parser';
+import { parseCommandArguments } from 'services/parser';
 import { CommandArgs } from 'types';
 import './CommandInput.css';
 

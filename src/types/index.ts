@@ -234,6 +234,11 @@ export interface PrinterInterface {
     printOutput: (output: string) => void;
     printError: (error: any) => void;
     printTable: (tableContent: TableContent) => void;
+    printJson: (jsonString: string) => void;
+    copyToClipboard: (text: string) => void;
+    downloadAsTxt: (filename: string, content: string) => void;
+    downloadAsCsv: (filename: string, tableContent: TableContent, separator?: string) => void;
+    downloadAsJson: (filename: string, jsonContent: object) => void;
     display: (output: string) => void;
     clearDisplay: () => void;
 }
@@ -244,7 +249,7 @@ export interface BaseEntry {
 }
 
 export interface StringEntry extends BaseEntry {
-    type: 'command' | 'input' | 'output' | 'error';
+    type: 'command' | 'input' | 'output' | 'error' | 'json';
     content: string;
 }
 
