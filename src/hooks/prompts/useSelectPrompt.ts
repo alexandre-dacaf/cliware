@@ -141,7 +141,7 @@ const useSelectPrompt = ({
 
     const submit = () => {
         if (required && checkedChoices.length === 0) {
-            display('Choose at least one option.');
+            display({ output: 'Choose at least one option.' });
             return;
         }
 
@@ -155,7 +155,7 @@ const useSelectPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            display(validationMessage);
+            display({ output: validationMessage });
             return;
         }
 
@@ -177,7 +177,7 @@ const useSelectPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            display(validationMessage);
+            display({ output: validationMessage });
             return;
         }
 

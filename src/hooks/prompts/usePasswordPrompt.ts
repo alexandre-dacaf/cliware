@@ -32,7 +32,7 @@ const usePasswordPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            display('Please fill out this field.');
+            display({ output: 'Please fill out this field.' });
             return;
         }
 
@@ -46,7 +46,7 @@ const usePasswordPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            display(validationMessage);
+            display({ output: validationMessage });
             return;
         }
 

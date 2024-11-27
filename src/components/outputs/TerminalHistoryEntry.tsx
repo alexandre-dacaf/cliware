@@ -1,6 +1,6 @@
 import React from 'react';
 import './TerminalHistoryEntry.css';
-import { HistoryEntry, TableEntryContent, TableEntry, TextSpan } from 'types';
+import { HistoryEntry, TableContent, TableHistoryEntry, TextSpan } from 'types';
 import { ensureArray } from 'services';
 
 interface TerminalHistoryEntryProps {
@@ -53,7 +53,7 @@ const JsonView: React.FC<JsonViewProps> = ({ json }) => {
 };
 
 interface TableViewProps {
-    tableContent: TableEntryContent;
+    tableContent: TableContent;
 }
 
 const TableView: React.FC<TableViewProps> = ({ tableContent }) => {

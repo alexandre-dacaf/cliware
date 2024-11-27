@@ -2,10 +2,12 @@ import {
     HistoryEntry,
     PrinterInterface,
     SpinnerProps,
-    TableEntryContent,
-    GenerateSpinnerConfigProps,
+    TableContent,
+    SpinnerConfig,
     TextSpan,
     Command,
+    ProgressBarProps,
+    PrinterDisplayProps,
 } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
@@ -20,14 +22,15 @@ import {
 const usePrinter = (): PrinterInterface => {
     const { state, dispatch } = useContext(TerminalContext);
 
-    const display = (output: string, spinner?: GenerateSpinnerConfigProps) => {
-        const spinnerConfig: SpinnerProps | null = generateSpinnerConfig(spinner);
+    const display = ({ output, spinner, progressBar }: PrinterDisplayProps) => {
+        const spinnerConfig: SpinnerProps | undefined = generateSpinnerConfig(spinner);
 
         dispatch({
             type: 'SET_DISPLAY',
             payload: {
                 output,
                 spinner: spinnerConfig,
+                progressBar,
             },
         });
     };
@@ -86,7 +89,7 @@ const usePrinter = (): PrinterInterface => {
         printText({ color: 'red', text });
     };
 
-    const printTable = (tableContent: TableEntryContent) => {
+    const printTable = (tableContent: TableContent) => {
         print({ type: 'table', content: tableContent });
     };
 
@@ -135,7 +138,7 @@ const usePrinter = (): PrinterInterface => {
 
     const downloadAsCsv = (
         filename: string,
-        tableContent: TableEntryContent,
+        tableContent: TableContent,
         separator: string = ','
     ) => {
         const { columns, data } = tableContent;

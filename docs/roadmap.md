@@ -3,29 +3,33 @@
 ## Sprint 5: Advanced Outputs
 
 > Version 0.5.0
-> 4.1.6 - Implement basic messages (sucess, error, alert, etc)
+> 4.1.7 - Implement progress bar
 
 - [x] 4.1.1 - Implement card-like appearance for the inputs (prompts and command-input)
 - [x] 4.1.2 - Implement card-like appearance for the groups of outputs related to a single command (adjust in terminal-history)
 - [x] 4.1.3 - Make sure the terminal is always scrolling to the bottom
 - [x] 4.1.4 - Implement basic printing with tables
 - [x] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
-- [ ] 4.1.7 - Implement progress bar
+- [x] 4.1.7 - Implement progress bar
 - [x] 4.1.8 - Implement JSON output
 - [x] 4.1.9 - Implement spinner
 - [x] 4.1.10 - Implement output to file (first csv, json and txt only)
 - [x] 4.1.11 - Implement output to clipboard
 
-### Extras:
+### Extras
 - [x] Ext1 - Update the color palette to have all the colors needed
 - [x] Ext2 - Change output types to represent colors, not use cases (green, not sucess. Devs should decide what each color means)
-- [ ] Ext3 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
-- [ ] Ext4 - Allow mouse select of outputs? If so, make it.
-- [ ] Ext5 - Block space action on simple select (use only enter)
-- [ ] Ext6 - Improve cohesion of usePrinter functions (break into more focused hooks)
+- Ext3 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
+- [x] Ext5 - Block space action on simple select (use only enter)
+- Ext6 - Improve cohesion of usePrinter functions (break into more focused hooks)
+
+### Re-prioritized
+- 5.4.1 < Ext3 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
+- 5.4.2 < Ext6 - Improve cohesion of usePrinter functions (break into more focused hooks)
 
 ### Obsolete
 - 4.1.5 - Implement toast (upper corner or inline?)
+- Ext4 - Allow mouse select of outputs? If so, make it.
 
 ## Sprint 4: Advanced Prompts and Commands
 

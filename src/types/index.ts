@@ -1,3 +1,5 @@
+import ProgressBar from 'components/outputs/ProgressBar';
+
 //#region Base
 export type TaskType = 'prompt' | 'action' | 'output';
 
@@ -227,6 +229,8 @@ export interface AppDispatcherInterface {
 
 // Terminal
 export interface PrinterInterface {
+    display: (printerDisplayProps: PrinterDisplayProps) => void;
+    clearDisplay: () => void;
     print: (entries: HistoryEntry | HistoryEntry[]) => void;
     printText: (content: TextSpan | TextSpan[]) => void;
     printCommand: (message: string) => void;
@@ -235,50 +239,22 @@ export interface PrinterInterface {
     printSuccess: (message: string) => void;
     printAlert: (message: string) => void;
     printError: (error: any) => void;
-    printTable: (tableContent: TableEntryContent) => void;
+    printTable: (tableContent: TableContent) => void;
     printJson: (json: object) => void;
     copyToClipboard: (text: string) => void;
     downloadAsTxt: (filename: string, content: string) => void;
-    downloadAsCsv: (filename: string, tableContent: TableEntryContent, separator?: string) => void;
+    downloadAsCsv: (filename: string, tableContent: TableContent, separator?: string) => void;
     downloadAsJson: (filename: string, json: object) => void;
-    display: (output: string, spinner?: GenerateSpinnerConfigProps) => void;
-    clearDisplay: () => void;
 }
 
-export interface SpinnerProps {
-    frames: string[];
-    interval: number;
-}
+export type HistoryEntry = TextHistoryEntry | JsonHistoryEntry | TableHistoryEntry;
 
-export type DefaultSpinnerNames =
-    | 'dots'
-    | 'dots2'
-    | 'dots3'
-    | 'dots4'
-    | 'dots5'
-    | 'dots6'
-    | 'dots7'
-    | 'dots8'
-    | 'dots9'
-    | 'line'
-    | 'arc'
-    | 'arc2'
-    | 'circleHalves';
-
-export interface GenerateSpinnerConfigProps {
-    name?: DefaultSpinnerNames;
-    frames?: string[];
-    interval?: number;
-}
-
-export type HistoryEntry = TextEntry | JsonEntry | TableEntry;
-
-export interface BaseEntry {
+export interface BaseHistoryEntry {
     type: string;
     content: any;
 }
 
-export interface TextEntry extends BaseEntry {
+export interface TextHistoryEntry extends BaseHistoryEntry {
     type: 'text';
     content: TextSpan | TextSpan[];
 }
@@ -327,17 +303,17 @@ export type TextSpanColor =
     | 'neutral-900'
     | 'neutral-light';
 
-export interface JsonEntry extends BaseEntry {
+export interface JsonHistoryEntry extends BaseHistoryEntry {
     type: 'json';
     content: object;
 }
 
-export interface TableEntry extends BaseEntry {
+export interface TableHistoryEntry extends BaseHistoryEntry {
     type: 'table';
-    content: TableEntryContent;
+    content: TableContent;
 }
 
-export type TableEntryContent = {
+export type TableContent = {
     columns: TableColumn[];
     data: TableData[];
 };
@@ -349,16 +325,68 @@ export type TableColumn = {
 
 export type TableData = Record<string, any>;
 
-export type HistoryGroupId = string | null;
-
 export interface HistoryGroup {
     id: HistoryGroupId;
     entries: HistoryEntry[];
 }
 
+export type HistoryGroupId = string | null;
+
 export interface Display {
     output: string;
-    spinner: SpinnerProps | null;
+    spinner?: SpinnerProps;
+    progressBar?: ProgressBarProps;
+}
+
+export interface PrinterDisplayProps {
+    output: string;
+    spinner?: SpinnerConfig;
+    progressBar?: ProgressBarProps;
+}
+
+export interface SpinnerProps {
+    frames: string[];
+    interval: number;
+}
+
+export type DefaultSpinnerNames =
+    | 'dots'
+    | 'dots2'
+    | 'dots3'
+    | 'dots4'
+    | 'dots5'
+    | 'dots6'
+    | 'dots7'
+    | 'dots8'
+    | 'dots9'
+    | 'line'
+    | 'arc'
+    | 'circleHalves';
+
+export interface SpinnerConfig {
+    name?: DefaultSpinnerNames;
+    frames?: string[];
+    interval?: number;
+}
+
+export interface ProgressBarProps {
+    percentage: number;
+    style?: ProgressBarStyleName;
+    totalLength?: number;
+    fontSize?: number;
+}
+
+export type ProgressBarCharacters = Record<ProgressBarStyleName, ProgressBarStyleChars>;
+
+export type ProgressBarStyleName = 'arrow' | 'blocks' | 'slanted' | 'hash';
+
+export interface ProgressBarStyleChars {
+    start: string;
+    end: string;
+    filled: string;
+    empty: string;
+    indicator: string;
+    size: number;
 }
 
 export interface TerminalState {

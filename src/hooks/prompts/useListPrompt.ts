@@ -47,7 +47,7 @@ const useListPrompt = ({
 
     const submit = () => {
         if (required && list.length === 0) {
-            display('Please fill out this field.');
+            display({ output: 'Please fill out this field.' });
             return;
         }
 
@@ -61,7 +61,7 @@ const useListPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            display(validationMessage);
+            display({ output: validationMessage });
             return;
         }
 

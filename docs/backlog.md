@@ -109,6 +109,10 @@
         - [ ] 5.3.4.1 - Base prompt must usePromptSubmitter, making the submit function available to the prompts
         - [ ] 5.3.4.2 - Each prompt must create its own validate, clear, etc functions, passing it to the base prompt
 
+- [ ] 🧩 **User Story 5.4 - As a dev, I want better lingo/domain language and better cohesion and structure**
+    - [ ] 5.4.1 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
+    - [ ] 5.4.2 - Improve cohesion of usePrinter functions (break into more focused hooks)
+
 
 ## Epic 6: CI/CD
 

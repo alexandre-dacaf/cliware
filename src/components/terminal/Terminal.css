@@ -4,7 +4,7 @@
     padding: 1rem;
     box-sizing: border-box;
     background-color: var(--neutral-200);
-    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    font-family: 'Courier New', Courier, monospace;
     height: 100%;
     outline: none;
     overflow-y: auto;

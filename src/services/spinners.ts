@@ -1,8 +1,6 @@
-import { DefaultSpinnerNames, GenerateSpinnerConfigProps, SpinnerProps } from 'types';
+import { DefaultSpinnerNames, SpinnerConfig, SpinnerProps } from 'types';
 
-export const generateSpinnerConfig = (
-    spinner?: GenerateSpinnerConfigProps
-): SpinnerProps | null => {
+export const generateSpinnerConfig = (spinner?: SpinnerConfig): SpinnerProps | undefined => {
     const spinners: Record<DefaultSpinnerNames, string[]> = {
         dots: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
         dots2: ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷'],
@@ -113,12 +111,11 @@ export const generateSpinnerConfig = (
         dots9: ['⣼', '⣹', '⢻', '⠿', '⡟', '⣏', '⣧', '⣶'],
         line: ['-', '\\', '|', '/'],
         arc: ['◜', '◠', '◝', '◞', '◡', '◟'],
-        arc2: ['\uEE06', '\uEE07', '\uEE08', '\uEE09', '\uEE0A', '\uEE0B'],
         circleHalves: ['◐', '◓', '◑', '◒'],
     };
 
     if (!spinner) {
-        return null;
+        return undefined;
     }
 
     const defaulInterval = 80;
@@ -139,5 +136,5 @@ export const generateSpinnerConfig = (
         };
     }
 
-    return null;
+    return undefined;
 };

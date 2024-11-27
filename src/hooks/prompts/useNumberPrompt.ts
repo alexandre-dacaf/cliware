@@ -126,7 +126,7 @@ const useNumberPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            display('Please fill out this field.');
+            display({ output: 'Please fill out this field.' });
             clear();
             return;
         }
@@ -134,13 +134,13 @@ const useNumberPrompt = ({
         const numberValue: number = parseFloat(value);
 
         if (numberValue < min) {
-            display(`Minimum value is ${min}.`);
+            display({ output: `Minimum value is ${min}.` });
             clear();
             return;
         }
 
         if (numberValue > max) {
-            display(`Maximum value is ${max}.`);
+            display({ output: `Maximum value is ${max}.` });
             clear();
             return;
         }
@@ -155,7 +155,7 @@ const useNumberPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            display(validationMessage);
+            display({ output: validationMessage });
             return;
         }
 

@@ -46,7 +46,7 @@ const useDatePrompt = ({
 
     const submit = () => {
         if (required && !dateValue) {
-            display('Invalid date.');
+            display({ output: 'Invalid date.' });
             return;
         }
 
@@ -60,7 +60,7 @@ const useDatePrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            display(validationMessage);
+            display({ output: validationMessage });
             return;
         }
 
