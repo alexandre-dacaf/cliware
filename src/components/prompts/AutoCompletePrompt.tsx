@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
-import './AutoCompletePrompt.css';
+import './AutoCompletePrompt.scss';
 import { ValidateFunction } from 'types';
 
 interface AutoCompletePromptProps {
@@ -33,15 +33,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     onGoBack,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const {
-        value,
-        pageSuggestions,
-        pageIndex,
-        handleChange,
-        handleKeyDown,
-        currentPage,
-        totalPages,
-    } = useAutoCompletePrompt({
+    const { value, pageSuggestions, pageIndex, handleChange, handleKeyDown, currentPage, totalPages } = useAutoCompletePrompt({
         message,
         suggestions,
         itemsPerPage,
@@ -85,12 +77,7 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
 
             <div className='autocomplete-suggestions'>
                 {pageSuggestions.map((suggestion, index) => (
-                    <span
-                        key={index}
-                        className={`autocomplete-suggestion ${
-                            pageIndex === index ? 'selected' : ''
-                        }`}
-                    >
+                    <span key={index} className={`autocomplete-suggestion ${pageIndex === index ? 'selected' : ''}`}>
                         {suggestion}
                     </span>
                 ))}

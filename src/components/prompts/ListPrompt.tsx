@@ -1,6 +1,5 @@
-import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import './ListPrompt.css';
-import usePrinter from 'hooks/printer/usePrinter';
+import React, { useRef, useEffect } from 'react';
+import './ListPrompt.scss';
 import useListPrompt from 'hooks/prompts/useListPrompt';
 import { ValidateFunction } from 'types';
 

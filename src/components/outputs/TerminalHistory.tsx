@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import TerminalHistoryEntry from './TerminalHistoryEntry';
 import { TerminalContext } from 'context/TerminalContext';
 import { HistoryGroup } from 'types';
-import './TerminalHistory.css';
+import './TerminalHistory.scss';
 
 export const TerminalHistory: React.FC = () => {
     const { state } = useContext(TerminalContext);
@@ -12,9 +12,7 @@ export const TerminalHistory: React.FC = () => {
             {state.printHistory
                 .filter((group) => group.id !== state.currentHistoryGroupId)
                 .map((group, index) => {
-                    return (
-                        <TerminalHistoryGroup key={index} group={group} className='history-group' />
-                    );
+                    return <TerminalHistoryGroup key={index} group={group} className='history-group' />;
                 })}
         </div>
     );

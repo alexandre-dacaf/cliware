@@ -33,12 +33,9 @@ const useSelectPrompt = ({
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const { printPromptResponse, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
-    const totalPages = useMemo(
-        () => Math.ceil(filteredSuggestions.length / itemsPerPage),
-        [filteredSuggestions, itemsPerPage]
-    );
+    const totalPages = useMemo(() => Math.ceil(filteredSuggestions.length / itemsPerPage), [filteredSuggestions, itemsPerPage]);
 
     useEffect(() => {
         setFilteredSuggestions(suggestions);
@@ -59,9 +56,7 @@ const useSelectPrompt = ({
     }, [defaultValue, suggestions, itemsPerPage]);
 
     useEffect(() => {
-        setPageSuggestions(
-            filteredSuggestions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-        );
+        setPageSuggestions(filteredSuggestions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage));
     }, [filteredSuggestions, currentPage, itemsPerPage]);
 
     useEffect(() => {
@@ -79,8 +74,7 @@ const useSelectPrompt = ({
             return;
         }
 
-        const normalizeText = (text: string) =>
-            text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizeText = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
         const pattern = new RegExp(normalizeText(inputValue), 'i');
 
@@ -167,7 +161,7 @@ const useSelectPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            display({ output: 'Please fill out this field.' });
+            setDisplayText('Please fill out this field.');
             return;
         }
 
@@ -176,12 +170,9 @@ const useSelectPrompt = ({
         const validation = validate(value);
 
         if (validation !== true) {
-            const validationMessage =
-                validation !== false
-                    ? validation
-                    : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
 
-            display({ output: validationMessage });
+            setDisplayText(validationMessage);
             return;
         }
 

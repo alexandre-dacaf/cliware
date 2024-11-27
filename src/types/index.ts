@@ -1,7 +1,7 @@
 import ProgressBar from 'components/outputs/ProgressBar';
 
 //#region Base
-export type TaskType = 'prompt' | 'action' | 'output';
+export type TaskType = 'prompt' | 'action';
 
 export type TaskKey = string;
 
@@ -60,16 +60,7 @@ export interface ActionTask extends BaseTask {
 //#endregion
 
 //#region Prompts
-export type PromptType =
-    | 'text'
-    | 'toggle'
-    | 'select'
-    | 'multiselect'
-    | 'number'
-    | 'list'
-    | 'date'
-    | 'autocomplete'
-    | 'password';
+export type PromptType = 'text' | 'toggle' | 'select' | 'multiselect' | 'number' | 'list' | 'date' | 'autocomplete' | 'password';
 
 export interface Choice {
     value?: any;
@@ -229,7 +220,10 @@ export interface AppDispatcherInterface {
 
 // Terminal
 export interface PrinterInterface {
-    display: (printerDisplayProps: PrinterDisplayProps) => void;
+    setDisplayText: (text: string) => void;
+    setDisplaySpinner: (config: SpinnerConfig) => void;
+    setProgressBarStyle: (style: ProgressBarStyle | null) => void;
+    updateProgressBarPercentage: (percentage: number) => void;
     clearDisplay: () => void;
     print: (entries: HistoryEntry | HistoryEntry[]) => void;
     printText: (content: TextSpan | TextSpan[]) => void;
@@ -260,11 +254,11 @@ export interface TextHistoryEntry extends BaseHistoryEntry {
 }
 
 export interface TextSpan {
-    color?: TextSpanColor;
+    color?: PaletteColor;
     text: string;
 }
 
-export type TextSpanColor =
+export type PaletteColor =
     | 'blue'
     | 'blue-dark'
     | 'blue-light'
@@ -333,15 +327,9 @@ export interface HistoryGroup {
 export type HistoryGroupId = string | null;
 
 export interface Display {
-    output: string;
-    spinner?: SpinnerProps;
-    progressBar?: ProgressBarProps;
-}
-
-export interface PrinterDisplayProps {
-    output: string;
-    spinner?: SpinnerConfig;
-    progressBar?: ProgressBarProps;
+    text?: string | null;
+    spinner?: SpinnerProps | null;
+    progressBar?: ProgressBarProps | null;
 }
 
 export interface SpinnerProps {
@@ -349,19 +337,13 @@ export interface SpinnerProps {
     interval: number;
 }
 
-export type DefaultSpinnerNames =
-    | 'dots'
-    | 'dots2'
-    | 'dots3'
-    | 'dots4'
-    | 'dots5'
-    | 'dots6'
-    | 'dots7'
-    | 'dots8'
-    | 'dots9'
-    | 'line'
-    | 'arc'
-    | 'circleHalves';
+export interface PrinterDisplayProps {
+    text?: string;
+    spinnerConfig?: SpinnerConfig;
+    progressBar?: ProgressBarProps;
+}
+
+export type DefaultSpinnerNames = 'dots' | 'dots2' | 'dots3' | 'dots4' | 'dots5' | 'dots6' | 'dots7' | 'dots8' | 'dots9' | 'line' | 'arc' | 'circleHalves';
 
 export interface SpinnerConfig {
     name?: DefaultSpinnerNames;
@@ -371,22 +353,17 @@ export interface SpinnerConfig {
 
 export interface ProgressBarProps {
     percentage: number;
-    style?: ProgressBarStyleName;
-    totalLength?: number;
-    fontSize?: number;
+    trackStyle?: React.CSSProperties;
+    barStyle?: React.CSSProperties;
+    animationKeyframes?: string;
+    color?: PaletteColor;
 }
 
-export type ProgressBarCharacters = Record<ProgressBarStyleName, ProgressBarStyleChars>;
-
-export type ProgressBarStyleName = 'arrow' | 'blocks' | 'slanted' | 'hash';
-
-export interface ProgressBarStyleChars {
-    start: string;
-    end: string;
-    filled: string;
-    empty: string;
-    indicator: string;
-    size: number;
+export interface ProgressBarStyle {
+    trackStyle?: React.CSSProperties;
+    barStyle?: React.CSSProperties;
+    animationKeyframes?: string;
+    color?: PaletteColor;
 }
 
 export interface TerminalState {
@@ -418,5 +395,9 @@ export type TerminalAction =
           payload: { currentGroupId: HistoryGroupId; entries: HistoryEntry | HistoryEntry[] };
       }
     | { type: 'SET_DISPLAY'; payload: Display }
+    | { type: 'SET_DISPLAY_TEXT'; payload: string | null }
+    | { type: 'SET_DISPLAY_SPINNER'; payload: SpinnerProps | null }
+    | { type: 'SET_PROGRESS_BAR_STYLE'; payload: ProgressBarStyle | null }
+    | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
     | { type: 'CLEAR_DISPLAY' };
 //#endregion

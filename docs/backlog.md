@@ -67,18 +67,17 @@
 
 ## Epic 4: Outputs
 
-- [ ] 🧩 **User Story 4.1 - As a dev, have multiple outputs for various use cases**
-    - [ ] 4.1.1 - Implement card-like appearance for the inputs (prompts and command-input)
-    - [ ] 4.1.2 - Implement card-like appearance for the groups of outputs related to a single command (adjust in terminal-history)
-    - [ ] 4.1.3 - Make sure the terminal is always scrolling to the bottom
-    - [ ] 4.1.4 - Implement basic printing with tables
-    - [ ] 4.1.5 - Implement toast (upper corner or inline?)
-    - [ ] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
-    - [ ] 4.1.7 - Implement progress bar
-    - [ ] 4.1.8 - Implement JSON output
-    - [ ] 4.1.9 - Implement spinner
-    - [ ] 4.1.10 - Implement output to file (first csv, json and txt only)
-    - [ ] 4.1.11 - Implement output to clipboard
+- [x] 🧩 **User Story 4.1 - As a dev, have multiple outputs for various use cases**
+    - [x] 4.1.1 - Implement card-like appearance for the inputs (prompts and command-input)
+    - [x] 4.1.2 - Implement card-like appearance for the groups of outputs related to a single command (adjust in terminal-history)
+    - [x] 4.1.3 - Make sure the terminal is always scrolling to the bottom
+    - [x] 4.1.4 - Implement basic printing with tables
+    - [x] 4.1.6 - Implement basic messages (sucess, error, alert, etc). Should they be persistent or transient? Toast or inline?
+    - [x] 4.1.7 - Implement progress bar
+    - [x] 4.1.8 - Implement JSON output
+    - [x] 4.1.9 - Implement spinner
+    - [x] 4.1.10 - Implement output to file (first csv, json and txt only)
+    - [x] 4.1.11 - Implement output to clipboard
 
 
 ## Epic 5: Refactoring
@@ -110,8 +109,9 @@
         - [ ] 5.3.4.2 - Each prompt must create its own validate, clear, etc functions, passing it to the base prompt
 
 - [ ] 🧩 **User Story 5.4 - As a dev, I want better lingo/domain language and better cohesion and structure**
-    - [ ] 5.4.1 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
+    - [ ] 5.4.1 - Enhance nomenclature of output components (history entry, terminal history, setDisplayText, etc)
     - [ ] 5.4.2 - Improve cohesion of usePrinter functions (break into more focused hooks)
+    - [ ] 5.4.3 - Improve typing and organize type files
 
 
 ## Epic 6: CI/CD
@@ -147,5 +147,5 @@
 
 ## To Be Defined (TBD)
 - [ ] Tbd1 - Single base prompt component, with input types as children components
-- [ ] Tbd2 - Scroll bottom when prompt is too long
+- [x] Tbd2 - Scroll bottom when prompt is too long
 - [ ] Tbd3 - Handle persistence with PipelineContext (sessionStorage, localStorage and cookies)

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
-import './NumberPrompt.css';
+import './NumberPrompt.scss';
 import { ValidateFunction } from 'types';
 
 interface NumberPromptProps {

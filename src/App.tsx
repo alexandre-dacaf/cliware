@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Terminal from 'components/terminal/Terminal';
 import { AppProvider } from 'context/AppContext';
 import useApp from 'hooks/app/useApp';
-import 'App.css';
+import 'App.scss';
 import { stat } from 'fs';
 import useAppDispatcher from 'hooks/app/useAppDispatcher';
 
@@ -16,13 +16,7 @@ const App: React.FC = () => {
 
 const TerminalContainer: React.FC = () => {
     const { state, terminalContainerRef, someTerminalActive, focusSelf } = useApp();
-    const {
-        createTerminal,
-        deleteCurrentTerminal,
-        selectNextTerminal,
-        selectPreviousTerminal,
-        activateTerminal,
-    } = useAppDispatcher();
+    const { createTerminal, deleteCurrentTerminal, selectNextTerminal, selectPreviousTerminal, activateTerminal } = useAppDispatcher();
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (someTerminalActive()) return;
@@ -79,11 +73,7 @@ const TerminalContainer: React.FC = () => {
             style={{ gridTemplateColumns: `repeat(${state.terminalColumns}, 1fr)` }}
         >
             {state.terminalList.map((terminal) => (
-                <Terminal
-                    key={terminal.id}
-                    isActive={isActive(terminal.id)}
-                    isSelected={isFocused(terminal.id)}
-                />
+                <Terminal key={terminal.id} isActive={isActive(terminal.id)} isSelected={isFocused(terminal.id)} />
             ))}
         </div>
     );

@@ -14,19 +14,10 @@ type UseDatePromptProps = {
     onGoBack: () => void;
 };
 
-const useDatePrompt = ({
-    message,
-    defaultValue,
-    required,
-    validate,
-    onSubmit,
-    onEscape,
-    onAbort,
-    onGoBack,
-}: UseDatePromptProps) => {
+const useDatePrompt = ({ message, defaultValue, required, validate, onSubmit, onEscape, onAbort, onGoBack }: UseDatePromptProps) => {
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
-    const { printPromptResponse, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
     useEffect(() => {
         setStringValue(defaultValue);
@@ -46,7 +37,7 @@ const useDatePrompt = ({
 
     const submit = () => {
         if (required && !dateValue) {
-            display({ output: 'Invalid date.' });
+            setDisplayText('Invalid date.');
             return;
         }
 
@@ -55,12 +46,9 @@ const useDatePrompt = ({
         const validation = validate(dateValue);
 
         if (validation !== true) {
-            const validationMessage =
-                validation !== false
-                    ? validation
-                    : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
 
-            display({ output: validationMessage });
+            setDisplayText(validationMessage);
             return;
         }
 

@@ -12,17 +12,9 @@ type UsePasswordPromptProps = {
     onGoBack: () => void;
 };
 
-const usePasswordPrompt = ({
-    message,
-    required,
-    validate,
-    onSubmit,
-    onEscape,
-    onAbort,
-    onGoBack,
-}: UsePasswordPromptProps) => {
+const usePasswordPrompt = ({ message, required, validate, onSubmit, onEscape, onAbort, onGoBack }: UsePasswordPromptProps) => {
     const [value, setValue] = useState<string>('');
-    const { printPromptResponse, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         clearDisplay();
@@ -32,7 +24,7 @@ const usePasswordPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            display({ output: 'Please fill out this field.' });
+            setDisplayText('Please fill out this field.');
             return;
         }
 
@@ -41,12 +33,9 @@ const usePasswordPrompt = ({
         const validation = validate(value);
 
         if (validation !== true) {
-            const validationMessage =
-                validation !== false
-                    ? validation
-                    : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
 
-            display({ output: validationMessage });
+            setDisplayText(validationMessage);
             return;
         }
 

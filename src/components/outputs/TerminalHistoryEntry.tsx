@@ -1,6 +1,6 @@
 import React from 'react';
-import './TerminalHistoryEntry.css';
-import { HistoryEntry, TableContent, TableHistoryEntry, TextSpan } from 'types';
+import './TerminalHistoryEntry.scss';
+import { HistoryEntry, TableContent, TextSpan } from 'types';
 import { ensureArray } from 'services';
 
 interface TerminalHistoryEntryProps {
@@ -31,8 +31,7 @@ const TextView: React.FC<TextViewProps> = ({ content }) => {
         <div className='terminal-text'>
             {contentArray.map((textEntryContent, index) => {
                 const color = textEntryContent.color ?? 'neutral-500';
-                const className = `terminal-output terminal__${color}`;
-                const style = { color: `var(--${color})` };
+                const className = `terminal-output terminal--${color}`;
 
                 return (
                     <span key={index} className={className}>

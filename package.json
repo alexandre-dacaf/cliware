@@ -57,5 +57,8 @@
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/alexandre-dacaf/cliware/issues"
+    },
+    "devDependencies": {
+        "sass": "^1.81.0"
     }
 }

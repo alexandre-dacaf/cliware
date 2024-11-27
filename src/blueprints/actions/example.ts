@@ -1,76 +1,50 @@
-import { ActionFunction, PipelineContext, ProgressBarStyleName, TableContent } from 'types';
+import { ActionFunction, PipelineContext, ProgressBarProps } from 'types';
 
 export const createTodo: ActionFunction = async (context: PipelineContext): Promise<any> => {
     console.log(window.getComputedStyle(document.body).fontFamily);
 
-    const style: ProgressBarStyleName = 'slanted';
-    const totalLength = 15;
-    const spinnerName = 'dots3';
+    context.printer.setDisplayText('Executando...');
 
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 0 },
+    context.printer.setDisplaySpinner({ name: 'dots3' });
+
+    context.printer.setProgressBarStyle({
+        color: 'red',
     });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 10 },
+
+    context.printer.updateProgressBarPercentage(0);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(10);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(20);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(30);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(40);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.setProgressBarStyle({
+        color: 'green',
     });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 20 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 30 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 40 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 50 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 60 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 70 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 80 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 90 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    context.printer.display({
-        output: 'Executando...',
-        spinner: { name: spinnerName },
-        progressBar: { totalLength, style, percentage: 100 },
-    });
-    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    context.printer.updateProgressBarPercentage(50);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(60);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(70);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(80);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(90);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    context.printer.updateProgressBarPercentage(100);
+    await new Promise((resolve) => setTimeout(resolve, 400));
 };

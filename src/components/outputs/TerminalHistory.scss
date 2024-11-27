@@ -1,5 +1,7 @@
+@import 'styles/variables';
+
 .history {
-    color: var(--neutral-800);
+    color: $neutral-800;
 }
 
 .history-group {
@@ -7,5 +9,5 @@
     padding: 1em;
     border-radius: 0.4em;
     margin-top: 1em;
-    box-shadow: inset rgba(0, 0, 0, 0.16) 0px 3px 6px, inset rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    box-shadow: $shadow-inset-upper;
 }

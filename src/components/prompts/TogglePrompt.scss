@@ -1,3 +1,5 @@
+@import 'styles/variables';
+
 .confirm-prompt {
     display: flex;
     flex-direction: column;
@@ -14,7 +16,7 @@
 }
 
 .confirm-choice.selected {
-    color: var(--blue);
+    color: $blue;
     text-decoration: underline;
 }
 

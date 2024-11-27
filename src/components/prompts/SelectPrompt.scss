@@ -1,3 +1,5 @@
+@import 'styles/variables';
+
 .select-prompt {
     display: flex;
     flex-direction: column;
@@ -22,12 +24,12 @@
 }
 
 .choice-label.checked {
-    color: var(--green);
+    color: $green;
     text-decoration: underline;
 }
 
 .choice-label.selected {
-    color: var(--blue);
+    color: $blue;
     text-decoration: underline;
 }
 

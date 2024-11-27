@@ -16,20 +16,9 @@ type UseTextPromptProps = {
     onGoBack: () => void;
 };
 
-const useTextPrompt = ({
-    message,
-    defaultValue,
-    required,
-    trim,
-    validate,
-    mask,
-    onSubmit,
-    onEscape,
-    onAbort,
-    onGoBack,
-}: UseTextPromptProps) => {
+const useTextPrompt = ({ message, defaultValue, required, trim, validate, mask, onSubmit, onEscape, onAbort, onGoBack }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
-    const { printPromptResponse, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
     useEffect(() => {
         setValue(defaultValue);
@@ -68,7 +57,7 @@ const useTextPrompt = ({
         }
 
         if (required && !formattedValue) {
-            display({ output: 'Please fill out this field.' });
+            setDisplayText('Please fill out this field.');
             return;
         }
 
@@ -77,12 +66,9 @@ const useTextPrompt = ({
         const validation = validate(formattedValue);
 
         if (validation !== true) {
-            const validationMessage =
-                validation !== false
-                    ? validation
-                    : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
 
-            display({ output: validationMessage });
+            setDisplayText(validationMessage);
             return;
         }
 

@@ -8,31 +8,34 @@ import {
     Command,
     ProgressBarProps,
     PrinterDisplayProps,
+    Display,
+    ProgressBarStyle,
 } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import {
-    ensureArray,
-    generateSpinnerConfig,
-    getExtensionFromMimeType,
-    hasValidExtension,
-} from 'services';
+import { ensureArray, generateSpinnerProps, getExtensionFromMimeType, hasValidExtension } from 'services';
 
 const usePrinter = (): PrinterInterface => {
     const { state, dispatch } = useContext(TerminalContext);
 
-    const display = ({ output, spinner, progressBar }: PrinterDisplayProps) => {
-        const spinnerConfig: SpinnerProps | undefined = generateSpinnerConfig(spinner);
+    const setDisplayText = (text: string) => {
+        dispatch({ type: 'SET_DISPLAY_TEXT', payload: text });
+    };
 
-        dispatch({
-            type: 'SET_DISPLAY',
-            payload: {
-                output,
-                spinner: spinnerConfig,
-                progressBar,
-            },
-        });
+    const setDisplaySpinner = (config: SpinnerConfig) => {
+        const spinner = generateSpinnerProps(config);
+        if (!spinner) return;
+
+        dispatch({ type: 'SET_DISPLAY_SPINNER', payload: spinner });
+    };
+
+    const setProgressBarStyle = (style: ProgressBarStyle | null) => {
+        dispatch({ type: 'SET_PROGRESS_BAR_STYLE', payload: style });
+    };
+
+    const updateProgressBarPercentage = (percentage: number) => {
+        dispatch({ type: 'UPDATE_PROGRESS_BAR_PERCENTAGE', payload: percentage });
     };
 
     const clearDisplay = () => {
@@ -109,9 +112,7 @@ const usePrinter = (): PrinterInterface => {
     const downloadFile = (filename: string, content: string, mimeType: string) => {
         try {
             const extension = getExtensionFromMimeType(mimeType);
-            const finalFilename = hasValidExtension(filename, extension)
-                ? filename
-                : `${filename}.${extension}`;
+            const finalFilename = hasValidExtension(filename, extension) ? filename : `${filename}.${extension}`;
 
             const blob = new Blob([content], { type: mimeType });
             const url = URL.createObjectURL(blob);
@@ -136,11 +137,7 @@ const usePrinter = (): PrinterInterface => {
         downloadFile(filename, content, 'text/plain');
     };
 
-    const downloadAsCsv = (
-        filename: string,
-        tableContent: TableContent,
-        separator: string = ','
-    ) => {
+    const downloadAsCsv = (filename: string, tableContent: TableContent, separator: string = ',') => {
         const { columns, data } = tableContent;
 
         // Generate the CSV headers using the column headers
@@ -168,6 +165,11 @@ const usePrinter = (): PrinterInterface => {
     };
 
     return {
+        setDisplayText,
+        setDisplaySpinner,
+        setProgressBarStyle,
+        updateProgressBarPercentage,
+        clearDisplay,
         print,
         printText,
         printCommand,
@@ -178,8 +180,6 @@ const usePrinter = (): PrinterInterface => {
         printError,
         printTable,
         printJson,
-        display,
-        clearDisplay,
         copyToClipboard,
         downloadAsTxt,
         downloadAsCsv,

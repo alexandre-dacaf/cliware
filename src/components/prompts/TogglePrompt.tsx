@@ -1,7 +1,5 @@
-import React, { useRef, useState, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { Choice } from 'types';
-import usePrinter from 'hooks/printer/usePrinter';
-import './TogglePrompt.css';
+import React, { useRef, useEffect } from 'react';
+import './TogglePrompt.scss';
 import useTogglePrompt from 'hooks/prompts/useTogglePrompt';
 
 interface TogglePromptProps {
@@ -47,31 +45,18 @@ const TogglePrompt: React.FC<TogglePromptProps> = ({
 
     const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
         const relatedTarget = event.relatedTarget as HTMLElement | null;
-        if (
-            containerRef.current &&
-            relatedTarget &&
-            !containerRef.current.contains(relatedTarget)
-        ) {
+        if (containerRef.current && relatedTarget && !containerRef.current.contains(relatedTarget)) {
             // Focus completelly left containerRef
             containerRef.current.focus();
         }
     };
 
     return (
-        <div
-            ref={containerRef}
-            className='confirm-prompt'
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
-        >
+        <div ref={containerRef} className='confirm-prompt' tabIndex={0} onKeyDown={handleKeyDown} onBlur={handleBlur}>
             <div>
                 <span className='confirm-message'>{message}</span>
                 {choices.map((choice, index) => (
-                    <span
-                        key={index}
-                        className={`confirm-choice ${choice.value === toggle ? 'selected' : ''}`}
-                    >
+                    <span key={index} className={`confirm-choice ${choice.value === toggle ? 'selected' : ''}`}>
                         {choice.label}
                     </span>
                 ))}

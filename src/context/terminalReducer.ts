@@ -1,5 +1,5 @@
 import { ensureArray } from 'services';
-import { TerminalState, TerminalAction, HistoryGroup, HistoryEntry } from 'types';
+import { TerminalState, TerminalAction, HistoryGroup, HistoryEntry, Display } from 'types';
 
 export const initialTerminalState: TerminalState = {
     commandArgs: null,
@@ -21,16 +21,13 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
             };
         }
         case 'START_NEW_COMMAND': {
-            const { currentGroupId, newGroupId, commandString, command, commandArgs } =
-                action.payload;
+            const { currentGroupId, newGroupId, commandString, command, commandArgs } = action.payload;
 
             if (currentGroupId !== state.currentHistoryGroupId) {
                 return state;
             }
 
-            const entries: HistoryEntry[] = [
-                { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
-            ];
+            const entries: HistoryEntry[] = [{ type: 'text', content: { color: 'blue', text: `> ${commandString}` } }];
 
             const newHistoryGroup: HistoryGroup = { id: newGroupId, entries };
             const history = state.printHistory;
@@ -107,17 +104,42 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
             };
 
             // Gets the remaining HistoryGroups in printHistory that are not the currentGroup
-            const remainingGroups = history.filter(
-                (historyGroup) => historyGroup.id !== currentGroupId
-            );
+            const remainingGroups = history.filter((historyGroup) => historyGroup.id !== currentGroupId);
 
             return {
                 ...state,
                 printHistory: [...remainingGroups, newHistoryGroup],
             };
         }
-        case 'SET_DISPLAY': {
-            return { ...state, display: action.payload };
+        case 'SET_DISPLAY_TEXT': {
+            return { ...state, display: { ...state.display, text: action.payload } };
+        }
+        case 'SET_DISPLAY_SPINNER': {
+            return { ...state, display: { ...state.display, spinner: action.payload } };
+        }
+        case 'SET_PROGRESS_BAR_STYLE': {
+            if (action.payload === null) {
+                return {
+                    ...state,
+                    display: { ...state.display, progressBar: undefined },
+                };
+            }
+
+            const progressBarProps = Object.fromEntries(Object.entries(action.payload).filter(([, value]) => value !== undefined));
+
+            return { ...state, display: { ...state.display, progressBar: { ...progressBarProps, percentage: 0 } } };
+        }
+        case 'UPDATE_PROGRESS_BAR_PERCENTAGE': {
+            if (!state.display?.progressBar) {
+                return state;
+            }
+
+            const percentage = action.payload;
+
+            return {
+                ...state,
+                display: { ...state.display, progressBar: { ...state.display.progressBar, percentage } },
+            };
         }
         case 'CLEAR_DISPLAY': {
             return { ...state, display: null };

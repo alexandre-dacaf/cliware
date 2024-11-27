@@ -1,21 +1,23 @@
-.text-prompt {
+@import 'styles/variables';
+
+.date-prompt {
     display: flex;
     flex-direction: row;
 }
 
-.text-field {
+.date-field {
     outline: none;
     border: none;
     background: transparent;
     font-size: 1rem;
     color: #c6cdd5;
     caret-color: #c6cdd5;
-    font-family: var(--font);
+    font-family: $font;
     white-space: pre;
     margin-left: 1rem;
 }
 
-.text-field:empty::before {
+.date-field:empty::before {
     content: attr(data-placeholder);
     color: #555;
 }

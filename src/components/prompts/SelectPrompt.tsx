@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import useSelectPrompt from 'hooks/prompts/useSelectPrompt';
 import { Choice, ValidateFunction } from 'types';
-import './SelectPrompt.css';
+import './SelectPrompt.scss';
 
 interface SelectPromptProps {
     message: string;
@@ -52,44 +52,22 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
 
     const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
         const relatedTarget = event.relatedTarget as HTMLElement | null;
-        if (
-            containerRef.current &&
-            relatedTarget &&
-            !containerRef.current.contains(relatedTarget)
-        ) {
+        if (containerRef.current && relatedTarget && !containerRef.current.contains(relatedTarget)) {
             // Focus completelly left containerRef
             containerRef.current.focus();
         }
     };
 
     return (
-        <div
-            ref={containerRef}
-            className='select-prompt'
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
-        >
+        <div ref={containerRef} className='select-prompt' tabIndex={0} onKeyDown={handleKeyDown} onBlur={handleBlur}>
             <div className='select-message'>{message}</div>
             <div className='choices-list'>
                 {choices.map((choice, index) => (
                     <div className='choice' key={index}>
-                        <span
-                            className={`choice-label ${selectedIndex === index ? 'selected' : ''} ${
-                                checkedIndexes.includes(index) ? 'checked' : ''
-                            }`}
-                        >
+                        <span className={`choice-label ${selectedIndex === index ? 'selected' : ''} ${checkedIndexes.includes(index) ? 'checked' : ''}`}>
                             {choice.label}
                         </span>
-                        {choice.hint ? (
-                            <span
-                                className={`choice-hint ${
-                                    selectedIndex === index ? 'selected' : ''
-                                }`}
-                            >
-                                {choice.hint}
-                            </span>
-                        ) : null}
+                        {choice.hint ? <span className={`choice-hint ${selectedIndex === index ? 'selected' : ''}`}>{choice.hint}</span> : null}
                     </div>
                 ))}
             </div>

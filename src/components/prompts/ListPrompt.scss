@@ -1,3 +1,5 @@
+@import 'styles/variables';
+
 .list-prompt {
     display: flex;
     flex-direction: row;
@@ -10,7 +12,7 @@
     font-size: 1rem;
     color: #c6cdd5;
     caret-color: #c6cdd5;
-    font-family: var(--font);
+    font-family: $font;
     white-space: pre;
     margin-left: 1rem;
 }

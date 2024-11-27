@@ -1,18 +1,9 @@
 import React, { useContext } from 'react';
 import { PromptTask } from 'types';
-import {
-    TextPrompt,
-    TogglePrompt,
-    SelectPrompt,
-    NumberPrompt,
-    ListPrompt,
-    DatePrompt,
-    AutoCompletePrompt,
-    PasswordPrompt,
-} from 'components/prompts';
+import { TextPrompt, TogglePrompt, SelectPrompt, NumberPrompt, ListPrompt, DatePrompt, AutoCompletePrompt, PasswordPrompt } from 'components/prompts';
 import { AppContext } from 'context/AppContext';
 import { TerminalContext } from 'context/TerminalContext';
-import './PromptHandler.css';
+import './PromptHandler.scss';
 
 interface PromptHandlerProps {
     task: PromptTask;
@@ -21,12 +12,7 @@ interface PromptHandlerProps {
     isActive: boolean;
 }
 
-const PromptHandler: React.FC<PromptHandlerProps> = ({
-    task,
-    onSubmit: onSubmit,
-    isActive,
-    onGoBack,
-}) => {
+const PromptHandler: React.FC<PromptHandlerProps> = ({ task, onSubmit: onSubmit, isActive, onGoBack }) => {
     const { dispatch: appDispatch } = useContext(AppContext);
     const { dispatch: terminalDispatch } = useContext(TerminalContext);
 

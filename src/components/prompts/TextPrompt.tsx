@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import './TextPrompt.css';
+import './TextPrompt.scss';
 import useTextPrompt from 'hooks/prompts/useTextPrompt';
 import { Mask, ValidateFunction } from 'types';
 

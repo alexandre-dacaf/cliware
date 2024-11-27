@@ -1,6 +1,5 @@
-import React, { useRef, useState, KeyboardEvent as ReactKeyboardEvent, useEffect } from 'react';
-import usePrinter from 'hooks/printer/usePrinter';
-import './PasswordPrompt.css';
+import React, { useRef, useEffect } from 'react';
+import './PasswordPrompt.scss';
 import usePasswordPrompt from 'hooks/prompts/usePasswordPrompt';
 import { ValidateFunction } from 'types';
 

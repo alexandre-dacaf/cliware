@@ -1,5 +1,7 @@
+@import 'styles/variables';
+
 .terminal-container {
-    background-color: #1c2128;
+    background-color: $neutral-100;
     padding: 0.6em;
     display: grid;
     gap: 0.6em;

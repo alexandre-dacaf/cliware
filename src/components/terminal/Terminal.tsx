@@ -8,7 +8,7 @@ import Display from 'components/outputs/Display';
 import CommandInput from 'components/command-input/CommandInput';
 import usePrinter from 'hooks/printer/usePrinter';
 import { v4 as uuidv4 } from 'uuid';
-import './Terminal.css';
+import './Terminal.scss';
 
 interface TerminalProps {
     isActive: boolean;
@@ -62,32 +62,19 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     };
 
     return (
-        <div
-            className={
-                'terminal ' +
-                (isActive ? 'active-terminal ' : ' ') +
-                (isSelected ? 'selected-terminal ' : ' ')
-            }
-            ref={terminalRef}
-        >
+        <div className={'terminal ' + (isActive ? 'active-terminal ' : ' ') + (isSelected ? 'selected-terminal ' : ' ')} ref={terminalRef}>
             <TerminalHistory />
 
             <div className='current-command-container'>
                 {terminalState.printHistory
                     .filter((group) => group.id === terminalState.currentHistoryGroupId)
                     .map((group) => {
-                        return (
-                            <TerminalHistoryGroup group={group} className='current-history-group' />
-                        );
+                        return <TerminalHistoryGroup group={group} className='current-history-group' />;
                     })}
                 {terminalState.command ? (
                     <TaskManager isActive={isActive} />
                 ) : (
-                    <CommandInput
-                        availableCommands={availableCommands.current}
-                        onSubmit={handleCommandSubmit}
-                        isActive={isActive}
-                    />
+                    <CommandInput availableCommands={availableCommands.current} onSubmit={handleCommandSubmit} isActive={isActive} />
                 )}
                 <Display />
             </div>

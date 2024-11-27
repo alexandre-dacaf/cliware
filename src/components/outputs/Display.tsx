@@ -3,7 +3,7 @@ import { TerminalContext } from 'context/TerminalContext';
 import { ProgressBarProps, SpinnerProps } from 'types';
 import Spinner from './Spinner';
 import ProgressBar from './ProgressBar';
-import './Display.css';
+import './Display.scss';
 
 const Display: React.FC = () => {
     const { state } = useContext(TerminalContext);
@@ -15,7 +15,12 @@ const Display: React.FC = () => {
 
         const spinnerProps: SpinnerProps = state.display.spinner;
 
-        return <Spinner {...spinnerProps} />;
+        return (
+            <span>
+                <Spinner {...spinnerProps} />
+                &nbsp;
+            </span>
+        );
     };
 
     const renderProgressBar = () => {
@@ -29,8 +34,7 @@ const Display: React.FC = () => {
     return (
         <div className='terminal-transient'>
             {renderSpinner()}
-            &nbsp;
-            {state.display.output}
+            {state.display.text}
             {renderProgressBar()}
         </div>
     );

@@ -1,5 +1,22 @@
 # Roadmap
 
+## Sprint 6: Style and Refactoring
+
+> Version 0.6.0
+
+- [x] 2.1.1 - Install sass
+- [x] 2.1.2 - Change .css to .scss and adjust
+- [x] 2.1.3 - Create global styles and variables
+- [ ] 2.1.4 - Create .module.scss for the rest of the components
+- [ ] 5.4.1 - Enhance nomenclature of output components (history entry, terminal history, setDisplayText, etc)
+- [ ] 5.4.2 - Improve cohesion of usePrinter functions (break into more focused hooks)
+- [ ] 5.4.3 - Improve typing and organize type files
+
+### Extras
+
+-  [ ] Ext.sprint6.1 - Rethink components and app flow
+
+
 ## Sprint 5: Advanced Outputs
 
 > Version 0.5.0
@@ -17,15 +34,15 @@
 - [x] 4.1.11 - Implement output to clipboard
 
 ### Extras
-- [x] Ext1 - Update the color palette to have all the colors needed
-- [x] Ext2 - Change output types to represent colors, not use cases (green, not sucess. Devs should decide what each color means)
-- Ext3 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
-- [x] Ext5 - Block space action on simple select (use only enter)
-- Ext6 - Improve cohesion of usePrinter functions (break into more focused hooks)
+- [x] Ext.sprint5.1 - Update the color palette to have all the colors needed
+- [x] Ext.sprint5.2 - Change output types to represent colors, not use cases (green, not sucess. Devs should decide what each color means)
+- Ext.sprint5.3 - Enhance nomenclature of output components (history entry, terminal history, setDisplayText, etc)
+- [x] Ext.sprint5.5 - Block space action on simple select (use only enter)
+- Ext.sprint5.6 - Improve cohesion of usePrinter functions (break into more focused hooks)
 
 ### Re-prioritized
-- 5.4.1 < Ext3 - Enhance nomenclature of output components (history entry, terminal history, display, etc)
-- 5.4.2 < Ext6 - Improve cohesion of usePrinter functions (break into more focused hooks)
+- 5.4.1 < Ext.sprint5.3 - Enhance nomenclature of output components (history entry, terminal history, setDisplayText, etc)
+- 5.4.2 < Ext.sprint5.6 - Improve cohesion of usePrinter functions (break into more focused hooks)
 
 ### Obsolete
 - 4.1.5 - Implement toast (upper corner or inline?)

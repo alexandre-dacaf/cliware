@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import useDatePrompt from 'hooks/prompts/useDatePrompt';
-import './DatePrompt.css';
+import './DatePrompt.scss';
 import { ValidateFunction } from 'types';
 
 interface DatePromptProps {

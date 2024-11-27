@@ -1,82 +1,14 @@
 import { DefaultSpinnerNames, SpinnerConfig, SpinnerProps } from 'types';
 
-export const generateSpinnerConfig = (spinner?: SpinnerConfig): SpinnerProps | undefined => {
+export const generateSpinnerProps = (spinner?: SpinnerConfig): SpinnerProps | undefined => {
     const spinners: Record<DefaultSpinnerNames, string[]> = {
         dots: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
         dots2: ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷'],
         dots3: ['⠋', '⠙', '⠚', '⠞', '⠖', '⠦', '⠴', '⠲', '⠳', '⠓'],
         dots4: ['⠄', '⠆', '⠇', '⠋', '⠙', '⠸', '⠰', '⠠', '⠰', '⠸', '⠙', '⠋', '⠇', '⠆'],
-        dots5: [
-            '⠋',
-            '⠙',
-            '⠚',
-            '⠒',
-            '⠂',
-            '⠂',
-            '⠒',
-            '⠲',
-            '⠴',
-            '⠦',
-            '⠖',
-            '⠒',
-            '⠐',
-            '⠐',
-            '⠒',
-            '⠓',
-            '⠋',
-        ],
-        dots6: [
-            '⠁',
-            '⠉',
-            '⠙',
-            '⠚',
-            '⠒',
-            '⠂',
-            '⠂',
-            '⠒',
-            '⠲',
-            '⠴',
-            '⠤',
-            '⠄',
-            '⠄',
-            '⠤',
-            '⠴',
-            '⠲',
-            '⠒',
-            '⠂',
-            '⠂',
-            '⠒',
-            '⠚',
-            '⠙',
-            '⠉',
-            '⠁',
-        ],
-        dots7: [
-            '⠈',
-            '⠉',
-            '⠋',
-            '⠓',
-            '⠒',
-            '⠐',
-            '⠐',
-            '⠒',
-            '⠖',
-            '⠦',
-            '⠤',
-            '⠠',
-            '⠠',
-            '⠤',
-            '⠦',
-            '⠖',
-            '⠒',
-            '⠐',
-            '⠐',
-            '⠒',
-            '⠓',
-            '⠋',
-            '⠉',
-            '⠈',
-        ],
+        dots5: ['⠋', '⠙', '⠚', '⠒', '⠂', '⠂', '⠒', '⠲', '⠴', '⠦', '⠖', '⠒', '⠐', '⠐', '⠒', '⠓', '⠋'],
+        dots6: ['⠁', '⠉', '⠙', '⠚', '⠒', '⠂', '⠂', '⠒', '⠲', '⠴', '⠤', '⠄', '⠄', '⠤', '⠴', '⠲', '⠒', '⠂', '⠂', '⠒', '⠚', '⠙', '⠉', '⠁'],
+        dots7: ['⠈', '⠉', '⠋', '⠓', '⠒', '⠐', '⠐', '⠒', '⠖', '⠦', '⠤', '⠠', '⠠', '⠤', '⠦', '⠖', '⠒', '⠐', '⠐', '⠒', '⠓', '⠋', '⠉', '⠈'],
         dots8: [
             '⠁',
             '⠁',
@@ -115,7 +47,7 @@ export const generateSpinnerConfig = (spinner?: SpinnerConfig): SpinnerProps | u
     };
 
     if (!spinner) {
-        return undefined;
+        return;
     }
 
     const defaulInterval = 80;
@@ -136,5 +68,5 @@ export const generateSpinnerConfig = (spinner?: SpinnerConfig): SpinnerProps | u
         };
     }
 
-    return undefined;
+    return;
 };

@@ -14,20 +14,10 @@ type UseListPromptProps = {
     onGoBack: () => void;
 };
 
-const useListPrompt = ({
-    message,
-    separator,
-    trim,
-    required,
-    validate,
-    onSubmit,
-    onEscape,
-    onAbort,
-    onGoBack,
-}: UseListPromptProps) => {
+const useListPrompt = ({ message, separator, trim, required, validate, onSubmit, onEscape, onAbort, onGoBack }: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
-    const { printPromptResponse, display, clearDisplay } = usePrinter();
+    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
     useEffect(() => {
         let splitContent = value.split(separator);
@@ -47,7 +37,7 @@ const useListPrompt = ({
 
     const submit = () => {
         if (required && list.length === 0) {
-            display({ output: 'Please fill out this field.' });
+            setDisplayText('Please fill out this field.');
             return;
         }
 
@@ -56,12 +46,9 @@ const useListPrompt = ({
         const validation = validate(list);
 
         if (validation !== true) {
-            const validationMessage =
-                validation !== false
-                    ? validation
-                    : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
 
-            display({ output: validationMessage });
+            setDisplayText(validationMessage);
             return;
         }
 
