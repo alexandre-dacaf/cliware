@@ -1,4 +1,5 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import useMessagePanel from 'hooks/context/useMessagePanel';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
 import { Prompt } from 'types';
 
@@ -27,7 +28,8 @@ const useListPrompt = ({
 }: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
-    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
+    const { setDisplayText, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
         let splitContent = value.split(separator);

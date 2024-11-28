@@ -1,22 +1,11 @@
-export namespace Blueprint {
-    export interface Blueprint {
-        [command: string]: Command;
-    }
-
-    export interface Command {
-        entrypoint: string;
-        pipeline: Pipeline;
-    }
-
-    export interface Pipeline {
-        [taskKey: TaskKey]: Task.Task;
-    }
-
-    export type TaskKey = string;
+export interface Blueprint {
+    [command: string]: Command.Blueprint;
 }
 
 export namespace Task {
     export type Task = Prompt.PromptTask | Action.ActionTask;
+
+    export type TaskKey = string;
 
     export type TaskType = 'prompt' | 'action';
 
@@ -25,7 +14,7 @@ export namespace Task {
         next?: NextTask;
     }
 
-    export type NextTask = string | ((context: PipelineContext.PipelineContext) => string);
+    export type NextTask = string | ((context: Pipeline.Context) => string);
 }
 
 export namespace Prompt {
@@ -160,22 +149,29 @@ export namespace Action {
         actionFunction: ActionFunction;
     }
 
-    export type ActionFunction = (context: PipelineContext.PipelineContext) => Promise<any> | any;
+    export type ActionFunction = (context: Pipeline.Context) => Promise<any> | any;
 }
 
-export namespace PipelineContext {
-    export interface PipelineContext {
-        currentTaskKey: Blueprint.TaskKey;
-        taskBreadcrumbs: Blueprint.TaskKey[];
+export namespace Pipeline {
+    export interface Blueprint {
+        [taskKey: Task.TaskKey]: Task.Task;
+    }
+
+    export interface Context {
+        currentTaskKey: Task.TaskKey;
+        taskBreadcrumbs: Task.TaskKey[];
         pipelineData: PipelineData;
-        pipeline: Blueprint.Pipeline;
+        pipelineBlueprint: Blueprint;
         commandArgs: Command.Args | null;
-        printer: Hooks.PrinterInterface;
-        appDispatcher: Hooks.AppDispatcherInterface;
+        messagePanel: Hooks.UseMessagePanelMethods;
+        history: Hooks.UseHistoryLoggerMethods;
+        clipboard: Hooks.UseClipboardMethods;
+        fileDownload: Hooks.UseFileDowloaderMethods;
+        appDispatcher: Hooks.UseAppDispatcherMethods;
     }
 
     export interface PipelineData {
-        [taskKey: Blueprint.TaskKey]: any;
+        [taskKey: Task.TaskKey]: any;
     }
 }
 
@@ -185,6 +181,92 @@ export namespace Command {
         args: string[];
         options: { [key: string]: string | string[] | boolean };
         flags: string[];
+    }
+
+    export interface Blueprint {
+        entrypoint: string;
+        pipeline: Pipeline.Blueprint;
+    }
+}
+
+export namespace App {
+    export interface AppState {
+        terminalList: TerminalType[];
+        currentTerminalId: string | null;
+        currentTerminalState: 'active' | 'focused';
+        terminalColumns: number;
+    }
+
+    export interface TerminalType {
+        id: string;
+    }
+
+    export type AppAction =
+        | { type: 'CREATE_TERMINAL'; payload: CreateTerminalPayload }
+        | { type: 'DELETE_TERMINAL'; payload: DeleteTerminalPayload }
+        | { type: 'ACTIVATE_TERMINAL' }
+        | { type: 'DEACTIVATE_TERMINAL' }
+        | { type: 'SELECT_NEXT_TERMINAL' }
+        | { type: 'SELECT_PREVIOUS_TERMINAL' }
+        | { type: 'CHANGE_TERMINAL_COLUMNS'; payload: number };
+
+    export interface CreateTerminalPayload {
+        beforeId: string;
+        afterId: string | null;
+        newTerminalId: string;
+    }
+
+    export interface DeleteTerminalPayload {
+        terminalToDeleteId: string;
+    }
+}
+
+export namespace Terminal {
+    export interface TerminalState {
+        commandArgs: Command.Args | null;
+        command: Command.Blueprint | null;
+        currentHistoryGroupId: History.HistoryGroupId;
+        printHistory: History.HistoryGroup[];
+        display: MessagePanel.Display | null;
+    }
+
+    export type TerminalAction =
+        | { type: 'STANDBY' }
+        | {
+              type: 'START_NEW_COMMAND';
+              payload: StartNewCommandPayload;
+          }
+        | {
+              type: 'COMMAND_NOT_FOUND';
+              payload: CommandNotFoundPayload;
+          }
+        | {
+              type: 'LOG_HISTORY_ENTRY';
+              payload: LogHistoryEntryPayload;
+          }
+        | { type: 'SET_DISPLAY_TEXT'; payload: string | null }
+        | { type: 'SET_DISPLAY_SPINNER'; payload: MessagePanel.SpinnerProps | null }
+        | { type: 'SET_PROGRESS_BAR_STYLE'; payload: MessagePanel.ProgressBarStyle | null }
+        | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
+        | { type: 'CLEAR_DISPLAY' };
+
+    export interface StartNewCommandPayload {
+        currentGroupId: History.HistoryGroupId;
+        newGroupId: string;
+        commandString: string;
+        command: Command.Blueprint;
+        commandArgs: Command.Args;
+    }
+
+    export interface CommandNotFoundPayload {
+        currentGroupId: History.HistoryGroupId;
+        newGroupId: string;
+        commandString: string;
+    }
+
+    export interface LogHistoryEntryPayload {
+        currentGroupId: History.HistoryGroupId;
+        entries: History.HistoryEntry | History.HistoryEntry[];
     }
 }
 
@@ -273,87 +355,6 @@ export namespace MessagePanel {
     }
 }
 
-export namespace App {
-    export interface AppState {
-        terminalList: TerminalType[];
-        currentTerminalId: string | null;
-        currentTerminalState: 'active' | 'focused';
-        terminalColumns: number;
-    }
-
-    export interface TerminalType {
-        id: string;
-    }
-
-    export type AppAction =
-        | { type: 'CREATE_TERMINAL'; payload: CreateTerminalPayload }
-        | { type: 'DELETE_TERMINAL'; payload: DeleteTerminalPayload }
-        | { type: 'ACTIVATE_TERMINAL' }
-        | { type: 'DEACTIVATE_TERMINAL' }
-        | { type: 'SELECT_NEXT_TERMINAL' }
-        | { type: 'SELECT_PREVIOUS_TERMINAL' }
-        | { type: 'CHANGE_TERMINAL_COLUMNS'; payload: number };
-
-    export interface CreateTerminalPayload {
-        beforeId: string;
-        afterId: string | null;
-        newTerminalId: string;
-    }
-
-    export interface DeleteTerminalPayload {
-        terminalToDeleteId: string;
-    }
-}
-
-export namespace Terminal {
-    export interface TerminalState {
-        commandArgs: Command.Args | null;
-        command: Blueprint.Command | null;
-        currentHistoryGroupId: History.HistoryGroupId;
-        printHistory: History.HistoryGroup[];
-        display: MessagePanel.Display | null;
-    }
-
-    export type TerminalAction =
-        | { type: 'STANDBY' }
-        | {
-              type: 'START_NEW_COMMAND';
-              payload: StartNewCommandPayload;
-          }
-        | {
-              type: 'COMMAND_NOT_FOUND';
-              payload: CommandNotFoundPayload;
-          }
-        | {
-              type: 'LOG_HISTORY_ENTRY';
-              payload: LogHistoryEntryPayload;
-          }
-        | { type: 'SET_DISPLAY_TEXT'; payload: string | null }
-        | { type: 'SET_DISPLAY_SPINNER'; payload: MessagePanel.SpinnerProps | null }
-        | { type: 'SET_PROGRESS_BAR_STYLE'; payload: MessagePanel.ProgressBarStyle | null }
-        | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
-        | { type: 'CLEAR_DISPLAY' };
-
-    export interface StartNewCommandPayload {
-        currentGroupId: History.HistoryGroupId;
-        newGroupId: string;
-        commandString: string;
-        command: Blueprint.Command;
-        commandArgs: Command.Args;
-    }
-
-    export interface CommandNotFoundPayload {
-        currentGroupId: History.HistoryGroupId;
-        newGroupId: string;
-        commandString: string;
-    }
-
-    export interface LogHistoryEntryPayload {
-        currentGroupId: History.HistoryGroupId;
-        entries: History.HistoryEntry | History.HistoryEntry[];
-    }
-}
-
 export namespace Content {
     export namespace Text {
         export interface TextSpan {
@@ -419,7 +420,7 @@ export namespace Content {
 }
 
 export namespace Hooks {
-    export interface PrinterInterface {
+    export interface UsePrinterMethods {
         setDisplayText: (text: string) => void;
         setDisplaySpinner: (config: MessagePanel.SpinnerConfig) => void;
         setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
@@ -445,7 +446,42 @@ export namespace Hooks {
         downloadAsJson: (filename: string, json: object) => void;
     }
 
-    export interface AppDispatcherInterface {
+    export interface UseMessagePanelMethods {
+        setDisplayText: (text: string) => void;
+        setDisplaySpinner: (config: MessagePanel.SpinnerConfig) => void;
+        setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
+        updateProgressBarPercentage: (percentage: number) => void;
+        clearDisplay: () => void;
+    }
+
+    export interface UseHistoryLoggerMethods {
+        print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
+        printText: (content: Content.Text.TextSpan | Content.Text.TextSpan[]) => void;
+        printCommand: (message: string) => void;
+        printCommandNotFound: (commandString: string) => void;
+        printPromptResponse: (message: string) => void;
+        printSuccess: (message: string) => void;
+        printAlert: (message: string) => void;
+        printError: (error: any) => void;
+        printTable: (tableContent: Content.Table.TableContent) => void;
+        printJson: (json: object) => void;
+    }
+
+    export interface UseClipboardMethods {
+        copyToClipboard: (text: string) => void;
+    }
+
+    export interface UseFileDowloaderMethods {
+        downloadAsTxt: (filename: string, content: string) => void;
+        downloadAsCsv: (
+            filename: string,
+            tableContent: Content.Table.TableContent,
+            separator?: string
+        ) => void;
+        downloadAsJson: (filename: string, json: object) => void;
+    }
+
+    export interface UseAppDispatcherMethods {
         changeTerminalColumns: (payload: number) => void;
         createTerminal: () => void;
         deleteTerminal: (terminalId: string) => void;

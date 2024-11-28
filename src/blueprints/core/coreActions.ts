@@ -1,8 +1,6 @@
-import { PipelineContext, Action } from '../../types';
+import { Pipeline, Action } from '../../types';
 
-export const changeTerminalColumns: Action.ActionFunction = (
-    context: PipelineContext.PipelineContext
-) => {
+export const changeTerminalColumns: Action.ActionFunction = (context: Pipeline.Context) => {
     if (!context.commandArgs || !context.commandArgs.args[0]) return;
 
     const columns: number = +context.commandArgs.args[0];
@@ -14,10 +12,10 @@ export const changeTerminalColumns: Action.ActionFunction = (
     context.appDispatcher.changeTerminalColumns(columns);
 };
 
-export const createTerminal = (context: PipelineContext.PipelineContext) => {
+export const createTerminal = (context: Pipeline.Context) => {
     context.appDispatcher.createTerminal();
 };
 
-export const deleteTerminal = (context: PipelineContext.PipelineContext) => {
+export const deleteTerminal = (context: Pipeline.Context) => {
     context.appDispatcher.deleteCurrentTerminal();
 };

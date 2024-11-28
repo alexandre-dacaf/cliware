@@ -1,4 +1,5 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import useMessagePanel from 'hooks/context/useMessagePanel';
 import { useEffect, useState, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { getMaskFunction } from 'services';
 import { Prompt } from 'types';
@@ -26,7 +27,8 @@ const useDatePrompt = ({
 }: UseDatePromptProps) => {
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
-    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
+    const { setDisplayText, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
         setStringValue(defaultValue);

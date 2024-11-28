@@ -1,4 +1,6 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import useMessagePanel from 'hooks/context/useMessagePanel';
+
 import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Prompt } from 'types';
 
@@ -33,7 +35,8 @@ const useSelectPrompt = ({
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
+    const { setDisplayText, clearDisplay } = useMessagePanel();
 
     const totalPages = useMemo(
         () => Math.ceil(filteredSuggestions.length / itemsPerPage),

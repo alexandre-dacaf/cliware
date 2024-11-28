@@ -2,7 +2,7 @@ import { Blueprint } from 'types';
 import { createTodo } from './actions';
 import { coreCommands } from './core/coreCommands';
 
-export const blueprint: Blueprint.Blueprint = {
+export const blueprint: Blueprint = {
     // ...coreCommands,
     todo: {
         entrypoint: 'selectPromptType',
@@ -361,7 +361,7 @@ export const blueprint: Blueprint.Blueprint = {
             result: {
                 type: 'action',
                 actionFunction: (context) => {
-                    context.printer.printJson(context.pipelineData);
+                    context.history.printJson(context.pipelineData);
                 },
             },
         },

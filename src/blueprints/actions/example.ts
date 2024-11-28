@@ -1,52 +1,50 @@
-import { Action, PipelineContext } from 'types';
+import { Action, Pipeline } from 'types';
 
 export const createTodo: Action.ActionFunction = async (
-    context: PipelineContext.PipelineContext
+    context: Pipeline.Context
 ): Promise<any> => {
-    console.log(window.getComputedStyle(document.body).fontFamily);
+    context.messagePanel.setDisplayText('Executando...');
 
-    context.printer.setDisplayText('Executando...');
+    context.messagePanel.setDisplaySpinner({ name: 'dots3' });
 
-    context.printer.setDisplaySpinner({ name: 'dots3' });
-
-    context.printer.setProgressBarStyle({
+    context.messagePanel.setProgressBarStyle({
         color: 'red',
     });
 
-    context.printer.updateProgressBarPercentage(0);
+    context.messagePanel.updateProgressBarPercentage(0);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(10);
+    context.messagePanel.updateProgressBarPercentage(10);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(20);
+    context.messagePanel.updateProgressBarPercentage(20);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(30);
+    context.messagePanel.updateProgressBarPercentage(30);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(40);
+    context.messagePanel.updateProgressBarPercentage(40);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.setProgressBarStyle({
+    context.messagePanel.setProgressBarStyle({
         color: 'green',
     });
 
-    context.printer.updateProgressBarPercentage(50);
+    context.messagePanel.updateProgressBarPercentage(50);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(60);
+    context.messagePanel.updateProgressBarPercentage(60);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(70);
+    context.messagePanel.updateProgressBarPercentage(70);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(80);
+    context.messagePanel.updateProgressBarPercentage(80);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(90);
+    context.messagePanel.updateProgressBarPercentage(90);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.printer.updateProgressBarPercentage(100);
+    context.messagePanel.updateProgressBarPercentage(100);
     await new Promise((resolve) => setTimeout(resolve, 400));
 };

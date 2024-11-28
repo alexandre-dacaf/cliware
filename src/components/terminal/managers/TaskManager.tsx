@@ -12,9 +12,9 @@ const TaskManager: React.FC<TaskManagerProps> = ({ isActive }) => {
     const renderCurrentTask = () => {
         if (!currentPipelineContext) return null;
 
-        const pipeline = currentPipelineContext.pipeline;
+        const pipelineBlueprint = currentPipelineContext.pipelineBlueprint;
         const currentTaskKey = currentPipelineContext.currentTaskKey;
-        const currentTask = pipeline[currentTaskKey];
+        const currentTask = pipelineBlueprint[currentTaskKey];
 
         if (!currentTask || currentTask.type !== 'prompt') return null;
 

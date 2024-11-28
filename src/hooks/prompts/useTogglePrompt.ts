@@ -1,4 +1,4 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef, useMemo } from 'react';
 import { Prompt } from 'types';
 
@@ -24,7 +24,7 @@ const useTogglePrompt = ({
     onGoBack,
 }: UseTogglePromptProps) => {
     const [toggle, setToggle] = useState<boolean>(defaultValue);
-    const { printPromptResponse } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
     const choices: Prompt.Choice[] = useMemo(
         () => [
             { label: falseLabel, value: false },

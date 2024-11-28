@@ -1,4 +1,5 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import useMessagePanel from 'hooks/context/useMessagePanel';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { getMaskFunction } from 'services';
 import { Prompt } from 'types';
@@ -29,7 +30,8 @@ const useTextPrompt = ({
     onGoBack,
 }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
-    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
+    const { setDisplayText, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
         setValue(defaultValue);

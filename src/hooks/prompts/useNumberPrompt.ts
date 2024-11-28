@@ -1,4 +1,5 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import useMessagePanel from 'hooks/context/useMessagePanel';
 import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Prompt } from 'types';
 
@@ -34,7 +35,8 @@ const useNumberPrompt = ({
     onGoBack,
 }: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
-    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
+    const { setDisplayText, clearDisplay } = useMessagePanel();
 
     const initValue = useMemo(() => {
         return Math.max(defaultValue, min);

@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Hooks } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-const useAppDispatcher = (): Hooks.AppDispatcherInterface => {
+const useAppDispatcher = (): Hooks.UseAppDispatcherMethods => {
     const { state, dispatch } = useContext(AppContext);
 
     const changeTerminalColumns = (payload: number) => {

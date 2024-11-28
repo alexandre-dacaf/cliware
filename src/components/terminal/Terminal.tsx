@@ -6,9 +6,9 @@ import { TerminalHistory, TerminalHistoryGroup } from 'components/outputs/Termin
 import TaskManager from './managers/TaskManager';
 import Display from 'components/outputs/Display';
 import CommandInput from 'components/command-input/CommandInput';
-import usePrinter from 'hooks/printer/usePrinter';
 import { v4 as uuidv4 } from 'uuid';
 import './Terminal.scss';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
 
 interface TerminalProps {
     isActive: boolean;
@@ -26,7 +26,7 @@ const Terminal: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
 const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     const terminalRef = useRef<HTMLDivElement>(null);
     const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
-    const { printCommandNotFound } = usePrinter();
+    const { printCommandNotFound } = useHistoryLogger();
 
     const availableCommands = useRef(Object.keys(blueprint).sort());
 
@@ -40,7 +40,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     }, [terminalState]);
 
     const handleCommandSubmit = (commandString: string, commandArgs: Command.Args) => {
-        const command: Blueprint.Command = blueprint[commandArgs.command];
+        const command: Command.Blueprint = blueprint[commandArgs.command];
 
         if (!command) {
             printCommandNotFound(commandString);

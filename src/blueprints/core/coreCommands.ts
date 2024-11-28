@@ -1,7 +1,7 @@
 import { Blueprint } from 'types';
 import { changeTerminalColumns, createTerminal, deleteTerminal } from './coreActions';
 
-export const coreCommands: Blueprint.Blueprint = {
+export const coreCommands: Blueprint = {
     cols: {
         entrypoint: 'action',
         pipeline: {

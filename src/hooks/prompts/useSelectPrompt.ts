@@ -1,4 +1,5 @@
-import usePrinter from 'hooks/printer/usePrinter';
+import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import useMessagePanel from 'hooks/context/useMessagePanel';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useMemo } from 'react';
 import { Prompt } from 'types';
 
@@ -30,7 +31,8 @@ const useSelectPrompt = ({
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
     const [checkedChoices, setCheckedChoices] = useState<Prompt.Choice[]>([]);
-    const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
+    const { printPromptResponse } = useHistoryLogger();
+    const { setDisplayText, clearDisplay } = useMessagePanel();
 
     const formattedChoices = useMemo(
         () =>
