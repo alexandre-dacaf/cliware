@@ -1,4 +1,4 @@
-import { AppState, AppAction, TerminalType } from '../types';
+import { AppState, AppAction } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const initialAppState: AppState = {

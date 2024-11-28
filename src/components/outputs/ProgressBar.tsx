@@ -1,7 +1,13 @@
-import { PaletteColor, ProgressBarProps } from 'types';
+import { ProgressBarProps } from 'types';
 import './ProgressBar.scss';
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, trackStyle, barStyle, animationKeyframes, color }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({
+    percentage,
+    trackStyle,
+    barStyle,
+    animationKeyframes,
+    color,
+}) => {
     const colorClass = color ? `color--${color}` : 'color--blue';
 
     const finalBarStyle = { ...barStyle, width: `${percentage}%` };

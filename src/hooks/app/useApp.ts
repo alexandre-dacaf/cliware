@@ -1,7 +1,5 @@
-import { TerminalType } from 'types';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useRef, useContext } from 'react';
 import { AppContext } from 'context/AppContext';
-import useAppDispatcher from './useAppDispatcher';
 
 const useApp = () => {
     const { state, dispatch } = useContext(AppContext);

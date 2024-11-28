@@ -1,4 +1,4 @@
-import { ActionFunction, PipelineContext, ProgressBarProps } from 'types';
+import { ActionFunction, PipelineContext } from 'types';
 
 export const createTodo: ActionFunction = async (context: PipelineContext): Promise<any> => {
     console.log(window.getComputedStyle(document.body).fontFamily);

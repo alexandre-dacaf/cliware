@@ -1,5 +1,5 @@
 import { ensureArray } from 'services';
-import { TerminalState, TerminalAction, HistoryGroup, HistoryEntry, Display } from 'types';
+import { TerminalState, TerminalAction, HistoryGroup, HistoryEntry } from 'types';
 
 export const initialTerminalState: TerminalState = {
     commandArgs: null,
@@ -21,13 +21,16 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
             };
         }
         case 'START_NEW_COMMAND': {
-            const { currentGroupId, newGroupId, commandString, command, commandArgs } = action.payload;
+            const { currentGroupId, newGroupId, commandString, command, commandArgs } =
+                action.payload;
 
             if (currentGroupId !== state.currentHistoryGroupId) {
                 return state;
             }
 
-            const entries: HistoryEntry[] = [{ type: 'text', content: { color: 'blue', text: `> ${commandString}` } }];
+            const entries: HistoryEntry[] = [
+                { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
+            ];
 
             const newHistoryGroup: HistoryGroup = { id: newGroupId, entries };
             const history = state.printHistory;
@@ -104,7 +107,9 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
             };
 
             // Gets the remaining HistoryGroups in printHistory that are not the currentGroup
-            const remainingGroups = history.filter((historyGroup) => historyGroup.id !== currentGroupId);
+            const remainingGroups = history.filter(
+                (historyGroup) => historyGroup.id !== currentGroupId
+            );
 
             return {
                 ...state,
@@ -125,9 +130,14 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 };
             }
 
-            const progressBarProps = Object.fromEntries(Object.entries(action.payload).filter(([, value]) => value !== undefined));
+            const progressBarProps = Object.fromEntries(
+                Object.entries(action.payload).filter(([, value]) => value !== undefined)
+            );
 
-            return { ...state, display: { ...state.display, progressBar: { ...progressBarProps, percentage: 0 } } };
+            return {
+                ...state,
+                display: { ...state.display, progressBar: { ...progressBarProps, percentage: 0 } },
+            };
         }
         case 'UPDATE_PROGRESS_BAR_PERCENTAGE': {
             if (!state.display?.progressBar) {
@@ -138,7 +148,10 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
 
             return {
                 ...state,
-                display: { ...state.display, progressBar: { ...state.display.progressBar, percentage } },
+                display: {
+                    ...state.display,
+                    progressBar: { ...state.display.progressBar, percentage },
+                },
             };
         }
         case 'CLEAR_DISPLAY': {
