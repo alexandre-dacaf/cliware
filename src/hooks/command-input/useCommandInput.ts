@@ -12,7 +12,7 @@ import { Command } from 'types';
 interface UseCommandInputProps {
     availableCommands: string[];
     itemsPerPage: number;
-    onSubmit: (commandString: string, commandArgs: Command.CommandArgs) => void;
+    onSubmit: (commandString: string, commandArgs: Command.Args) => void;
     isActive: boolean;
 }
 
@@ -153,7 +153,7 @@ const useCommandInput = ({
 
     const submit = () => {
         const commandString = value;
-        const commandArgs: Command.CommandArgs = parseCommandArguments(commandString);
+        const commandArgs: Command.Args = parseCommandArguments(commandString);
         onSubmit(commandString, commandArgs);
         setValue('');
     };

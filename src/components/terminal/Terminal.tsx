@@ -39,7 +39,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         }, 100);
     }, [terminalState]);
 
-    const handleCommandSubmit = (commandString: string, commandArgs: Command.CommandArgs) => {
+    const handleCommandSubmit = (commandString: string, commandArgs: Command.Args) => {
         const command: Blueprint.Command = blueprint[commandArgs.command];
 
         if (!command) {

@@ -6,7 +6,7 @@ import './CommandInput.scss';
 interface CommandInputProps {
     availableCommands: string[];
     itemsPerPage?: number;
-    onSubmit: (commandString: string, commandArgs: Command.CommandArgs) => void;
+    onSubmit: (commandString: string, commandArgs: Command.Args) => void;
     isActive: boolean;
 }
 

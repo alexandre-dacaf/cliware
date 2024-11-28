@@ -169,7 +169,7 @@ export namespace PipelineContext {
         taskBreadcrumbs: Blueprint.TaskKey[];
         pipelineData: PipelineData;
         pipeline: Blueprint.Pipeline;
-        commandArgs: Command.CommandArgs | null;
+        commandArgs: Command.Args | null;
         printer: Hooks.PrinterInterface;
         appDispatcher: Hooks.AppDispatcherInterface;
     }
@@ -180,7 +180,7 @@ export namespace PipelineContext {
 }
 
 export namespace Command {
-    export interface CommandArgs {
+    export interface Args {
         command: string;
         args: string[];
         options: { [key: string]: string | string[] | boolean };
@@ -307,7 +307,7 @@ export namespace App {
 
 export namespace Terminal {
     export interface TerminalState {
-        commandArgs: Command.CommandArgs | null;
+        commandArgs: Command.Args | null;
         command: Blueprint.Command | null;
         currentHistoryGroupId: History.HistoryGroupId;
         printHistory: History.HistoryGroup[];
@@ -339,7 +339,7 @@ export namespace Terminal {
         newGroupId: string;
         commandString: string;
         command: Blueprint.Command;
-        commandArgs: Command.CommandArgs;
+        commandArgs: Command.Args;
     }
 
     export interface CommandNotFoundPayload {

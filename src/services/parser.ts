@@ -3,7 +3,7 @@ import { Command } from 'types';
 export const parseCommandArguments = (command: string) => {
     const [baseCommand, ...commandArgs] = command.split(' ');
 
-    const data: Command.CommandArgs = {
+    const data: Command.Args = {
         command: baseCommand,
         args: [],
         options: {},
