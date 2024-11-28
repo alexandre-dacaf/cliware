@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './TextPrompt.scss';
 import useTextPrompt from 'hooks/prompts/useTextPrompt';
-import { Mask, ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 interface TextPromptProps {
     message: string;
@@ -9,8 +9,8 @@ interface TextPromptProps {
     required?: boolean;
     trim?: boolean;
     placeholder?: string;
-    validate?: ValidateFunction;
-    mask?: Mask;
+    validate?: Prompt.ValidateFunction;
+    mask?: Prompt.Mask;
     isActive: boolean;
     onSubmit: (data: string) => void;
     onEscape: () => void;

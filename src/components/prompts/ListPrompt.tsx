@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import './ListPrompt.scss';
 import useListPrompt from 'hooks/prompts/useListPrompt';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 interface ListPromptProps {
     message: string;
@@ -10,7 +10,7 @@ interface ListPromptProps {
     required?: boolean;
     placeholder?: string;
     isActive: boolean;
-    validate?: ValidateFunction;
+    validate?: Prompt.ValidateFunction;
     onSubmit: (data: string[]) => void;
     onEscape: () => void;
     onAbort: () => void;

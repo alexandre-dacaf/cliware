@@ -1,5 +1,5 @@
 // masks.ts
-import { Mask, MaskFunction } from 'types';
+import { Prompt } from 'types';
 
 interface CurrencyFormat {
     symbol: string;
@@ -7,7 +7,7 @@ interface CurrencyFormat {
     thousand: string;
 }
 
-export const getMaskFunction = (mask: Mask): MaskFunction => {
+export const getMaskFunction = (mask: Prompt.Mask): Prompt.MaskFunction => {
     if (typeof mask === 'string' && mask.startsWith('currency-')) {
         return maskCurrency(mask);
     }
@@ -118,7 +118,7 @@ const maskCreditCard = (value: string): string => {
 };
 
 // Currency Mask: Supports multiple currencies
-const maskCurrency = (maskType: string): MaskFunction => {
+const maskCurrency = (maskType: string): Prompt.MaskFunction => {
     const currencyFormats: { [key: string]: CurrencyFormat } = {
         'currency-BRL': { symbol: 'R$', decimal: ',', thousand: '.' },
         'currency-USD': { symbol: '$', decimal: '.', thousand: ',' },

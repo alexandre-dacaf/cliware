@@ -2,7 +2,7 @@ import { Blueprint } from 'types';
 import { createTodo } from './actions';
 import { coreCommands } from './core/coreCommands';
 
-export const blueprint: Blueprint = {
+export const blueprint: Blueprint.Blueprint = {
     // ...coreCommands,
     todo: {
         entrypoint: 'selectPromptType',

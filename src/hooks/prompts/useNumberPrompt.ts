@@ -1,6 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 type UseNumberPromptProps = {
     message: string;
@@ -11,7 +11,7 @@ type UseNumberPromptProps = {
     decimals: number;
     defaultValue: number;
     required: boolean;
-    validate: ValidateFunction;
+    validate: Prompt.ValidateFunction;
     onSubmit: (data: number) => void;
     onEscape: () => void;
     onAbort: () => void;
@@ -150,7 +150,10 @@ const useNumberPrompt = ({
         const validation = validate(numberValue);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;

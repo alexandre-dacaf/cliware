@@ -1,22 +1,33 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { getMaskFunction } from 'services';
-import { Mask, ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 type UseTextPromptProps = {
     message: string;
     defaultValue: string;
     required: boolean;
     trim: boolean;
-    validate: ValidateFunction;
-    mask: Mask;
+    validate: Prompt.ValidateFunction;
+    mask: Prompt.Mask;
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
 };
 
-const useTextPrompt = ({ message, defaultValue, required, trim, validate, mask, onSubmit, onEscape, onAbort, onGoBack }: UseTextPromptProps) => {
+const useTextPrompt = ({
+    message,
+    defaultValue,
+    required,
+    trim,
+    validate,
+    mask,
+    onSubmit,
+    onEscape,
+    onAbort,
+    onGoBack,
+}: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
     const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
@@ -66,7 +77,10 @@ const useTextPrompt = ({ message, defaultValue, required, trim, validate, mask, 
         const validation = validate(formattedValue);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;

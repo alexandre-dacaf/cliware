@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { SpinnerProps } from 'types';
+import { MessagePanel } from 'types';
 
-const Spinner: React.FC<SpinnerProps> = (spinner) => {
+const Spinner: React.FC<MessagePanel.SpinnerProps> = (spinner) => {
     const [currentFrame, setCurrentFrame] = useState(0);
 
     useEffect(() => {

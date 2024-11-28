@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import useNumberPrompt from 'hooks/prompts/useNumberPrompt';
 import './NumberPrompt.scss';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 interface NumberPromptProps {
     message: string;
@@ -14,7 +14,7 @@ interface NumberPromptProps {
     required?: boolean;
     placeholder?: string;
     isActive: boolean;
-    validate?: ValidateFunction;
+    validate?: Prompt.ValidateFunction;
     onSubmit: (data: number) => void;
     onEscape: () => void;
     onAbort: () => void;

@@ -1,7 +1,7 @@
-import { ProgressBarProps } from 'types';
+import { MessagePanel } from 'types';
 import './ProgressBar.scss';
 
-const ProgressBar: React.FC<ProgressBarProps> = ({
+const ProgressBar: React.FC<MessagePanel.ProgressBarProps> = ({
     percentage,
     trackStyle,
     barStyle,

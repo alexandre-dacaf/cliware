@@ -1,10 +1,10 @@
 import React from 'react';
 import './TerminalHistoryEntry.scss';
-import { HistoryEntry, TableContent, TextSpan } from 'types';
+import { History, Content } from 'types';
 import { ensureArray } from 'services';
 
 interface TerminalHistoryEntryProps {
-    entry: HistoryEntry;
+    entry: History.HistoryEntry;
 }
 
 const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) => {
@@ -21,7 +21,7 @@ const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) =>
 };
 
 interface TextViewProps {
-    content: TextSpan | TextSpan[];
+    content: Content.Text.TextSpan | Content.Text.TextSpan[];
 }
 
 const TextView: React.FC<TextViewProps> = ({ content }) => {
@@ -52,7 +52,7 @@ const JsonView: React.FC<JsonViewProps> = ({ json }) => {
 };
 
 interface TableViewProps {
-    tableContent: TableContent;
+    tableContent: Content.Table.TableContent;
 }
 
 const TableView: React.FC<TableViewProps> = ({ tableContent }) => {

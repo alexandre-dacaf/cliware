@@ -1,9 +1,9 @@
-import { CommandArgs } from 'types';
+import { Command } from 'types';
 
 export const parseCommandArguments = (command: string) => {
     const [baseCommand, ...commandArgs] = command.split(' ');
 
-    const data: CommandArgs = {
+    const data: Command.CommandArgs = {
         command: baseCommand,
         args: [],
         options: {},

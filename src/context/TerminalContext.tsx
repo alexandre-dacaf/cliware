@@ -1,10 +1,10 @@
 import React, { createContext, useReducer, Dispatch, ReactNode } from 'react';
-import { TerminalState, TerminalAction } from '../types';
+import { Terminal } from '../types';
 import { terminalReducer, initialTerminalState } from './terminalReducer';
 
 interface TerminalContextProps {
-    state: TerminalState;
-    dispatch: Dispatch<TerminalAction>;
+    state: Terminal.TerminalState;
+    dispatch: Dispatch<Terminal.TerminalAction>;
 }
 
 export const TerminalContext = createContext<TerminalContextProps>({
@@ -19,5 +19,7 @@ interface TerminalProviderProps {
 export const TerminalProvider: React.FC<TerminalProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(terminalReducer, initialTerminalState);
 
-    return <TerminalContext.Provider value={{ state, dispatch }}>{children}</TerminalContext.Provider>;
+    return (
+        <TerminalContext.Provider value={{ state, dispatch }}>{children}</TerminalContext.Provider>
+    );
 };

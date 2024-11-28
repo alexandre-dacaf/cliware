@@ -7,12 +7,12 @@ import {
     useContext,
 } from 'react';
 import { parseCommandArguments } from 'services/parser';
-import { CommandArgs } from 'types';
+import { Command } from 'types';
 
 interface UseCommandInputProps {
     availableCommands: string[];
     itemsPerPage: number;
-    onSubmit: (commandString: string, commandArgs: CommandArgs) => void;
+    onSubmit: (commandString: string, commandArgs: Command.CommandArgs) => void;
     isActive: boolean;
 }
 
@@ -153,7 +153,7 @@ const useCommandInput = ({
 
     const submit = () => {
         const commandString = value;
-        const commandArgs: CommandArgs = parseCommandArguments(commandString);
+        const commandArgs: Command.CommandArgs = parseCommandArguments(commandString);
         onSubmit(commandString, commandArgs);
         setValue('');
     };

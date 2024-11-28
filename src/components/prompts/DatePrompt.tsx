@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import useDatePrompt from 'hooks/prompts/useDatePrompt';
 import './DatePrompt.scss';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 interface DatePromptProps {
     message: string;
@@ -9,7 +9,7 @@ interface DatePromptProps {
     required?: boolean;
     placeholder?: string;
     isActive: boolean;
-    validate?: ValidateFunction;
+    validate?: Prompt.ValidateFunction;
     onSubmit: (data: Date | null) => void;
     onEscape: () => void;
     onAbort: () => void;

@@ -1,6 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef, useMemo } from 'react';
-import { Choice } from 'types';
+import { Prompt } from 'types';
 
 type UseTogglePromptProps = {
     message: string;
@@ -25,7 +25,7 @@ const useTogglePrompt = ({
 }: UseTogglePromptProps) => {
     const [toggle, setToggle] = useState<boolean>(defaultValue);
     const { printPromptResponse } = usePrinter();
-    const choices: Choice[] = useMemo(
+    const choices: Prompt.Choice[] = useMemo(
         () => [
             { label: falseLabel, value: false },
             { label: trueLabel, value: true },

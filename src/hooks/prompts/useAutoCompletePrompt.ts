@@ -1,6 +1,6 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, useMemo, KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 type UseAutoCompletePromptProps = {
     message: string;
@@ -8,7 +8,7 @@ type UseAutoCompletePromptProps = {
     itemsPerPage: number;
     defaultValue: string;
     required: boolean;
-    validate: ValidateFunction;
+    validate: Prompt.ValidateFunction;
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;
@@ -35,7 +35,10 @@ const useSelectPrompt = ({
     const [currentPage, setCurrentPage] = useState<number>(0);
     const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
-    const totalPages = useMemo(() => Math.ceil(filteredSuggestions.length / itemsPerPage), [filteredSuggestions, itemsPerPage]);
+    const totalPages = useMemo(
+        () => Math.ceil(filteredSuggestions.length / itemsPerPage),
+        [filteredSuggestions, itemsPerPage]
+    );
 
     useEffect(() => {
         setFilteredSuggestions(suggestions);
@@ -56,7 +59,9 @@ const useSelectPrompt = ({
     }, [defaultValue, suggestions, itemsPerPage]);
 
     useEffect(() => {
-        setPageSuggestions(filteredSuggestions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage));
+        setPageSuggestions(
+            filteredSuggestions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+        );
     }, [filteredSuggestions, currentPage, itemsPerPage]);
 
     useEffect(() => {
@@ -74,7 +79,8 @@ const useSelectPrompt = ({
             return;
         }
 
-        const normalizeText = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const normalizeText = (text: string) =>
+            text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
         const pattern = new RegExp(normalizeText(inputValue), 'i');
 
@@ -170,7 +176,10 @@ const useSelectPrompt = ({
         const validation = validate(value);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;

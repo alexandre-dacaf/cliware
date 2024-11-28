@@ -1,20 +1,29 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useEffect, useState, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { getMaskFunction } from 'services';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 type UseDatePromptProps = {
     message: string;
     defaultValue: string;
     required: boolean;
-    validate: ValidateFunction;
+    validate: Prompt.ValidateFunction;
     onSubmit: (data: Date | null) => void;
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
 };
 
-const useDatePrompt = ({ message, defaultValue, required, validate, onSubmit, onEscape, onAbort, onGoBack }: UseDatePromptProps) => {
+const useDatePrompt = ({
+    message,
+    defaultValue,
+    required,
+    validate,
+    onSubmit,
+    onEscape,
+    onAbort,
+    onGoBack,
+}: UseDatePromptProps) => {
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
     const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
@@ -46,7 +55,10 @@ const useDatePrompt = ({ message, defaultValue, required, validate, onSubmit, on
         const validation = validate(dateValue);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;

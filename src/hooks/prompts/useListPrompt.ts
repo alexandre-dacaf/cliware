@@ -1,20 +1,30 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from 'react';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 type UseListPromptProps = {
     message: string;
     separator: string;
     trim: boolean;
     required: boolean;
-    validate: ValidateFunction;
+    validate: Prompt.ValidateFunction;
     onSubmit: (data: string[]) => void;
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
 };
 
-const useListPrompt = ({ message, separator, trim, required, validate, onSubmit, onEscape, onAbort, onGoBack }: UseListPromptProps) => {
+const useListPrompt = ({
+    message,
+    separator,
+    trim,
+    required,
+    validate,
+    onSubmit,
+    onEscape,
+    onAbort,
+    onGoBack,
+}: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
     const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
@@ -46,7 +56,10 @@ const useListPrompt = ({ message, separator, trim, required, validate, onSubmit,
         const validation = validate(list);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;

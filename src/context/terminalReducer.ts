@@ -1,7 +1,7 @@
 import { ensureArray } from 'services';
-import { TerminalState, TerminalAction, HistoryGroup, HistoryEntry } from 'types';
+import { Terminal, History } from 'types';
 
-export const initialTerminalState: TerminalState = {
+export const initialTerminalState: Terminal.TerminalState = {
     commandArgs: null,
     command: null,
     currentHistoryGroupId: null,
@@ -9,7 +9,10 @@ export const initialTerminalState: TerminalState = {
     display: null,
 };
 
-export const terminalReducer = (state: TerminalState, action: TerminalAction): TerminalState => {
+export const terminalReducer = (
+    state: Terminal.TerminalState,
+    action: Terminal.TerminalAction
+): Terminal.TerminalState => {
     switch (action.type) {
         case 'STANDBY': {
             return {
@@ -28,11 +31,11 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 return state;
             }
 
-            const entries: HistoryEntry[] = [
+            const entries: History.HistoryEntry[] = [
                 { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
             ];
 
-            const newHistoryGroup: HistoryGroup = { id: newGroupId, entries };
+            const newHistoryGroup: History.HistoryGroup = { id: newGroupId, entries };
             const history = state.printHistory;
 
             return {
@@ -52,7 +55,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
 
             const cmd = commandString.split(' ')[0];
 
-            const entries: HistoryEntry[] = [
+            const entries: History.HistoryEntry[] = [
                 { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
                 {
                     type: 'text',
@@ -60,7 +63,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 },
             ];
 
-            const newHistoryGroup: HistoryGroup = { id: newGroupId, entries };
+            const newHistoryGroup: History.HistoryGroup = { id: newGroupId, entries };
             const history = state.printHistory;
 
             return {
@@ -72,7 +75,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 currentHistoryGroupId: null,
             };
         }
-        case 'ADD_ENTRY_TO_TERMINAL_HISTORY': {
+        case 'LOG_HISTORY_ENTRY': {
             const currentGroupId = state.currentHistoryGroupId;
 
             if (!currentGroupId) {
@@ -86,7 +89,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 return state;
             }
 
-            // Gets whole printHistory, made of HistoryGroup entries { id: string, entries: entries: HistoryEntry[] }
+            // Gets whole printHistory, made of History.HistoryGroup entries { id: string, entries: entries: History.HistoryEntry[] }
             const history = state.printHistory;
 
             // Gets the currentGroup, checks if it exists and if it has an entries property array
@@ -96,7 +99,7 @@ export const terminalReducer = (state: TerminalState, action: TerminalAction): T
                 return state;
             }
 
-            // Entries can be HistoryEntry or HistoryEntry[]. Makes sure it's an array
+            // Entries can be History.HistoryEntry or History.HistoryEntry[]. Makes sure it's an array
             const payloadEntries = action.payload.entries;
             const payloadEntriesArray = ensureArray(payloadEntries);
 

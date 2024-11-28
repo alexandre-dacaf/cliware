@@ -1,24 +1,35 @@
 import usePrinter from 'hooks/printer/usePrinter';
 import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useMemo } from 'react';
-import { Choice, ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 type UseSelectPromptProps = {
     message: string;
-    choices: Choice[];
+    choices: Prompt.Choice[];
     multiselect: boolean;
     defaultValue: any;
     required: boolean;
-    validate: ValidateFunction;
-    onSubmit: (data: Choice[] | Choice) => void;
+    validate: Prompt.ValidateFunction;
+    onSubmit: (data: Prompt.Choice[] | Prompt.Choice) => void;
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
 };
 
-const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required, validate, onSubmit, onEscape, onAbort, onGoBack }: UseSelectPromptProps) => {
+const useSelectPrompt = ({
+    message,
+    choices,
+    multiselect,
+    defaultValue,
+    required,
+    validate,
+    onSubmit,
+    onEscape,
+    onAbort,
+    onGoBack,
+}: UseSelectPromptProps) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
-    const [checkedChoices, setCheckedChoices] = useState<Choice[]>([]);
+    const [checkedChoices, setCheckedChoices] = useState<Prompt.Choice[]>([]);
     const { printPromptResponse, setDisplayText, clearDisplay } = usePrinter();
 
     const formattedChoices = useMemo(
@@ -32,7 +43,9 @@ const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required
 
     useEffect(() => {
         setSelectedIndex(() => {
-            const defaultIndex = formattedChoices.findIndex((choice) => choice.value === defaultValue);
+            const defaultIndex = formattedChoices.findIndex(
+                (choice) => choice.value === defaultValue
+            );
 
             if (!defaultIndex) return 0;
 
@@ -55,9 +68,15 @@ const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required
         const isCtrlPressed = event.ctrlKey;
         preventDefaultEvents(event);
 
-        if ((key === 'ArrowUp' || key === 'ArrowLeft' || (key === 'Tab' && isShiftPressed)) && !isCtrlPressed) {
+        if (
+            (key === 'ArrowUp' || key === 'ArrowLeft' || (key === 'Tab' && isShiftPressed)) &&
+            !isCtrlPressed
+        ) {
             selectPrevious();
-        } else if ((key === 'ArrowDown' || key === 'ArrowRight' || (key === 'Tab' && !isShiftPressed)) && !isCtrlPressed) {
+        } else if (
+            (key === 'ArrowDown' || key === 'ArrowRight' || (key === 'Tab' && !isShiftPressed)) &&
+            !isCtrlPressed
+        ) {
             selectNext();
         } else if ((key === ' ' || event.code === 'Space') && multiselect) {
             checkSelected();
@@ -75,7 +94,17 @@ const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required
     };
 
     const preventDefaultEvents = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-        const preventDefaultKeys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape', 'Space', ' '];
+        const preventDefaultKeys = [
+            'Enter',
+            'Tab',
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'Escape',
+            'Space',
+            ' ',
+        ];
 
         if (preventDefaultKeys.includes(event.key)) {
             event.preventDefault();
@@ -83,7 +112,9 @@ const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required
     };
 
     const selectPrevious = () => {
-        setSelectedIndex((prevIndex) => (prevIndex - 1 + formattedChoices.length) % formattedChoices.length);
+        setSelectedIndex(
+            (prevIndex) => (prevIndex - 1 + formattedChoices.length) % formattedChoices.length
+        );
     };
 
     const selectNext = () => {
@@ -119,7 +150,10 @@ const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required
         const validation = validate(checkedChoices);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;
@@ -138,7 +172,10 @@ const useSelectPrompt = ({ message, choices, multiselect, defaultValue, required
         const validation = validate(selectedChoice);
 
         if (validation !== true) {
-            const validationMessage = validation !== false ? validation : 'Input does not meet the required criteria. Please check and try again.';
+            const validationMessage =
+                validation !== false
+                    ? validation
+                    : 'Input does not meet the required criteria. Please check and try again.';
 
             setDisplayText(validationMessage);
             return;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { TerminalContext } from 'context/TerminalContext';
-import { ProgressBarProps, SpinnerProps } from 'types';
+import { MessagePanel } from 'types';
 import Spinner from './Spinner';
 import ProgressBar from './ProgressBar';
 import './Display.scss';
@@ -13,7 +13,7 @@ const Display: React.FC = () => {
     const renderSpinner = () => {
         if (!state.display?.spinner) return null;
 
-        const spinnerProps: SpinnerProps = state.display.spinner;
+        const spinnerProps: MessagePanel.SpinnerProps = state.display.spinner;
 
         return (
             <span>
@@ -26,7 +26,7 @@ const Display: React.FC = () => {
     const renderProgressBar = () => {
         if (!state.display?.progressBar) return null;
 
-        const progressBarProps: ProgressBarProps = state.display.progressBar;
+        const progressBarProps: MessagePanel.ProgressBarProps = state.display.progressBar;
 
         return <ProgressBar {...progressBarProps} />;
     };

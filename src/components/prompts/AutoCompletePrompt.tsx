@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import useAutoCompletePrompt from 'hooks/prompts/useAutoCompletePrompt';
 import './AutoCompletePrompt.scss';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 interface AutoCompletePromptProps {
     message: string;
@@ -10,7 +10,7 @@ interface AutoCompletePromptProps {
     defaultValue?: string;
     required?: boolean;
     placeholder?: string;
-    validate?: ValidateFunction;
+    validate?: Prompt.ValidateFunction;
     isActive: boolean;
     onSubmit: (data: string) => void;
     onEscape: () => void;
@@ -33,7 +33,15 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
     onGoBack,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { value, pageSuggestions, pageIndex, handleChange, handleKeyDown, currentPage, totalPages } = useAutoCompletePrompt({
+    const {
+        value,
+        pageSuggestions,
+        pageIndex,
+        handleChange,
+        handleKeyDown,
+        currentPage,
+        totalPages,
+    } = useAutoCompletePrompt({
         message,
         suggestions,
         itemsPerPage,
@@ -77,7 +85,12 @@ const AutoCompletePrompt: React.FC<AutoCompletePromptProps> = ({
 
             <div className='autocomplete-suggestions'>
                 {pageSuggestions.map((suggestion, index) => (
-                    <span key={index} className={`autocomplete-suggestion ${pageIndex === index ? 'selected' : ''}`}>
+                    <span
+                        key={index}
+                        className={`autocomplete-suggestion ${
+                            pageIndex === index ? 'selected' : ''
+                        }`}
+                    >
                         {suggestion}
                     </span>
                 ))}

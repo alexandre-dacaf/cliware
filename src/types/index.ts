@@ -1,403 +1,458 @@
-import ProgressBar from 'components/outputs/ProgressBar';
+export namespace Blueprint {
+    export interface Blueprint {
+        [command: string]: Command;
+    }
 
-//#region Base
-export type TaskType = 'prompt' | 'action';
+    export interface Command {
+        entrypoint: string;
+        pipeline: Pipeline;
+    }
 
-export type TaskKey = string;
+    export interface Pipeline {
+        [taskKey: TaskKey]: Task.Task;
+    }
 
-export type NextTask = string | ((context: PipelineContext) => string);
-export interface BaseTask {
-    type: TaskType;
-    next?: NextTask;
+    export type TaskKey = string;
 }
 
-export interface CommandArgs {
-    command: string;
-    args: string[];
-    options: { [key: string]: string | string[] | boolean };
-    flags: string[];
+export namespace Task {
+    export type Task = Prompt.PromptTask | Action.ActionTask;
+
+    export type TaskType = 'prompt' | 'action';
+
+    export interface BaseTask {
+        type: TaskType;
+        next?: NextTask;
+    }
+
+    export type NextTask = string | ((context: PipelineContext.PipelineContext) => string);
 }
 
-export interface PipelineData {
-    [taskKey: TaskKey]: any;
-}
-//#endregion
+export namespace Prompt {
+    export type PromptTask =
+        | TextPrompt
+        | TogglePrompt
+        | SelectPrompt
+        | MultiselectPrompt
+        | NumberPrompt
+        | ListPrompt
+        | DatePrompt
+        | AutoCompletePrompt
+        | PasswordPrompt;
 
-//#region Tasks
-export type Task = PromptTask | ActionTask;
+    export interface BasePrompt extends Task.BaseTask {
+        type: 'prompt';
+        message: string;
+        promptType: PromptType;
+        required?: boolean;
+        validate?: ValidateFunction;
+    }
 
-export interface Pipeline {
-    [taskKey: TaskKey]: Task;
-}
+    export type PromptType =
+        | 'text'
+        | 'toggle'
+        | 'select'
+        | 'multiselect'
+        | 'number'
+        | 'list'
+        | 'date'
+        | 'autocomplete'
+        | 'password';
 
-export interface Command {
-    entrypoint: string;
-    pipeline: Pipeline;
-}
+    export interface TextPrompt extends BasePrompt {
+        promptType: 'text';
+        default?: string;
+        trim?: boolean;
+        mask?: Mask;
+        placeholder?: string;
+    }
 
-export interface Blueprint {
-    [command: string]: Command;
-}
-//#endregion
+    export interface TogglePrompt extends BasePrompt {
+        promptType: 'toggle';
+        trueLabel?: string;
+        falseLabel?: string;
+        default?: boolean;
+    }
 
-//#region Actions
-export interface PipelineContext {
-    currentTaskKey: TaskKey;
-    taskBreadcrumbs: TaskKey[];
-    pipelineData: PipelineData;
-    pipeline: Pipeline;
-    commandArgs: CommandArgs | null;
-    printer: PrinterInterface;
-    appDispatcher: AppDispatcherInterface;
-}
+    export interface SelectPrompt extends BasePrompt {
+        promptType: 'select';
+        choices: Choice[];
+        default?: any;
+    }
 
-export type ActionFunction = (context: PipelineContext) => Promise<any> | any;
+    export interface MultiselectPrompt extends BasePrompt {
+        promptType: 'multiselect';
+        choices: Choice[];
+        default?: any;
+    }
 
-export interface ActionTask extends BaseTask {
-    type: 'action';
-    actionFunction: ActionFunction;
-}
-//#endregion
+    export interface NumberPrompt extends BasePrompt {
+        promptType: 'number';
+        max?: number;
+        min?: number;
+        step?: number;
+        float?: boolean;
+        decimals?: number;
+        default?: number;
+        placeholder?: string;
+    }
 
-//#region Prompts
-export type PromptType = 'text' | 'toggle' | 'select' | 'multiselect' | 'number' | 'list' | 'date' | 'autocomplete' | 'password';
+    export interface ListPrompt extends BasePrompt {
+        promptType: 'list';
+        separator?: string;
+        trim?: boolean;
+        placeholder?: string;
+    }
 
-export interface Choice {
-    value?: any;
-    label: string;
-    hint?: string;
-}
+    export interface DatePrompt extends BasePrompt {
+        promptType: 'date';
+        default?: string;
+        placeholder?: string;
+    }
 
-export type ValidateFunction = (response: any) => boolean | string;
+    export interface AutoCompletePrompt extends BasePrompt {
+        promptType: 'autocomplete';
+        suggestions: string[];
+        itemsPerPage?: number;
+        default?: string;
+        placeholder?: string;
+    }
 
-export type MaskTemplate =
-    | 'cpf'
-    | 'cnpj'
-    | 'phone'
-    | 'cep'
-    | 'date'
-    | 'time'
-    | 'datetime'
-    | 'credit-card'
-    | 'currency-BRL'
-    | 'currency-USD'
-    | 'currency-EUR'
-    | 'currency-GBP'
-    | 'currency-JPY'
-    | 'ipv4-address'
-    | 'ipv6-address'
-    | 'hex-color';
-export type MaskFunction = (value: string) => string;
-export type Mask = MaskTemplate | MaskFunction;
+    export interface PasswordPrompt extends BasePrompt {
+        promptType: 'password';
+        placeholder?: string;
+    }
 
-export interface BasePrompt extends BaseTask {
-    type: 'prompt';
-    message: string;
-    promptType: PromptType;
-    required?: boolean;
-    validate?: ValidateFunction;
-}
+    export interface Choice {
+        value?: any;
+        label: string;
+        hint?: string;
+    }
 
-export interface TextPrompt extends BasePrompt {
-    promptType: 'text';
-    default?: string;
-    trim?: boolean;
-    mask?: Mask;
-    placeholder?: string;
-}
+    export type ValidateFunction = (response: any) => boolean | string;
 
-export interface TogglePrompt extends BasePrompt {
-    promptType: 'toggle';
-    trueLabel?: string;
-    falseLabel?: string;
-    default?: boolean;
-}
+    export type Mask = MaskTemplate | MaskFunction;
 
-export interface SelectPrompt extends BasePrompt {
-    promptType: 'select';
-    choices: Choice[];
-    default?: any;
-}
+    export type MaskTemplate =
+        | 'cpf'
+        | 'cnpj'
+        | 'phone'
+        | 'cep'
+        | 'date'
+        | 'time'
+        | 'datetime'
+        | 'credit-card'
+        | 'currency-BRL'
+        | 'currency-USD'
+        | 'currency-EUR'
+        | 'currency-GBP'
+        | 'currency-JPY'
+        | 'ipv4-address'
+        | 'ipv6-address'
+        | 'hex-color';
 
-export interface MultiselectPrompt extends BasePrompt {
-    promptType: 'multiselect';
-    choices: Choice[];
-    default?: any;
-}
-
-export interface NumberPrompt extends BasePrompt {
-    promptType: 'number';
-    max?: number;
-    min?: number;
-    step?: number;
-    float?: boolean;
-    decimals?: number;
-    default?: number;
-    placeholder?: string;
-}
-
-export interface ListPrompt extends BasePrompt {
-    promptType: 'list';
-    separator?: string;
-    trim?: boolean;
-    placeholder?: string;
-}
-
-export interface DatePrompt extends BasePrompt {
-    promptType: 'date';
-    default?: string;
-    placeholder?: string;
+    export type MaskFunction = (value: string) => string;
 }
 
-export interface AutoCompletePrompt extends BasePrompt {
-    promptType: 'autocomplete';
-    suggestions: string[];
-    itemsPerPage?: number;
-    default?: string;
-    placeholder?: string;
+export namespace Action {
+    export interface ActionTask extends Task.BaseTask {
+        type: 'action';
+        actionFunction: ActionFunction;
+    }
+
+    export type ActionFunction = (context: PipelineContext.PipelineContext) => Promise<any> | any;
 }
 
-export interface PasswordPrompt extends BasePrompt {
-    promptType: 'password';
-    placeholder?: string;
+export namespace PipelineContext {
+    export interface PipelineContext {
+        currentTaskKey: Blueprint.TaskKey;
+        taskBreadcrumbs: Blueprint.TaskKey[];
+        pipelineData: PipelineData;
+        pipeline: Blueprint.Pipeline;
+        commandArgs: Command.CommandArgs | null;
+        printer: Hooks.PrinterInterface;
+        appDispatcher: Hooks.AppDispatcherInterface;
+    }
+
+    export interface PipelineData {
+        [taskKey: Blueprint.TaskKey]: any;
+    }
 }
 
-export type PromptTask =
-    | TextPrompt
-    | TogglePrompt
-    | SelectPrompt
-    | MultiselectPrompt
-    | NumberPrompt
-    | ListPrompt
-    | DatePrompt
-    | AutoCompletePrompt
-    | PasswordPrompt;
-//#endregion
-
-//#region Context
-
-// App
-export interface TerminalType {
-    id: string;
+export namespace Command {
+    export interface CommandArgs {
+        command: string;
+        args: string[];
+        options: { [key: string]: string | string[] | boolean };
+        flags: string[];
+    }
 }
 
-export interface AppState {
-    terminalList: TerminalType[];
-    currentTerminalId: string | null;
-    currentTerminalState: 'active' | 'focused';
-    terminalColumns: number;
+export namespace History {
+    export interface HistoryGroup {
+        id: HistoryGroupId;
+        entries: HistoryEntry[];
+    }
+
+    export type HistoryGroupId = string | null;
+
+    export type HistoryEntry = TextHistoryEntry | JsonHistoryEntry | TableHistoryEntry;
+
+    export interface BaseHistoryEntry {
+        type: string;
+        content: any;
+    }
+
+    export interface TextHistoryEntry extends BaseHistoryEntry {
+        type: 'text';
+        content: Content.Text.TextSpan | Content.Text.TextSpan[];
+    }
+
+    export interface JsonHistoryEntry extends BaseHistoryEntry {
+        type: 'json';
+        content: object;
+    }
+
+    export interface TableHistoryEntry extends BaseHistoryEntry {
+        type: 'table';
+        content: Content.Table.TableContent;
+    }
 }
 
-export interface CreateTerminalPayload {
-    beforeId: string;
-    afterId: string | null;
-    newTerminalId: string;
+export namespace MessagePanel {
+    export interface Display {
+        text?: string | null;
+        spinner?: SpinnerProps | null;
+        progressBar?: ProgressBarProps | null;
+    }
+
+    export interface SpinnerProps {
+        frames: string[];
+        interval: number;
+    }
+
+    export interface PrinterDisplayProps {
+        text?: string;
+        spinnerConfig?: SpinnerConfig;
+        progressBar?: ProgressBarProps;
+    }
+
+    export type DefaultSpinnerNames =
+        | 'dots'
+        | 'dots2'
+        | 'dots3'
+        | 'dots4'
+        | 'dots5'
+        | 'dots6'
+        | 'dots7'
+        | 'dots8'
+        | 'dots9'
+        | 'line'
+        | 'arc'
+        | 'circleHalves';
+
+    export interface SpinnerConfig {
+        name?: DefaultSpinnerNames;
+        frames?: string[];
+        interval?: number;
+    }
+
+    export interface ProgressBarProps {
+        percentage: number;
+        trackStyle?: React.CSSProperties;
+        barStyle?: React.CSSProperties;
+        animationKeyframes?: string;
+        color?: Content.Color.PaletteColor;
+    }
+
+    export interface ProgressBarStyle {
+        trackStyle?: React.CSSProperties;
+        barStyle?: React.CSSProperties;
+        animationKeyframes?: string;
+        color?: Content.Color.PaletteColor;
+    }
 }
 
-export interface DeleteTerminalPayload {
-    terminalToDeleteId: string;
+export namespace App {
+    export interface AppState {
+        terminalList: TerminalType[];
+        currentTerminalId: string | null;
+        currentTerminalState: 'active' | 'focused';
+        terminalColumns: number;
+    }
+
+    export interface TerminalType {
+        id: string;
+    }
+
+    export type AppAction =
+        | { type: 'CREATE_TERMINAL'; payload: CreateTerminalPayload }
+        | { type: 'DELETE_TERMINAL'; payload: DeleteTerminalPayload }
+        | { type: 'ACTIVATE_TERMINAL' }
+        | { type: 'DEACTIVATE_TERMINAL' }
+        | { type: 'SELECT_NEXT_TERMINAL' }
+        | { type: 'SELECT_PREVIOUS_TERMINAL' }
+        | { type: 'CHANGE_TERMINAL_COLUMNS'; payload: number };
+
+    export interface CreateTerminalPayload {
+        beforeId: string;
+        afterId: string | null;
+        newTerminalId: string;
+    }
+
+    export interface DeleteTerminalPayload {
+        terminalToDeleteId: string;
+    }
 }
 
-export type AppAction =
-    | { type: 'CREATE_TERMINAL'; payload: CreateTerminalPayload }
-    | { type: 'DELETE_TERMINAL'; payload: DeleteTerminalPayload }
-    | { type: 'ACTIVATE_TERMINAL' }
-    | { type: 'DEACTIVATE_TERMINAL' }
-    | { type: 'SELECT_NEXT_TERMINAL' }
-    | { type: 'SELECT_PREVIOUS_TERMINAL' }
-    | { type: 'CHANGE_TERMINAL_COLUMNS'; payload: number };
+export namespace Terminal {
+    export interface TerminalState {
+        commandArgs: Command.CommandArgs | null;
+        command: Blueprint.Command | null;
+        currentHistoryGroupId: History.HistoryGroupId;
+        printHistory: History.HistoryGroup[];
+        display: MessagePanel.Display | null;
+    }
 
-export interface AppDispatcherInterface {
-    changeTerminalColumns: (payload: number) => void;
-    createTerminal: () => void;
-    deleteTerminal: (terminalId: string) => void;
-    deleteCurrentTerminal: () => void;
-    activateTerminal: () => void;
-    deactivateTerminal: () => void;
-    selectNextTerminal: () => void;
-    selectPreviousTerminal: () => void;
+    export type TerminalAction =
+        | { type: 'STANDBY' }
+        | {
+              type: 'START_NEW_COMMAND';
+              payload: StartNewCommandPayload;
+          }
+        | {
+              type: 'COMMAND_NOT_FOUND';
+              payload: CommandNotFoundPayload;
+          }
+        | {
+              type: 'LOG_HISTORY_ENTRY';
+              payload: LogHistoryEntryPayload;
+          }
+        | { type: 'SET_DISPLAY_TEXT'; payload: string | null }
+        | { type: 'SET_DISPLAY_SPINNER'; payload: MessagePanel.SpinnerProps | null }
+        | { type: 'SET_PROGRESS_BAR_STYLE'; payload: MessagePanel.ProgressBarStyle | null }
+        | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
+        | { type: 'CLEAR_DISPLAY' };
+
+    export interface StartNewCommandPayload {
+        currentGroupId: History.HistoryGroupId;
+        newGroupId: string;
+        commandString: string;
+        command: Blueprint.Command;
+        commandArgs: Command.CommandArgs;
+    }
+
+    export interface CommandNotFoundPayload {
+        currentGroupId: History.HistoryGroupId;
+        newGroupId: string;
+        commandString: string;
+    }
+
+    export interface LogHistoryEntryPayload {
+        currentGroupId: History.HistoryGroupId;
+        entries: History.HistoryEntry | History.HistoryEntry[];
+    }
 }
 
-// Terminal
-export interface PrinterInterface {
-    setDisplayText: (text: string) => void;
-    setDisplaySpinner: (config: SpinnerConfig) => void;
-    setProgressBarStyle: (style: ProgressBarStyle | null) => void;
-    updateProgressBarPercentage: (percentage: number) => void;
-    clearDisplay: () => void;
-    print: (entries: HistoryEntry | HistoryEntry[]) => void;
-    printText: (content: TextSpan | TextSpan[]) => void;
-    printCommand: (message: string) => void;
-    printCommandNotFound: (commandString: string) => void;
-    printPromptResponse: (message: string) => void;
-    printSuccess: (message: string) => void;
-    printAlert: (message: string) => void;
-    printError: (error: any) => void;
-    printTable: (tableContent: TableContent) => void;
-    printJson: (json: object) => void;
-    copyToClipboard: (text: string) => void;
-    downloadAsTxt: (filename: string, content: string) => void;
-    downloadAsCsv: (filename: string, tableContent: TableContent, separator?: string) => void;
-    downloadAsJson: (filename: string, json: object) => void;
+export namespace Content {
+    export namespace Text {
+        export interface TextSpan {
+            color?: Content.Color.PaletteColor;
+            text: string;
+        }
+    }
+
+    export namespace Table {
+        export type TableContent = {
+            columns: TableColumn[];
+            data: TableData[];
+        };
+
+        export type TableColumn = {
+            key: string;
+            header: string;
+        };
+
+        export type TableData = Record<string, any>;
+    }
+
+    export namespace Color {
+        export type PaletteColor =
+            | 'blue'
+            | 'blue-dark'
+            | 'blue-light'
+            | 'green'
+            | 'green-dark'
+            | 'green-light'
+            | 'red'
+            | 'red-dark'
+            | 'red-light'
+            | 'yellow'
+            | 'yellow-dark'
+            | 'yellow-light'
+            | 'purple'
+            | 'purple-dark'
+            | 'purple-light'
+            | 'orange'
+            | 'orange-dark'
+            | 'orange-light'
+            | 'teal'
+            | 'teal-dark'
+            | 'teal-light'
+            | 'cyan'
+            | 'cyan-dark'
+            | 'cyan-light'
+            | 'pink'
+            | 'pink-dark'
+            | 'pink-light'
+            | 'neutral-100'
+            | 'neutral-200'
+            | 'neutral-300'
+            | 'neutral-400'
+            | 'neutral-500'
+            | 'neutral-600'
+            | 'neutral-700'
+            | 'neutral-800'
+            | 'neutral-900'
+            | 'neutral-light';
+    }
 }
 
-export type HistoryEntry = TextHistoryEntry | JsonHistoryEntry | TableHistoryEntry;
+export namespace Hooks {
+    export interface PrinterInterface {
+        setDisplayText: (text: string) => void;
+        setDisplaySpinner: (config: MessagePanel.SpinnerConfig) => void;
+        setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
+        updateProgressBarPercentage: (percentage: number) => void;
+        clearDisplay: () => void;
+        print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
+        printText: (content: Content.Text.TextSpan | Content.Text.TextSpan[]) => void;
+        printCommand: (message: string) => void;
+        printCommandNotFound: (commandString: string) => void;
+        printPromptResponse: (message: string) => void;
+        printSuccess: (message: string) => void;
+        printAlert: (message: string) => void;
+        printError: (error: any) => void;
+        printTable: (tableContent: Content.Table.TableContent) => void;
+        printJson: (json: object) => void;
+        copyToClipboard: (text: string) => void;
+        downloadAsTxt: (filename: string, content: string) => void;
+        downloadAsCsv: (
+            filename: string,
+            tableContent: Content.Table.TableContent,
+            separator?: string
+        ) => void;
+        downloadAsJson: (filename: string, json: object) => void;
+    }
 
-export interface BaseHistoryEntry {
-    type: string;
-    content: any;
+    export interface AppDispatcherInterface {
+        changeTerminalColumns: (payload: number) => void;
+        createTerminal: () => void;
+        deleteTerminal: (terminalId: string) => void;
+        deleteCurrentTerminal: () => void;
+        activateTerminal: () => void;
+        deactivateTerminal: () => void;
+        selectNextTerminal: () => void;
+        selectPreviousTerminal: () => void;
+    }
 }
-
-export interface TextHistoryEntry extends BaseHistoryEntry {
-    type: 'text';
-    content: TextSpan | TextSpan[];
-}
-
-export interface TextSpan {
-    color?: PaletteColor;
-    text: string;
-}
-
-export type PaletteColor =
-    | 'blue'
-    | 'blue-dark'
-    | 'blue-light'
-    | 'green'
-    | 'green-dark'
-    | 'green-light'
-    | 'red'
-    | 'red-dark'
-    | 'red-light'
-    | 'yellow'
-    | 'yellow-dark'
-    | 'yellow-light'
-    | 'purple'
-    | 'purple-dark'
-    | 'purple-light'
-    | 'orange'
-    | 'orange-dark'
-    | 'orange-light'
-    | 'teal'
-    | 'teal-dark'
-    | 'teal-light'
-    | 'cyan'
-    | 'cyan-dark'
-    | 'cyan-light'
-    | 'pink'
-    | 'pink-dark'
-    | 'pink-light'
-    | 'neutral-100'
-    | 'neutral-200'
-    | 'neutral-300'
-    | 'neutral-400'
-    | 'neutral-500'
-    | 'neutral-600'
-    | 'neutral-700'
-    | 'neutral-800'
-    | 'neutral-900'
-    | 'neutral-light';
-
-export interface JsonHistoryEntry extends BaseHistoryEntry {
-    type: 'json';
-    content: object;
-}
-
-export interface TableHistoryEntry extends BaseHistoryEntry {
-    type: 'table';
-    content: TableContent;
-}
-
-export type TableContent = {
-    columns: TableColumn[];
-    data: TableData[];
-};
-
-export type TableColumn = {
-    key: string;
-    header: string;
-};
-
-export type TableData = Record<string, any>;
-
-export interface HistoryGroup {
-    id: HistoryGroupId;
-    entries: HistoryEntry[];
-}
-
-export type HistoryGroupId = string | null;
-
-export interface Display {
-    text?: string | null;
-    spinner?: SpinnerProps | null;
-    progressBar?: ProgressBarProps | null;
-}
-
-export interface SpinnerProps {
-    frames: string[];
-    interval: number;
-}
-
-export interface PrinterDisplayProps {
-    text?: string;
-    spinnerConfig?: SpinnerConfig;
-    progressBar?: ProgressBarProps;
-}
-
-export type DefaultSpinnerNames = 'dots' | 'dots2' | 'dots3' | 'dots4' | 'dots5' | 'dots6' | 'dots7' | 'dots8' | 'dots9' | 'line' | 'arc' | 'circleHalves';
-
-export interface SpinnerConfig {
-    name?: DefaultSpinnerNames;
-    frames?: string[];
-    interval?: number;
-}
-
-export interface ProgressBarProps {
-    percentage: number;
-    trackStyle?: React.CSSProperties;
-    barStyle?: React.CSSProperties;
-    animationKeyframes?: string;
-    color?: PaletteColor;
-}
-
-export interface ProgressBarStyle {
-    trackStyle?: React.CSSProperties;
-    barStyle?: React.CSSProperties;
-    animationKeyframes?: string;
-    color?: PaletteColor;
-}
-
-export interface TerminalState {
-    commandArgs: CommandArgs | null;
-    command: Command | null;
-    currentHistoryGroupId: HistoryGroupId;
-    printHistory: HistoryGroup[];
-    display: Display | null;
-}
-
-export type TerminalAction =
-    | { type: 'STANDBY' }
-    | {
-          type: 'START_NEW_COMMAND';
-          payload: {
-              currentGroupId: HistoryGroupId;
-              newGroupId: string;
-              commandString: string;
-              command: Command;
-              commandArgs: CommandArgs;
-          };
-      }
-    | {
-          type: 'COMMAND_NOT_FOUND';
-          payload: { currentGroupId: HistoryGroupId; newGroupId: string; commandString: string };
-      }
-    | {
-          type: 'ADD_ENTRY_TO_TERMINAL_HISTORY';
-          payload: { currentGroupId: HistoryGroupId; entries: HistoryEntry | HistoryEntry[] };
-      }
-    | { type: 'SET_DISPLAY'; payload: Display }
-    | { type: 'SET_DISPLAY_TEXT'; payload: string | null }
-    | { type: 'SET_DISPLAY_SPINNER'; payload: SpinnerProps | null }
-    | { type: 'SET_PROGRESS_BAR_STYLE'; payload: ProgressBarStyle | null }
-    | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
-    | { type: 'CLEAR_DISPLAY' };
-//#endregion

@@ -1,36 +1,29 @@
-import {
-    HistoryEntry,
-    PrinterInterface,
-    SpinnerProps,
-    TableContent,
-    SpinnerConfig,
-    TextSpan,
-    Command,
-    ProgressBarProps,
-    PrinterDisplayProps,
-    Display,
-    ProgressBarStyle,
-} from 'types';
+import { History, MessagePanel, Content, Hooks } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ensureArray, generateSpinnerProps, getExtensionFromMimeType, hasValidExtension } from 'services';
+import {
+    ensureArray,
+    generateSpinnerProps,
+    getExtensionFromMimeType,
+    hasValidExtension,
+} from 'services';
 
-const usePrinter = (): PrinterInterface => {
+const usePrinter = (): Hooks.PrinterInterface => {
     const { state, dispatch } = useContext(TerminalContext);
 
     const setDisplayText = (text: string) => {
         dispatch({ type: 'SET_DISPLAY_TEXT', payload: text });
     };
 
-    const setDisplaySpinner = (config: SpinnerConfig) => {
+    const setDisplaySpinner = (config: MessagePanel.SpinnerConfig) => {
         const spinner = generateSpinnerProps(config);
         if (!spinner) return;
 
         dispatch({ type: 'SET_DISPLAY_SPINNER', payload: spinner });
     };
 
-    const setProgressBarStyle = (style: ProgressBarStyle | null) => {
+    const setProgressBarStyle = (style: MessagePanel.ProgressBarStyle | null) => {
         dispatch({ type: 'SET_PROGRESS_BAR_STYLE', payload: style });
     };
 
@@ -42,14 +35,14 @@ const usePrinter = (): PrinterInterface => {
         dispatch({ type: 'CLEAR_DISPLAY' });
     };
 
-    const print = (entries: HistoryEntry | HistoryEntry[]) => {
+    const print = (entries: History.HistoryEntry | History.HistoryEntry[]) => {
         dispatch({
-            type: 'ADD_ENTRY_TO_TERMINAL_HISTORY',
+            type: 'LOG_HISTORY_ENTRY',
             payload: { currentGroupId: state.currentHistoryGroupId, entries },
         });
     };
 
-    const printText = (content: TextSpan | TextSpan[]) => {
+    const printText = (content: Content.Text.TextSpan | Content.Text.TextSpan[]) => {
         const contentArray = ensureArray(content);
         print({ type: 'text', content: contentArray });
     };
@@ -92,7 +85,7 @@ const usePrinter = (): PrinterInterface => {
         printText({ color: 'red', text });
     };
 
-    const printTable = (tableContent: TableContent) => {
+    const printTable = (tableContent: Content.Table.TableContent) => {
         print({ type: 'table', content: tableContent });
     };
 
@@ -112,7 +105,9 @@ const usePrinter = (): PrinterInterface => {
     const downloadFile = (filename: string, content: string, mimeType: string) => {
         try {
             const extension = getExtensionFromMimeType(mimeType);
-            const finalFilename = hasValidExtension(filename, extension) ? filename : `${filename}.${extension}`;
+            const finalFilename = hasValidExtension(filename, extension)
+                ? filename
+                : `${filename}.${extension}`;
 
             const blob = new Blob([content], { type: mimeType });
             const url = URL.createObjectURL(blob);
@@ -137,7 +132,11 @@ const usePrinter = (): PrinterInterface => {
         downloadFile(filename, content, 'text/plain');
     };
 
-    const downloadAsCsv = (filename: string, tableContent: TableContent, separator: string = ',') => {
+    const downloadAsCsv = (
+        filename: string,
+        tableContent: Content.Table.TableContent,
+        separator: string = ','
+    ) => {
         const { columns, data } = tableContent;
 
         // Generate the CSV headers using the column headers

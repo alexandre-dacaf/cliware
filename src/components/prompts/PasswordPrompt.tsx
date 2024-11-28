@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import './PasswordPrompt.scss';
 import usePasswordPrompt from 'hooks/prompts/usePasswordPrompt';
-import { ValidateFunction } from 'types';
+import { Prompt } from 'types';
 
 interface PasswordPromptProps {
     message: string;
     required?: boolean;
     placeholder?: string;
     isActive: boolean;
-    validate?: ValidateFunction;
+    validate?: Prompt.ValidateFunction;
     onSubmit: (data: string) => void;
     onEscape: () => void;
     onAbort: () => void;

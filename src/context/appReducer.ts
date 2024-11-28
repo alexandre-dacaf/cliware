@@ -1,14 +1,14 @@
-import { AppState, AppAction } from '../types';
+import { App } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const initialAppState: AppState = {
+export const initialAppState: App.AppState = {
     terminalList: [{ id: uuidv4() }, { id: uuidv4() }],
     currentTerminalId: null,
     currentTerminalState: 'active',
     terminalColumns: 2,
 };
 
-export const appReducer = (state: AppState, action: AppAction): AppState => {
+export const appReducer = (state: App.AppState, action: App.AppAction): App.AppState => {
     switch (action.type) {
         case 'CREATE_TERMINAL': {
             const { beforeId, afterId, newTerminalId } = action.payload;

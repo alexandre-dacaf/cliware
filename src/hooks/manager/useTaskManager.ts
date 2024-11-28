@@ -1,14 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
-import { PipelineContext, TaskKey, Command } from 'types';
+import { PipelineContext, Blueprint } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import usePrinter from 'hooks/printer/usePrinter';
 import useAppDispatcher from 'hooks/app/useAppDispatcher';
 
 const useTaskManager = () => {
     const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
-    const [currentPipelineContext, setCurrentPipelineContext] = useState<PipelineContext | null>(
-        null
-    );
+    const [currentPipelineContext, setCurrentPipelineContext] =
+        useState<PipelineContext.PipelineContext | null>(null);
     const printer = usePrinter();
     const appDispatcher = useAppDispatcher();
 
@@ -32,7 +31,10 @@ const useTaskManager = () => {
         initiatePipeline();
     }, [terminalState.command]);
 
-    const generatePipelineContext = (taskKey: TaskKey, command: Command): PipelineContext => {
+    const generatePipelineContext = (
+        taskKey: Blueprint.TaskKey,
+        command: Blueprint.Command
+    ): PipelineContext.PipelineContext => {
         return {
             currentTaskKey: taskKey,
             taskBreadcrumbs: [],
@@ -44,7 +46,7 @@ const useTaskManager = () => {
         };
     };
 
-    const startTask = async (pipelineContext: PipelineContext) => {
+    const startTask = async (pipelineContext: PipelineContext.PipelineContext) => {
         const pipeline = pipelineContext.pipeline;
         const currentTaskKey = pipelineContext.currentTaskKey;
         const currentTask = pipeline[currentTaskKey];
@@ -61,7 +63,7 @@ const useTaskManager = () => {
         }
     };
 
-    const handleActionTask = async (pipelineContext: PipelineContext) => {
+    const handleActionTask = async (pipelineContext: PipelineContext.PipelineContext) => {
         const pipeline = pipelineContext.pipeline;
         const currentTaskKey = pipelineContext.currentTaskKey;
         const currentTask = pipeline[currentTaskKey];
@@ -83,7 +85,9 @@ const useTaskManager = () => {
         }
     };
 
-    const savePipelineContextForLater = async (pipelineContext: PipelineContext) => {
+    const savePipelineContextForLater = async (
+        pipelineContext: PipelineContext.PipelineContext
+    ) => {
         const pipeline = pipelineContext.pipeline;
         const currentTaskKey = pipelineContext.currentTaskKey;
         const currentTask = pipeline[currentTaskKey];
@@ -133,7 +137,7 @@ const useTaskManager = () => {
 
         currentPipelineContext.printer.printPromptResponse('Returning to the previous prompt...');
 
-        const newPipelineContext: PipelineContext = {
+        const newPipelineContext: PipelineContext.PipelineContext = {
             ...currentPipelineContext,
             pipelineData: newPipelineData,
             currentTaskKey: previousTaskKey,
@@ -144,7 +148,7 @@ const useTaskManager = () => {
         startTask(newPipelineContext);
     };
 
-    const finishTask = (pipelineContext: PipelineContext) => {
+    const finishTask = (pipelineContext: PipelineContext.PipelineContext) => {
         const currentTaskKey = pipelineContext.currentTaskKey;
         const pipeline = pipelineContext.pipeline;
         const next = pipeline[currentTaskKey].next;
@@ -154,7 +158,8 @@ const useTaskManager = () => {
             return;
         }
 
-        const nextTaskKey: TaskKey = typeof next === 'function' ? next(pipelineContext) : next;
+        const nextTaskKey: Blueprint.TaskKey =
+            typeof next === 'function' ? next(pipelineContext) : next;
 
         if (!(nextTaskKey in pipeline)) {
             handleError(`${nextTaskKey} not in pipeline. Check blueprint keys.`);
@@ -162,7 +167,7 @@ const useTaskManager = () => {
 
         const breadcrumbs = pipelineContext.taskBreadcrumbs;
 
-        const newPipelineContext: PipelineContext = {
+        const newPipelineContext: PipelineContext.PipelineContext = {
             ...pipelineContext,
             currentTaskKey: nextTaskKey,
             taskBreadcrumbs: [...breadcrumbs, currentTaskKey],

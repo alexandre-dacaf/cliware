@@ -1,9 +1,9 @@
 import { AppContext } from 'context/AppContext';
 import { useContext } from 'react';
-import { AppDispatcherInterface } from 'types';
+import { Hooks } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-const useAppDispatcher = (): AppDispatcherInterface => {
+const useAppDispatcher = (): Hooks.AppDispatcherInterface => {
     const { state, dispatch } = useContext(AppContext);
 
     const changeTerminalColumns = (payload: number) => {

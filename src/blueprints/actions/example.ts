@@ -1,6 +1,8 @@
-import { ActionFunction, PipelineContext } from 'types';
+import { Action, PipelineContext } from 'types';
 
-export const createTodo: ActionFunction = async (context: PipelineContext): Promise<any> => {
+export const createTodo: Action.ActionFunction = async (
+    context: PipelineContext.PipelineContext
+): Promise<any> => {
     console.log(window.getComputedStyle(document.body).fontFamily);
 
     context.printer.setDisplayText('Executando...');
