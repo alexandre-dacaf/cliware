@@ -2,7 +2,7 @@ import HistoryEntry from 'components/history/HistoryEntry';
 import { TerminalContext } from 'context/TerminalContext';
 import React, { useContext } from 'react';
 import { History as H } from 'types';
-import './History.scss';
+import './HistoryBlock.scss';
 
 interface HistoryBlockProps {
     group: H.HistoryBlock;
