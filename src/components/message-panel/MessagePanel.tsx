@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { TerminalContext } from 'context/TerminalContext';
-import { MessagePanel as MP } from 'types';
-import Spinner from './Spinner';
+import { Content, MessagePanel as MP } from 'types';
+import Spinner from '../content/Spinner';
 import ProgressBar from './ProgressBar';
 import './MessagePanel.scss';
+import RichText from 'components/content/RichText';
 
 const MessagePanel: React.FC = () => {
     const { state } = useContext(TerminalContext);
@@ -23,10 +24,18 @@ const MessagePanel: React.FC = () => {
         );
     };
 
+    const renderText = () => {
+        if (!state.display?.text) return null;
+
+        const textProps: Content.Text.RichText = state.display.text;
+
+        return <RichText content={textProps} />;
+    };
+
     const renderProgressBar = () => {
         if (!state.display?.progressBar) return null;
 
-        const progressBarProps: MP.ProgressBarProps = state.display.progressBar;
+        const progressBarProps: MP.ProgressBar = state.display.progressBar;
 
         return <ProgressBar {...progressBarProps} />;
     };
@@ -34,7 +43,7 @@ const MessagePanel: React.FC = () => {
     return (
         <div className='message-panel'>
             {renderSpinner()}
-            {state.display.text}
+            {renderText()}
             {renderProgressBar()}
         </div>
     );

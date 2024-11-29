@@ -36,7 +36,7 @@ const useNumberPrompt = ({
 }: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
     const { printPromptResponse } = useHistoryLogger();
-    const { setMessageText, clearDisplay } = useMessagePanel();
+    const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     const initValue = useMemo(() => {
         return Math.max(defaultValue, min);
@@ -128,7 +128,7 @@ const useNumberPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            setMessageText('Please fill out this field.');
+            setMessageAlert('Please fill out this field.');
             clear();
             return;
         }
@@ -136,13 +136,13 @@ const useNumberPrompt = ({
         const numberValue: number = parseFloat(value);
 
         if (numberValue < min) {
-            setMessageText(`Minimum value is ${min}.`);
+            setMessageAlert(`Minimum value is ${min}.`);
             clear();
             return;
         }
 
         if (numberValue > max) {
-            setMessageText(`Maximum value is ${max}.`);
+            setMessageAlert(`Maximum value is ${max}.`);
             clear();
             return;
         }
@@ -157,7 +157,7 @@ const useNumberPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setMessageText(validationMessage);
+            setMessageAlert(validationMessage);
             return;
         }
 

@@ -24,7 +24,7 @@ const usePasswordPrompt = ({
 }: UsePasswordPromptProps) => {
     const [value, setValue] = useState<string>('');
     const { printPromptResponse } = useHistoryLogger();
-    const { setMessageText, clearDisplay } = useMessagePanel();
+    const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         clearDisplay();
@@ -34,7 +34,7 @@ const usePasswordPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            setMessageText('Please fill out this field.');
+            setMessageAlert('Please fill out this field.');
             return;
         }
 
@@ -48,7 +48,7 @@ const usePasswordPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setMessageText(validationMessage);
+            setMessageAlert(validationMessage);
             return;
         }
 

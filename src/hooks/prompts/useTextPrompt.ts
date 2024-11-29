@@ -31,7 +31,7 @@ const useTextPrompt = ({
 }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
     const { printPromptResponse } = useHistoryLogger();
-    const { setMessageText, clearDisplay } = useMessagePanel();
+    const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
         setValue(defaultValue);
@@ -70,7 +70,7 @@ const useTextPrompt = ({
         }
 
         if (required && !formattedValue) {
-            setMessageText('Please fill out this field.');
+            setMessageAlert('Please fill out this field.');
             return;
         }
 
@@ -84,7 +84,7 @@ const useTextPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setMessageText(validationMessage);
+            setMessageAlert(validationMessage);
             return;
         }
 

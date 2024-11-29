@@ -28,7 +28,7 @@ const useDatePrompt = ({
     const [stringValue, setStringValue] = useState<string>(defaultValue);
     const [dateValue, setDateValue] = useState<Date | null>(parseDate(defaultValue));
     const { printPromptResponse } = useHistoryLogger();
-    const { setMessageText, clearDisplay } = useMessagePanel();
+    const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
         setStringValue(defaultValue);
@@ -48,7 +48,7 @@ const useDatePrompt = ({
 
     const submit = () => {
         if (required && !dateValue) {
-            setMessageText('Invalid date.');
+            setMessageAlert('Invalid date.');
             return;
         }
 
@@ -62,7 +62,7 @@ const useDatePrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setMessageText(validationMessage);
+            setMessageAlert(validationMessage);
             return;
         }
 

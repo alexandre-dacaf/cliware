@@ -1,30 +1,26 @@
 import React from 'react';
 import { ensureArray } from 'services';
-import { Content } from 'types';
-// import './HistoryEntry.scss';
+import { Content, MessagePanel } from 'types';
+import Spinner from './Spinner';
+import './RichText.scss';
 
 interface RichTextProps {
-    content: Content.Text.RichTextLine | Content.Text.RichTextLine[];
+    content: Content.Text.RichText;
 }
 
 const RichText: React.FC<RichTextProps> = ({ content }) => {
-    const contentArray = ensureArray(content);
-    const richTextLineArray = contentArray.map((line) => ensureArray(line));
+    const richTextSpanArray = ensureArray(content);
 
     return (
         <div className='rich-text'>
-            {richTextLineArray.map((line, lineIndex) => {
+            {richTextSpanArray.map((span, index) => {
+                const style = getSpanStyle({ color: span.color });
+
                 return (
-                    <div key={lineIndex}>
-                        {line.map((span, spanIndex) => {
-                            const style = getSpanStyle({ color: span.color });
-                            return (
-                                <span key={spanIndex} style={style}>
-                                    {span.text}
-                                </span>
-                            );
-                        })}
-                    </div>
+                    <span key={index} style={style}>
+                        {renderSpinner(span.spinner)}
+                        {span.text}
+                    </span>
                 );
             })}
         </div>
@@ -76,11 +72,22 @@ const getSpanStyle = (style: StyleProps): React.CSSProperties => {
         'neutral-light': '#c9c9c9',
     };
 
-    const colorName = style.color ?? 'neutral-500';
+    const colorName = style.color ?? 'neutral-900';
 
     return {
         color: colors[colorName],
     };
+};
+
+const renderSpinner = (spinner: MessagePanel.Spinner | undefined) => {
+    if (!spinner) return null;
+
+    return (
+        <span>
+            <Spinner {...spinner} />
+            &nbsp;
+        </span>
+    );
 };
 
 RichText.displayName = 'RichText';

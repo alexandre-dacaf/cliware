@@ -244,7 +244,7 @@ export namespace Terminal {
               type: 'LOG_HISTORY_ENTRY';
               payload: LogHistoryEntryPayload;
           }
-        | { type: 'SET_MESSAGE_TEXT'; payload: string | null }
+        | { type: 'SET_MESSAGE_TEXT'; payload: Content.Text.RichText | null }
         | { type: 'SET_SPINNER'; payload: MessagePanel.Spinner | null }
         | { type: 'SET_PROGRESS_BAR_STYLE'; payload: MessagePanel.ProgressBarStyle | null }
         | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
@@ -287,7 +287,7 @@ export namespace History {
 
     export interface TextHistoryEntry extends BaseHistoryEntry {
         type: 'text';
-        content: Content.Text.RichTextLine;
+        content: Content.Text.RichText;
     }
 
     export interface JsonHistoryEntry extends BaseHistoryEntry {
@@ -303,9 +303,9 @@ export namespace History {
 
 export namespace MessagePanel {
     export interface Display {
-        text?: string | null;
+        text?: Content.Text.RichText | null;
         spinner?: Spinner | null;
-        progressBar?: ProgressBarProps | null;
+        progressBar?: ProgressBar | null;
     }
 
     export interface Spinner {
@@ -325,31 +325,27 @@ export namespace MessagePanel {
         | 'dots9'
         | 'line'
         | 'arc'
-        | 'circleHalves';
+        | 'circleHalves'
+        | 'ellipsis';
 
-    export interface ProgressBarProps {
+    export interface ProgressBar {
         percentage: number;
-        trackStyle?: React.CSSProperties;
-        barStyle?: React.CSSProperties;
-        animationKeyframes?: string;
         color?: Content.Palette.ColorName;
     }
 
     export interface ProgressBarStyle {
-        trackStyle?: React.CSSProperties;
-        barStyle?: React.CSSProperties;
-        animationKeyframes?: string;
         color?: Content.Palette.ColorName;
     }
 }
 
 export namespace Content {
     export namespace Text {
-        export type RichTextLine = RichTextSpan | RichTextSpan[];
+        export type RichText = RichTextSpan | RichTextSpan[];
 
         export interface RichTextSpan {
             color?: Content.Palette.ColorName;
-            text: string;
+            text?: string;
+            spinner?: MessagePanel.Spinner;
         }
     }
 
@@ -411,7 +407,8 @@ export namespace Content {
 
 export namespace Hooks {
     export interface UseMessagePanelMethods {
-        setMessageText: (text: string) => void;
+        setMessageText: (text: Content.Text.RichText | null) => void;
+        setMessageAlert: (text: string) => void;
         setSpinner: (spinner: MessagePanel.Spinner) => void;
         setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
         updateProgressBarPercentage: (percentage: number) => void;
@@ -420,7 +417,7 @@ export namespace Hooks {
 
     export interface UseHistoryLoggerMethods {
         print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
-        printText: (content: Content.Text.RichTextLine) => void;
+        printText: (content: Content.Text.RichText) => void;
         printCommand: (message: string) => void;
         printCommandNotFound: (commandString: string) => void;
         printPromptResponse: (message: string) => void;

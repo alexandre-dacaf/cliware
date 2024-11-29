@@ -29,7 +29,7 @@ const useListPrompt = ({
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
     const { printPromptResponse } = useHistoryLogger();
-    const { setMessageText, clearDisplay } = useMessagePanel();
+    const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
         let splitContent = value.split(separator);
@@ -49,7 +49,7 @@ const useListPrompt = ({
 
     const submit = () => {
         if (required && list.length === 0) {
-            setMessageText('Please fill out this field.');
+            setMessageAlert('Please fill out this field.');
             return;
         }
 
@@ -63,7 +63,7 @@ const useListPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setMessageText(validationMessage);
+            setMessageAlert(validationMessage);
             return;
         }
 

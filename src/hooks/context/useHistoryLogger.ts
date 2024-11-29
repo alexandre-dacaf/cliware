@@ -14,7 +14,7 @@ const useHistoryLogger = (): Hooks.UseHistoryLoggerMethods => {
         });
     };
 
-    const printText = (content: Content.Text.RichTextSpan | Content.Text.RichTextSpan[]) => {
+    const printText = (content: Content.Text.RichText) => {
         const contentArray = ensureArray(content);
         print({ type: 'text', content: contentArray });
     };

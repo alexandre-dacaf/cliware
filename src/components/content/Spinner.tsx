@@ -129,6 +129,7 @@ const getSpinnerFrames = (name: MessagePanel.SpinnerName) => {
         line: ['-', '\\', '|', '/'],
         arc: ['◜', '◠', '◝', '◞', '◡', '◟'],
         circleHalves: ['◐', '◓', '◑', '◒'],
+        ellipsis: ['   ', '.  ', '.. ', '...'],
     };
 
     return spinners[name];
