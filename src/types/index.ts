@@ -305,7 +305,6 @@ export namespace History {
 export namespace MessagePanel {
     export interface Display {
         text?: Text.RichText | null;
-        spinner?: Text.Spinner | null;
         progressBar?: ProgressBar | null;
     }
 
@@ -364,6 +363,12 @@ export namespace Table {
 }
 
 export namespace Color {
+    export interface Theme {
+        palette: Palette;
+    }
+
+    export type Palette = Record<ColorName, string>;
+
     export type ColorName =
         | 'blue'
         | 'blue-dark'

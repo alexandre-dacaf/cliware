@@ -34,7 +34,7 @@ export const createTodo: Action.ActionFunction = async (
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     context.messagePanel.setProgressBarStyle({
-        color: 'green',
+        color: 'teal',
     });
 
     context.messagePanel.updateProgressBarPercentage(50);

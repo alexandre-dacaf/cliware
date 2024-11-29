@@ -1,14 +1,22 @@
+import React from 'react';
+import { defaultTheme } from 'styles/theme';
 import { MessagePanel } from 'types';
 import './ProgressBar.scss';
 
 const ProgressBar: React.FC<MessagePanel.ProgressBar> = ({ percentage, color }) => {
-    const colorClass = color ? `color--${color}` : 'color--blue';
+    const colorPalette = defaultTheme.palette;
+    const colorName = color ?? 'neutral-900';
+    const colorValue = colorPalette[colorName];
 
-    const style = { width: `${percentage}%` };
+    const trackStyle: React.CSSProperties = { border: `solid 1px ${colorValue}` };
+    const barStyle: React.CSSProperties = {
+        width: `${percentage}%`,
+        backgroundColor: colorValue,
+    };
 
     return (
-        <div className={`progress-track ${colorClass}`}>
-            <div className='progress-bar' style={style} />
+        <div className='progress-track' style={trackStyle}>
+            <div className='progress-bar' style={barStyle} />
         </div>
     );
 };

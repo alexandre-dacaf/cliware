@@ -11,19 +11,6 @@ const MessagePanel: React.FC = () => {
 
     if (!state.display) return null;
 
-    const renderSpinner = () => {
-        if (!state.display?.spinner) return null;
-
-        const spinnerProps: Text.Spinner = state.display.spinner;
-
-        return (
-            <span>
-                <Spinner {...spinnerProps} />
-                &nbsp;
-            </span>
-        );
-    };
-
     const renderText = () => {
         if (!state.display?.text) return null;
 
@@ -42,7 +29,6 @@ const MessagePanel: React.FC = () => {
 
     return (
         <div className='message-panel'>
-            {renderSpinner()}
             {renderText()}
             {renderProgressBar()}
         </div>
