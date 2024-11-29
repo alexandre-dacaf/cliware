@@ -36,7 +36,7 @@ const useSelectPrompt = ({
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
     const { printPromptResponse } = useHistoryLogger();
-    const { setDisplayText, clearDisplay } = useMessagePanel();
+    const { setMessageText, clearDisplay } = useMessagePanel();
 
     const totalPages = useMemo(
         () => Math.ceil(filteredSuggestions.length / itemsPerPage),
@@ -170,7 +170,7 @@ const useSelectPrompt = ({
 
     const submit = () => {
         if (required && !value) {
-            setDisplayText('Please fill out this field.');
+            setMessageText('Please fill out this field.');
             return;
         }
 
@@ -184,7 +184,7 @@ const useSelectPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setDisplayText(validationMessage);
+            setMessageText(validationMessage);
             return;
         }
 

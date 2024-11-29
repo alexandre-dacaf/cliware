@@ -3,9 +3,9 @@ import { Action, Pipeline } from 'types';
 export const createTodo: Action.ActionFunction = async (
     context: Pipeline.Context
 ): Promise<any> => {
-    context.messagePanel.setDisplayText('Executando...');
+    context.messagePanel.setMessageText('Executando...');
 
-    context.messagePanel.setDisplaySpinner({ name: 'dots3' });
+    context.messagePanel.setSpinner({ name: 'dots3' });
 
     context.messagePanel.setProgressBarStyle({
         color: 'red',

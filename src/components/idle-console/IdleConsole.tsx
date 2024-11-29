@@ -1,16 +1,16 @@
 import React, { useRef, useEffect } from 'react';
-import useCommandInput from 'hooks/command-input/useCommandInput';
+import useIdleConsole from 'hooks/idle-console/useIdleConsole';
 import { Command } from 'types';
-import './CommandInput.scss';
+import './IdleConsole.scss';
 
-interface CommandInputProps {
+interface IdleConsoleProps {
     availableCommands: string[];
     itemsPerPage?: number;
     onSubmit: (commandString: string, commandArgs: Command.Args) => void;
     isActive: boolean;
 }
 
-const CommandInput: React.FC<CommandInputProps> = ({
+const IdleConsole: React.FC<IdleConsoleProps> = ({
     availableCommands,
     itemsPerPage = 10,
     onSubmit,
@@ -18,7 +18,7 @@ const CommandInput: React.FC<CommandInputProps> = ({
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { value, pageCommands, pageIndex, handleChange, currentPage, totalPages, handleKeyDown } =
-        useCommandInput({
+        useIdleConsole({
             availableCommands,
             itemsPerPage,
             onSubmit,
@@ -74,4 +74,4 @@ const CommandInput: React.FC<CommandInputProps> = ({
     );
 };
 
-export default CommandInput;
+export default IdleConsole;

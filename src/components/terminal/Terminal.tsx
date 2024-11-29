@@ -1,14 +1,15 @@
-import React, { useRef, useEffect, useContext, useMemo } from 'react';
 import { blueprint } from 'blueprints/blueprint';
+import History from 'components/history/History';
+import HistoryBlock from 'components/history/HistoryBlock';
+import IdleConsole from 'components/idle-console/IdleConsole';
+import MessagePanel from 'components/message-panel/MessagePanel';
 import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
-import { Blueprint, Command } from 'types';
-import { TerminalHistory, TerminalHistoryGroup } from 'components/outputs/TerminalHistory';
-import TaskManager from './managers/TaskManager';
-import Display from 'components/outputs/Display';
-import CommandInput from 'components/command-input/CommandInput';
-import { v4 as uuidv4 } from 'uuid';
-import './Terminal.scss';
 import useHistoryLogger from 'hooks/context/useHistoryLogger';
+import React, { useContext, useEffect, useRef } from 'react';
+import { Command } from 'types';
+import { v4 as uuidv4 } from 'uuid';
+import TaskManager from './managers/TaskManager';
+import './Terminal.scss';
 
 interface TerminalProps {
     isActive: boolean;
@@ -70,26 +71,24 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
             }
             ref={terminalRef}
         >
-            <TerminalHistory />
+            <History />
 
             <div className='current-command-container'>
                 {terminalState.printHistory
                     .filter((group) => group.id === terminalState.currentHistoryGroupId)
                     .map((group) => {
-                        return (
-                            <TerminalHistoryGroup group={group} className='current-history-group' />
-                        );
+                        return <HistoryBlock group={group} className='current-history-group' />;
                     })}
                 {terminalState.command ? (
                     <TaskManager isActive={isActive} />
                 ) : (
-                    <CommandInput
+                    <IdleConsole
                         availableCommands={availableCommands.current}
                         onSubmit={handleCommandSubmit}
                         isActive={isActive}
                     />
                 )}
-                <Display />
+                <MessagePanel />
             </div>
         </div>
     );

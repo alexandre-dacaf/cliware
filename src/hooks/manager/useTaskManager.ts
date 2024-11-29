@@ -189,7 +189,7 @@ const useTaskManager = () => {
     };
 
     const endPipelineAndStandby = () => {
-        terminalDispatch({ type: 'STANDBY' });
+        terminalDispatch({ type: 'SET_IDLE_CONSOLE' });
     };
 
     return {

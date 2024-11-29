@@ -14,7 +14,7 @@ export const terminalReducer = (
     action: Terminal.TerminalAction
 ): Terminal.TerminalState => {
     switch (action.type) {
-        case 'STANDBY': {
+        case 'SET_IDLE_CONSOLE': {
             return {
                 ...state,
                 commandArgs: null,
@@ -35,7 +35,7 @@ export const terminalReducer = (
                 { type: 'text', content: { color: 'blue', text: `> ${commandString}` } },
             ];
 
-            const newHistoryGroup: History.HistoryGroup = { id: newGroupId, entries };
+            const newHistoryGroup: History.HistoryBlock = { id: newGroupId, entries };
             const history = state.printHistory;
 
             return {
@@ -63,7 +63,7 @@ export const terminalReducer = (
                 },
             ];
 
-            const newHistoryGroup: History.HistoryGroup = { id: newGroupId, entries };
+            const newHistoryGroup: History.HistoryBlock = { id: newGroupId, entries };
             const history = state.printHistory;
 
             return {
@@ -119,10 +119,10 @@ export const terminalReducer = (
                 printHistory: [...remainingGroups, newHistoryGroup],
             };
         }
-        case 'SET_DISPLAY_TEXT': {
+        case 'SET_MESSAGE_TEXT': {
             return { ...state, display: { ...state.display, text: action.payload } };
         }
-        case 'SET_DISPLAY_SPINNER': {
+        case 'SET_SPINNER': {
             return { ...state, display: { ...state.display, spinner: action.payload } };
         }
         case 'SET_PROGRESS_BAR_STYLE': {

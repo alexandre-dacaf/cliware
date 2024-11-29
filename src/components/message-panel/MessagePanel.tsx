@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { TerminalContext } from 'context/TerminalContext';
-import { MessagePanel } from 'types';
+import { MessagePanel as MP } from 'types';
 import Spinner from './Spinner';
 import ProgressBar from './ProgressBar';
-import './Display.scss';
+import './MessagePanel.scss';
 
-const Display: React.FC = () => {
+const MessagePanel: React.FC = () => {
     const { state } = useContext(TerminalContext);
 
     if (!state.display) return null;
@@ -13,7 +13,7 @@ const Display: React.FC = () => {
     const renderSpinner = () => {
         if (!state.display?.spinner) return null;
 
-        const spinnerProps: MessagePanel.SpinnerProps = state.display.spinner;
+        const spinnerProps: MP.Spinner = state.display.spinner;
 
         return (
             <span>
@@ -26,13 +26,13 @@ const Display: React.FC = () => {
     const renderProgressBar = () => {
         if (!state.display?.progressBar) return null;
 
-        const progressBarProps: MessagePanel.ProgressBarProps = state.display.progressBar;
+        const progressBarProps: MP.ProgressBarProps = state.display.progressBar;
 
         return <ProgressBar {...progressBarProps} />;
     };
 
     return (
-        <div className='terminal-transient'>
+        <div className='message-panel'>
             {renderSpinner()}
             {state.display.text}
             {renderProgressBar()}
@@ -40,6 +40,6 @@ const Display: React.FC = () => {
     );
 };
 
-Display.displayName = 'Display';
+MessagePanel.displayName = 'Display';
 
-export default Display;
+export default MessagePanel;

@@ -225,13 +225,13 @@ export namespace Terminal {
     export interface TerminalState {
         commandArgs: Command.Args | null;
         command: Command.Blueprint | null;
-        currentHistoryGroupId: History.HistoryGroupId;
-        printHistory: History.HistoryGroup[];
+        currentHistoryGroupId: History.HistoryBlockId;
+        printHistory: History.HistoryBlock[];
         display: MessagePanel.Display | null;
     }
 
     export type TerminalAction =
-        | { type: 'STANDBY' }
+        | { type: 'SET_IDLE_CONSOLE' }
         | {
               type: 'START_NEW_COMMAND';
               payload: StartNewCommandPayload;
@@ -244,14 +244,14 @@ export namespace Terminal {
               type: 'LOG_HISTORY_ENTRY';
               payload: LogHistoryEntryPayload;
           }
-        | { type: 'SET_DISPLAY_TEXT'; payload: string | null }
-        | { type: 'SET_DISPLAY_SPINNER'; payload: MessagePanel.SpinnerProps | null }
+        | { type: 'SET_MESSAGE_TEXT'; payload: string | null }
+        | { type: 'SET_SPINNER'; payload: MessagePanel.Spinner | null }
         | { type: 'SET_PROGRESS_BAR_STYLE'; payload: MessagePanel.ProgressBarStyle | null }
         | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
         | { type: 'CLEAR_DISPLAY' };
 
     export interface StartNewCommandPayload {
-        currentGroupId: History.HistoryGroupId;
+        currentGroupId: History.HistoryBlockId;
         newGroupId: string;
         commandString: string;
         command: Command.Blueprint;
@@ -259,24 +259,24 @@ export namespace Terminal {
     }
 
     export interface CommandNotFoundPayload {
-        currentGroupId: History.HistoryGroupId;
+        currentGroupId: History.HistoryBlockId;
         newGroupId: string;
         commandString: string;
     }
 
     export interface LogHistoryEntryPayload {
-        currentGroupId: History.HistoryGroupId;
+        currentGroupId: History.HistoryBlockId;
         entries: History.HistoryEntry | History.HistoryEntry[];
     }
 }
 
 export namespace History {
-    export interface HistoryGroup {
-        id: HistoryGroupId;
+    export interface HistoryBlock {
+        id: HistoryBlockId;
         entries: HistoryEntry[];
     }
 
-    export type HistoryGroupId = string | null;
+    export type HistoryBlockId = string | null;
 
     export type HistoryEntry = TextHistoryEntry | JsonHistoryEntry | TableHistoryEntry;
 
@@ -287,7 +287,7 @@ export namespace History {
 
     export interface TextHistoryEntry extends BaseHistoryEntry {
         type: 'text';
-        content: Content.Text.TextSpan | Content.Text.TextSpan[];
+        content: Content.Text.RichTextLine;
     }
 
     export interface JsonHistoryEntry extends BaseHistoryEntry {
@@ -304,22 +304,16 @@ export namespace History {
 export namespace MessagePanel {
     export interface Display {
         text?: string | null;
-        spinner?: SpinnerProps | null;
+        spinner?: Spinner | null;
         progressBar?: ProgressBarProps | null;
     }
 
-    export interface SpinnerProps {
-        frames: string[];
-        interval: number;
+    export interface Spinner {
+        name: SpinnerName;
+        interval?: number;
     }
 
-    export interface PrinterDisplayProps {
-        text?: string;
-        spinnerConfig?: SpinnerConfig;
-        progressBar?: ProgressBarProps;
-    }
-
-    export type DefaultSpinnerNames =
+    export type SpinnerName =
         | 'dots'
         | 'dots2'
         | 'dots3'
@@ -333,32 +327,28 @@ export namespace MessagePanel {
         | 'arc'
         | 'circleHalves';
 
-    export interface SpinnerConfig {
-        name?: DefaultSpinnerNames;
-        frames?: string[];
-        interval?: number;
-    }
-
     export interface ProgressBarProps {
         percentage: number;
         trackStyle?: React.CSSProperties;
         barStyle?: React.CSSProperties;
         animationKeyframes?: string;
-        color?: Content.Color.PaletteColor;
+        color?: Content.Palette.ColorName;
     }
 
     export interface ProgressBarStyle {
         trackStyle?: React.CSSProperties;
         barStyle?: React.CSSProperties;
         animationKeyframes?: string;
-        color?: Content.Color.PaletteColor;
+        color?: Content.Palette.ColorName;
     }
 }
 
 export namespace Content {
     export namespace Text {
-        export interface TextSpan {
-            color?: Content.Color.PaletteColor;
+        export type RichTextLine = RichTextSpan | RichTextSpan[];
+
+        export interface RichTextSpan {
+            color?: Content.Palette.ColorName;
             text: string;
         }
     }
@@ -377,35 +367,35 @@ export namespace Content {
         export type TableData = Record<string, any>;
     }
 
-    export namespace Color {
-        export type PaletteColor =
+    export namespace Palette {
+        export type ColorName =
             | 'blue'
             | 'blue-dark'
+            | 'cyan'
+            | 'cyan-dark'
+            | 'cyan-light'
+            | 'teal'
+            | 'teal-dark'
+            | 'teal-light'
             | 'blue-light'
             | 'green'
             | 'green-dark'
             | 'green-light'
-            | 'red'
-            | 'red-dark'
-            | 'red-light'
             | 'yellow'
             | 'yellow-dark'
             | 'yellow-light'
-            | 'purple'
-            | 'purple-dark'
-            | 'purple-light'
             | 'orange'
             | 'orange-dark'
             | 'orange-light'
-            | 'teal'
-            | 'teal-dark'
-            | 'teal-light'
-            | 'cyan'
-            | 'cyan-dark'
-            | 'cyan-light'
+            | 'red'
+            | 'red-dark'
+            | 'red-light'
             | 'pink'
             | 'pink-dark'
             | 'pink-light'
+            | 'purple'
+            | 'purple-dark'
+            | 'purple-light'
             | 'neutral-100'
             | 'neutral-200'
             | 'neutral-300'
@@ -420,35 +410,9 @@ export namespace Content {
 }
 
 export namespace Hooks {
-    export interface UsePrinterMethods {
-        setDisplayText: (text: string) => void;
-        setDisplaySpinner: (config: MessagePanel.SpinnerConfig) => void;
-        setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
-        updateProgressBarPercentage: (percentage: number) => void;
-        clearDisplay: () => void;
-        print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
-        printText: (content: Content.Text.TextSpan | Content.Text.TextSpan[]) => void;
-        printCommand: (message: string) => void;
-        printCommandNotFound: (commandString: string) => void;
-        printPromptResponse: (message: string) => void;
-        printSuccess: (message: string) => void;
-        printAlert: (message: string) => void;
-        printError: (error: any) => void;
-        printTable: (tableContent: Content.Table.TableContent) => void;
-        printJson: (json: object) => void;
-        copyToClipboard: (text: string) => void;
-        downloadAsTxt: (filename: string, content: string) => void;
-        downloadAsCsv: (
-            filename: string,
-            tableContent: Content.Table.TableContent,
-            separator?: string
-        ) => void;
-        downloadAsJson: (filename: string, json: object) => void;
-    }
-
     export interface UseMessagePanelMethods {
-        setDisplayText: (text: string) => void;
-        setDisplaySpinner: (config: MessagePanel.SpinnerConfig) => void;
+        setMessageText: (text: string) => void;
+        setSpinner: (spinner: MessagePanel.Spinner) => void;
         setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
         updateProgressBarPercentage: (percentage: number) => void;
         clearDisplay: () => void;
@@ -456,7 +420,7 @@ export namespace Hooks {
 
     export interface UseHistoryLoggerMethods {
         print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
-        printText: (content: Content.Text.TextSpan | Content.Text.TextSpan[]) => void;
+        printText: (content: Content.Text.RichTextLine) => void;
         printCommand: (message: string) => void;
         printCommandNotFound: (commandString: string) => void;
         printPromptResponse: (message: string) => void;

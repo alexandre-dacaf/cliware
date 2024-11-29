@@ -16,7 +16,7 @@ interface UseCommandInputProps {
     isActive: boolean;
 }
 
-const useCommandInput = ({
+const useIdleConsole = ({
     availableCommands,
     itemsPerPage,
     onSubmit,
@@ -210,4 +210,4 @@ const useCommandInput = ({
     };
 };
 
-export default useCommandInput;
+export default useIdleConsole;

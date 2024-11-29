@@ -46,7 +46,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
 
     const endPipelineAndStandby = () => {
         if (isActive) {
-            terminalDispatch({ type: 'STANDBY' });
+            terminalDispatch({ type: 'SET_IDLE_CONSOLE' });
         }
     };
 

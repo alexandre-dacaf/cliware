@@ -32,7 +32,7 @@ const useSelectPrompt = ({
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
     const [checkedChoices, setCheckedChoices] = useState<Prompt.Choice[]>([]);
     const { printPromptResponse } = useHistoryLogger();
-    const { setDisplayText, clearDisplay } = useMessagePanel();
+    const { setMessageText, clearDisplay } = useMessagePanel();
 
     const formattedChoices = useMemo(
         () =>
@@ -143,7 +143,7 @@ const useSelectPrompt = ({
 
     const submit = () => {
         if (required && checkedChoices.length === 0) {
-            setDisplayText('Choose at least one option.');
+            setMessageText('Choose at least one option.');
             return;
         }
 
@@ -157,7 +157,7 @@ const useSelectPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setDisplayText(validationMessage);
+            setMessageText(validationMessage);
             return;
         }
 
@@ -179,7 +179,7 @@ const useSelectPrompt = ({
                     ? validation
                     : 'Input does not meet the required criteria. Please check and try again.';
 
-            setDisplayText(validationMessage);
+            setMessageText(validationMessage);
             return;
         }
 

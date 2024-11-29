@@ -1,16 +1,17 @@
+import RichText from 'components/content/RichText';
 import React from 'react';
-import './TerminalHistoryEntry.scss';
-import { History, Content } from 'types';
 import { ensureArray } from 'services';
+import { Content, History as H } from 'types';
+import './HistoryEntry.scss';
 
-interface TerminalHistoryEntryProps {
-    entry: History.HistoryEntry;
+interface HistoryEntryProps {
+    entry: H.HistoryEntry;
 }
 
-const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) => {
+const HistoryEntry: React.FC<HistoryEntryProps> = ({ entry }) => {
     switch (entry.type) {
         case 'text':
-            return <TextView content={entry.content} />;
+            return <RichText content={entry.content} />;
         case 'table':
             return <TableView tableContent={entry.content} />;
         case 'json':
@@ -18,29 +19,6 @@ const TerminalHistoryEntry: React.FC<TerminalHistoryEntryProps> = ({ entry }) =>
         default:
             return null;
     }
-};
-
-interface TextViewProps {
-    content: Content.Text.TextSpan | Content.Text.TextSpan[];
-}
-
-const TextView: React.FC<TextViewProps> = ({ content }) => {
-    const contentArray = ensureArray(content);
-
-    return (
-        <div className='terminal-text'>
-            {contentArray.map((textEntryContent, index) => {
-                const color = textEntryContent.color ?? 'neutral-500';
-                const className = `terminal-output terminal--${color}`;
-
-                return (
-                    <span key={index} className={className}>
-                        {textEntryContent.text}
-                    </span>
-                );
-            })}
-        </div>
-    );
 };
 
 interface JsonViewProps {
@@ -81,6 +59,6 @@ const TableView: React.FC<TableViewProps> = ({ tableContent }) => {
     );
 };
 
-TerminalHistoryEntry.displayName = 'TerminalHistoryEntry';
+HistoryEntry.displayName = 'HistoryEntry';
 
-export default TerminalHistoryEntry;
+export default HistoryEntry;

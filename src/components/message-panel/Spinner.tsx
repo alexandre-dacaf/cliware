@@ -1,9 +1,24 @@
+import { useState, useEffect, useMemo } from 'react';
 import { MessagePanel } from 'types';
 
-export const generateSpinnerProps = (
-    spinner?: MessagePanel.SpinnerConfig
-): MessagePanel.SpinnerProps | undefined => {
-    const spinners: Record<MessagePanel.DefaultSpinnerNames, string[]> = {
+const Spinner: React.FC<MessagePanel.Spinner> = (spinner) => {
+    const [currentFrame, setCurrentFrame] = useState(0);
+    const frames = useMemo(() => getSpinnerFrames(spinner.name), [spinner.name]);
+    const defaultInterval = 80;
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentFrame((prevFrame) => (prevFrame + 1) % frames.length);
+        }, spinner.interval ?? defaultInterval);
+
+        return () => clearInterval(interval); // Cleans interval on unmount
+    }, [frames.length]);
+
+    return <span>{frames[currentFrame]}</span>;
+};
+
+const getSpinnerFrames = (name: MessagePanel.SpinnerName) => {
+    const spinners: Record<MessagePanel.SpinnerName, string[]> = {
         dots: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
         dots2: ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷'],
         dots3: ['⠋', '⠙', '⠚', '⠞', '⠖', '⠦', '⠴', '⠲', '⠳', '⠓'],
@@ -116,27 +131,9 @@ export const generateSpinnerProps = (
         circleHalves: ['◐', '◓', '◑', '◒'],
     };
 
-    if (!spinner) {
-        return;
-    }
-
-    const defaulInterval = 80;
-
-    if (spinner.frames) {
-        // Uses custom frames if provided
-        return {
-            frames: spinner.frames,
-            interval: spinner.interval ?? defaulInterval,
-        };
-    }
-
-    if (spinner.name && spinners[spinner.name]) {
-        // Finds frames by name
-        return {
-            frames: spinners[spinner.name],
-            interval: spinner.interval ?? defaulInterval,
-        };
-    }
-
-    return;
+    return spinners[name];
 };
+
+Spinner.displayName = 'Spinner';
+
+export default Spinner;
