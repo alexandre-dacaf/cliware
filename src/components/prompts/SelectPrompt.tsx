@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import useSelectPrompt from 'hooks/prompts/useSelectPrompt';
 import { Prompt } from 'types';
 import './SelectPrompt.scss';
+import { Radio } from 'components/widgets/Radio';
+import { Checkbox } from 'components/widgets/Checkbox';
 
 interface SelectPromptProps {
     message: string;
@@ -72,26 +74,49 @@ const SelectPrompt: React.FC<SelectPromptProps> = ({
         >
             <div className='select-message'>{message}</div>
             <div className='choices-list'>
-                {choices.map((choice, index) => (
-                    <div className='choice' key={index}>
-                        <span
-                            className={`choice-label ${selectedIndex === index ? 'selected' : ''} ${
-                                checkedIndexes.includes(index) ? 'checked' : ''
-                            }`}
-                        >
-                            {choice.label}
-                        </span>
-                        {choice.hint ? (
-                            <span
-                                className={`choice-hint ${
-                                    selectedIndex === index ? 'selected' : ''
-                                }`}
-                            >
-                                {choice.hint}
-                            </span>
-                        ) : null}
-                    </div>
-                ))}
+                {choices.map((choice, index) => {
+                    const isSelected = selectedIndex === index;
+                    const isChecked = checkedIndexes.includes(index);
+
+                    if (!multiselect) {
+                        return (
+                            <Radio
+                                isSelected={isSelected}
+                                label={choice.label}
+                                hint={choice.hint}
+                            />
+                        );
+                    }
+
+                    return (
+                        <Checkbox
+                            isSelected={isSelected}
+                            isChecked={isChecked}
+                            label={choice.label}
+                            hint={choice.hint}
+                        />
+                    );
+                    // return (
+                    //     <div className='choice' key={index}>
+                    //         <span
+                    //             className={`choice-label ${
+                    //                 selectedIndex === index ? 'selected' : ''
+                    //             } ${checkedIndexes.includes(index) ? 'checked' : ''}`}
+                    //         >
+                    //             {choice.label}
+                    //         </span>
+                    //         {choice.hint ? (
+                    //             <span
+                    //                 className={`choice-hint ${
+                    //                     selectedIndex === index ? 'selected' : ''
+                    //                 }`}
+                    //             >
+                    //                 {choice.hint}
+                    //             </span>
+                    //         ) : null}
+                    //     </div>
+                    // );
+                })}
             </div>
             <span className='select-navigation-hint'>
                 <em>Use arrow keys to navigate, Space to (de)select and Enter to confirm.</em>

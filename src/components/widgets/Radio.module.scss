@@ -1,0 +1,42 @@
+@import 'styles/variables';
+
+.radio {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: baseline;
+    gap: 0.5em;
+}
+
+.circle {
+    width: 6px;
+    height: 6px;
+    border-radius: 100%;
+    padding: 2px;
+    overflow: hidden;
+    border: solid 1px $neutral-600;
+    color: $neutral-600;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.selected {
+        background-color: $green;
+        border-color: $green;
+    }
+}
+
+.label {
+    color: $neutral-600;
+
+    &.selected {
+        color: $neutral-light;
+    }
+}
+
+.hint {
+    color: $neutral-600;
+    font-style: italic;
+    font-size: 0.9em;
+}

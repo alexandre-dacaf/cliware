@@ -1,6 +1,6 @@
 import Spinner from 'components/text/Spinner';
 import React from 'react';
-import { ensureArray } from 'services';
+import { ensureArray, getColorValue } from 'services';
 import { defaultTheme } from 'styles/theme';
 import { Color, Text } from 'types';
 import './RichText.scss';
@@ -33,11 +33,10 @@ interface StyleProps {
 }
 
 const getSpanStyle = (style: StyleProps): React.CSSProperties => {
-    const colorPalette = defaultTheme.palette;
-    const colorName = style.color ?? 'neutral-900';
+    const colorValue = getColorValue(style.color ?? 'neutral-900');
 
     return {
-        color: colorPalette[colorName],
+        color: colorValue,
     };
 };
 

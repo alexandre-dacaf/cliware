@@ -1,0 +1,47 @@
+@import 'styles/variables';
+
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.box {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    padding: 2px;
+    overflow: hidden;
+    border: solid 1px $neutral-600;
+    color: $neutral-600;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-radius 80ms ease-in-out;
+
+    &.checked {
+        border-radius: 5px;
+        border-color: $green;
+        background-color: $green;
+    }
+
+    &.selected {
+        border-color: $green;
+    }
+}
+
+.label {
+    color: $neutral-600;
+
+    &.selected {
+        color: $neutral-light;
+    }
+}
+
+.hint {
+    color: $neutral-600;
+    font-style: italic;
+    font-size: 0.9em;
+}
