@@ -1,4 +1,4 @@
-import { Content, Hooks } from 'types';
+import { Table, Hooks } from 'types';
 import { getExtensionFromMimeType, hasValidExtension } from 'services';
 import useHistoryLogger from './useHistoryLogger';
 
@@ -34,7 +34,7 @@ const useFileDownloader = (): Hooks.UseFileDowloaderMethods => {
 
     const downloadAsCsv = (
         filename: string,
-        tableContent: Content.Table.TableContent,
+        tableContent: Table.TableContent,
         separator: string = ','
     ) => {
         const { columns, data } = tableContent;

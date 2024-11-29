@@ -1,20 +1,16 @@
-import { MessagePanel, Hooks, Content } from 'types';
+import { MessagePanel, Hooks, Text } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 
 const useMessagePanel = (): Hooks.UseMessagePanelMethods => {
     const { dispatch } = useContext(TerminalContext);
 
-    const setMessageText = (richText: Content.Text.RichText | null) => {
+    const setMessageText = (richText: Text.RichText | null) => {
         dispatch({ type: 'SET_MESSAGE_TEXT', payload: richText });
     };
 
     const setMessageAlert = (text: string) => {
         setMessageText({ color: 'yellow', text });
-    };
-
-    const setSpinner = (spinner: MessagePanel.Spinner | null) => {
-        dispatch({ type: 'SET_SPINNER', payload: spinner });
     };
 
     const setProgressBarStyle = (style: MessagePanel.ProgressBarStyle | null) => {
@@ -32,7 +28,6 @@ const useMessagePanel = (): Hooks.UseMessagePanelMethods => {
     return {
         setMessageText,
         setMessageAlert,
-        setSpinner,
         setProgressBarStyle,
         updateProgressBarPercentage,
         clearDisplay,

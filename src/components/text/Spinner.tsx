@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { MessagePanel } from 'types';
+import { Text } from 'types';
 
-const Spinner: React.FC<MessagePanel.Spinner> = (spinner) => {
+const Spinner: React.FC<Text.Spinner> = (spinner) => {
     const [currentFrame, setCurrentFrame] = useState(0);
     const frames = useMemo(() => getSpinnerFrames(spinner.name), [spinner.name]);
     const defaultInterval = 80;
@@ -17,8 +17,8 @@ const Spinner: React.FC<MessagePanel.Spinner> = (spinner) => {
     return <span>{frames[currentFrame]}</span>;
 };
 
-const getSpinnerFrames = (name: MessagePanel.SpinnerName) => {
-    const spinners: Record<MessagePanel.SpinnerName, string[]> = {
+const getSpinnerFrames = (name: Text.SpinnerName) => {
+    const spinners: Record<Text.SpinnerName, string[]> = {
         dots: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
         dots2: ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷'],
         dots3: ['⠋', '⠙', '⠚', '⠞', '⠖', '⠦', '⠴', '⠲', '⠳', '⠓'],

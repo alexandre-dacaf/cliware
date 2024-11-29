@@ -1,3 +1,5 @@
+import RichText from 'components/text/RichText';
+
 export interface Blueprint {
     [command: string]: Command.Blueprint;
 }
@@ -244,8 +246,7 @@ export namespace Terminal {
               type: 'LOG_HISTORY_ENTRY';
               payload: LogHistoryEntryPayload;
           }
-        | { type: 'SET_MESSAGE_TEXT'; payload: Content.Text.RichText | null }
-        | { type: 'SET_SPINNER'; payload: MessagePanel.Spinner | null }
+        | { type: 'SET_MESSAGE_TEXT'; payload: Text.RichText | null }
         | { type: 'SET_PROGRESS_BAR_STYLE'; payload: MessagePanel.ProgressBarStyle | null }
         | { type: 'UPDATE_PROGRESS_BAR_PERCENTAGE'; payload: number }
         | { type: 'CLEAR_DISPLAY' };
@@ -287,7 +288,7 @@ export namespace History {
 
     export interface TextHistoryEntry extends BaseHistoryEntry {
         type: 'text';
-        content: Content.Text.RichText;
+        content: Text.RichText;
     }
 
     export interface JsonHistoryEntry extends BaseHistoryEntry {
@@ -297,15 +298,34 @@ export namespace History {
 
     export interface TableHistoryEntry extends BaseHistoryEntry {
         type: 'table';
-        content: Content.Table.TableContent;
+        content: Table.TableContent;
     }
 }
 
 export namespace MessagePanel {
     export interface Display {
-        text?: Content.Text.RichText | null;
-        spinner?: Spinner | null;
+        text?: Text.RichText | null;
+        spinner?: Text.Spinner | null;
         progressBar?: ProgressBar | null;
+    }
+
+    export interface ProgressBar {
+        percentage: number;
+        color?: Color.ColorName;
+    }
+
+    export interface ProgressBarStyle {
+        color?: Color.ColorName;
+    }
+}
+
+export namespace Text {
+    export type RichText = RichTextSpan | RichTextSpan[];
+
+    export interface RichTextSpan {
+        color?: Color.ColorName;
+        text?: string;
+        spinner?: Spinner;
     }
 
     export interface Spinner {
@@ -327,89 +347,67 @@ export namespace MessagePanel {
         | 'arc'
         | 'circleHalves'
         | 'ellipsis';
-
-    export interface ProgressBar {
-        percentage: number;
-        color?: Content.Palette.ColorName;
-    }
-
-    export interface ProgressBarStyle {
-        color?: Content.Palette.ColorName;
-    }
 }
 
-export namespace Content {
-    export namespace Text {
-        export type RichText = RichTextSpan | RichTextSpan[];
+export namespace Table {
+    export type TableContent = {
+        columns: TableColumn[];
+        data: TableData[];
+    };
 
-        export interface RichTextSpan {
-            color?: Content.Palette.ColorName;
-            text?: string;
-            spinner?: MessagePanel.Spinner;
-        }
-    }
+    export type TableColumn = {
+        key: string;
+        header: string;
+    };
 
-    export namespace Table {
-        export type TableContent = {
-            columns: TableColumn[];
-            data: TableData[];
-        };
+    export type TableData = Record<string, any>;
+}
 
-        export type TableColumn = {
-            key: string;
-            header: string;
-        };
-
-        export type TableData = Record<string, any>;
-    }
-
-    export namespace Palette {
-        export type ColorName =
-            | 'blue'
-            | 'blue-dark'
-            | 'cyan'
-            | 'cyan-dark'
-            | 'cyan-light'
-            | 'teal'
-            | 'teal-dark'
-            | 'teal-light'
-            | 'blue-light'
-            | 'green'
-            | 'green-dark'
-            | 'green-light'
-            | 'yellow'
-            | 'yellow-dark'
-            | 'yellow-light'
-            | 'orange'
-            | 'orange-dark'
-            | 'orange-light'
-            | 'red'
-            | 'red-dark'
-            | 'red-light'
-            | 'pink'
-            | 'pink-dark'
-            | 'pink-light'
-            | 'purple'
-            | 'purple-dark'
-            | 'purple-light'
-            | 'neutral-100'
-            | 'neutral-200'
-            | 'neutral-300'
-            | 'neutral-400'
-            | 'neutral-500'
-            | 'neutral-600'
-            | 'neutral-700'
-            | 'neutral-800'
-            | 'neutral-900'
-            | 'neutral-light';
-    }
+export namespace Color {
+    export type ColorName =
+        | 'blue'
+        | 'blue-dark'
+        | 'cyan'
+        | 'cyan-dark'
+        | 'cyan-light'
+        | 'teal'
+        | 'teal-dark'
+        | 'teal-light'
+        | 'blue-light'
+        | 'green'
+        | 'green-dark'
+        | 'green-light'
+        | 'yellow'
+        | 'yellow-dark'
+        | 'yellow-light'
+        | 'orange'
+        | 'orange-dark'
+        | 'orange-light'
+        | 'red'
+        | 'red-dark'
+        | 'red-light'
+        | 'pink'
+        | 'pink-dark'
+        | 'pink-light'
+        | 'purple'
+        | 'purple-dark'
+        | 'purple-light'
+        | 'neutral-100'
+        | 'neutral-200'
+        | 'neutral-300'
+        | 'neutral-400'
+        | 'neutral-500'
+        | 'neutral-600'
+        | 'neutral-700'
+        | 'neutral-800'
+        | 'neutral-900'
+        | 'neutral-light';
 }
 
 export namespace Hooks {
     export interface UseMessagePanelMethods {
-        setMessageText: (text: Content.Text.RichText | null) => void;
+        setMessageText: (text: Text.RichText | null) => void;
         setMessageAlert: (text: string) => void;
-        setSpinner: (spinner: MessagePanel.Spinner) => void;
         setProgressBarStyle: (style: MessagePanel.ProgressBarStyle | null) => void;
         updateProgressBarPercentage: (percentage: number) => void;
         clearDisplay: () => void;
@@ -417,14 +415,14 @@ export namespace Hooks {
 
     export interface UseHistoryLoggerMethods {
         print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
-        printText: (content: Content.Text.RichText) => void;
+        printText: (content: Text.RichText) => void;
         printCommand: (message: string) => void;
         printCommandNotFound: (commandString: string) => void;
         printPromptResponse: (message: string) => void;
         printSuccess: (message: string) => void;
         printAlert: (message: string) => void;
         printError: (error: any) => void;
-        printTable: (tableContent: Content.Table.TableContent) => void;
+        printTable: (tableContent: Table.TableContent) => void;
         printJson: (json: object) => void;
     }
 
@@ -436,7 +434,7 @@ export namespace Hooks {
         downloadAsTxt: (filename: string, content: string) => void;
         downloadAsCsv: (
             filename: string,
-            tableContent: Content.Table.TableContent,
+            tableContent: Table.TableContent,
             separator?: string
         ) => void;
         downloadAsJson: (filename: string, json: object) => void;

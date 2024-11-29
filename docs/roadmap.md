@@ -8,9 +8,9 @@
 - [x] 2.1.2 - Change .css to .scss and adjust
 - [x] 2.1.3 - Create global styles and variables
 - [ ] 2.1.4 - Create .module.scss for the rest of the components
-- [ ] 5.4.1 - Enhance nomenclature of output components (history entry, terminal history, setDisplayText, etc)
-- [ ] 5.4.2 - Improve cohesion of usePrinter functions (break into more focused hooks)
-- [ ] 5.4.3 - Improve typing and organize type files
+- [x] 5.4.1 - Enhance nomenclature of output components (history entry, terminal history, setDisplayText, etc)
+- [x] 5.4.2 - Improve cohesion of usePrinter functions (break into more focused hooks)
+- [x] 5.4.3 - Improve typing and organize type files
 
 ### Extras
 

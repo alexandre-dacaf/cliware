@@ -5,10 +5,11 @@ export const createTodo: Action.ActionFunction = async (
 ): Promise<any> => {
     context.messagePanel.setMessageText([
         { color: 'blue', spinner: { name: 'dots3' } },
-        { color: 'teal', text: 'Executando' },
+        { color: 'teal', text: ' Executando' },
         { color: 'pink', spinner: { name: 'ellipsis', interval: 400 } },
+        { color: 'red', text: ' ' },
         { color: 'yellow', spinner: { name: 'circleHalves' } },
-        { color: 'red', text: 'Executando...' },
+        { color: 'red', text: ' Executando...' },
     ]);
 
     // context.messagePanel.setSpinner({ name: 'dots3' });
@@ -52,5 +53,5 @@ export const createTodo: Action.ActionFunction = async (
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     context.messagePanel.updateProgressBarPercentage(100);
-    await new Promise((resolve) => setTimeout(resolve, 4000000));
+    await new Promise((resolve) => setTimeout(resolve, 400));
 };

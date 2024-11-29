@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { TerminalContext } from 'context/TerminalContext';
-import { Content, MessagePanel as MP } from 'types';
-import Spinner from '../content/Spinner';
+import { Text, MessagePanel as MP } from 'types';
+import Spinner from '../text/Spinner';
 import ProgressBar from './ProgressBar';
 import './MessagePanel.scss';
-import RichText from 'components/content/RichText';
+import RichText from 'components/text/RichText';
 
 const MessagePanel: React.FC = () => {
     const { state } = useContext(TerminalContext);
@@ -14,7 +14,7 @@ const MessagePanel: React.FC = () => {
     const renderSpinner = () => {
         if (!state.display?.spinner) return null;
 
-        const spinnerProps: MP.Spinner = state.display.spinner;
+        const spinnerProps: Text.Spinner = state.display.spinner;
 
         return (
             <span>
@@ -27,7 +27,7 @@ const MessagePanel: React.FC = () => {
     const renderText = () => {
         if (!state.display?.text) return null;
 
-        const textProps: Content.Text.RichText = state.display.text;
+        const textProps: Text.RichText = state.display.text;
 
         return <RichText content={textProps} />;
     };

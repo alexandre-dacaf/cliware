@@ -1,11 +1,11 @@
+import Spinner from 'components/text/Spinner';
 import React from 'react';
 import { ensureArray } from 'services';
-import { Content, MessagePanel } from 'types';
-import Spinner from './Spinner';
+import { Color, Text } from 'types';
 import './RichText.scss';
 
 interface RichTextProps {
-    content: Content.Text.RichText;
+    content: Text.RichText;
 }
 
 const RichText: React.FC<RichTextProps> = ({ content }) => {
@@ -28,7 +28,7 @@ const RichText: React.FC<RichTextProps> = ({ content }) => {
 };
 
 interface StyleProps {
-    color?: Content.Palette.ColorName;
+    color?: Color.ColorName;
 }
 
 const getSpanStyle = (style: StyleProps): React.CSSProperties => {
@@ -79,15 +79,10 @@ const getSpanStyle = (style: StyleProps): React.CSSProperties => {
     };
 };
 
-const renderSpinner = (spinner: MessagePanel.Spinner | undefined) => {
+const renderSpinner = (spinner: Text.Spinner | undefined) => {
     if (!spinner) return null;
 
-    return (
-        <span>
-            <Spinner {...spinner} />
-            &nbsp;
-        </span>
-    );
+    return <Spinner {...spinner} />;
 };
 
 RichText.displayName = 'RichText';

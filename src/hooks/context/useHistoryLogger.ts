@@ -1,4 +1,4 @@
-import { History, Content, Hooks } from 'types';
+import { History, Table, Text, Hooks } from 'types';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,7 +14,7 @@ const useHistoryLogger = (): Hooks.UseHistoryLoggerMethods => {
         });
     };
 
-    const printText = (content: Content.Text.RichText) => {
+    const printText = (content: Text.RichText) => {
         const contentArray = ensureArray(content);
         print({ type: 'text', content: contentArray });
     };
@@ -57,7 +57,7 @@ const useHistoryLogger = (): Hooks.UseHistoryLoggerMethods => {
         printText({ color: 'red', text });
     };
 
-    const printTable = (tableContent: Content.Table.TableContent) => {
+    const printTable = (tableContent: Table.TableContent) => {
         print({ type: 'table', content: tableContent });
     };
 

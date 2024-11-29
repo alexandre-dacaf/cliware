@@ -1,7 +1,6 @@
-import RichText from 'components/content/RichText';
+import RichText from 'components/text/RichText';
 import React from 'react';
-import { ensureArray } from 'services';
-import { Content, History as H } from 'types';
+import { Table, History as H } from 'types';
 import './HistoryEntry.scss';
 
 interface HistoryEntryProps {
@@ -30,7 +29,7 @@ const JsonView: React.FC<JsonViewProps> = ({ json }) => {
 };
 
 interface TableViewProps {
-    tableContent: Content.Table.TableContent;
+    tableContent: Table.TableContent;
 }
 
 const TableView: React.FC<TableViewProps> = ({ tableContent }) => {

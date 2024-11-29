@@ -122,9 +122,6 @@ export const terminalReducer = (
         case 'SET_MESSAGE_TEXT': {
             return { ...state, display: { ...state.display, text: action.payload } };
         }
-        case 'SET_SPINNER': {
-            return { ...state, display: { ...state.display, spinner: action.payload } };
-        }
         case 'SET_PROGRESS_BAR_STYLE': {
             if (action.payload === null) {
                 return {

@@ -11,7 +11,7 @@ export const blueprint: Blueprint = {
             selectPromptType: {
                 type: 'prompt',
                 promptType: 'select',
-                message: 'Selecione o tipo de prompt que deseja utilizar:',
+                message: 'Selecione o tipo de          prompt que deseja utilizar:',
                 choices: [
                     { label: 'Texto', value: 'text' },
                     { label: 'Toggle', value: 'toggle' },
