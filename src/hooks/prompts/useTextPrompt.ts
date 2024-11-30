@@ -38,8 +38,6 @@ const useTextPrompt = ({
     }, [defaultValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        clearDisplay();
-
         let inputValue = event.target.value;
         inputValue = getMaskFunction(mask)(inputValue);
 
@@ -47,6 +45,7 @@ const useTextPrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+        clearDisplay();
         const key = event.key;
         const isCtrlPressed = event.ctrlKey;
         preventDefaultEvents(event);

@@ -1,3 +1,4 @@
+import SlideIn from 'components/animations/SlideIn';
 import {
     AutoCompletePrompt,
     DatePrompt,
@@ -10,11 +11,13 @@ import {
 } from 'components/prompts';
 import { AppContext } from 'context/AppContext';
 import { TerminalContext } from 'context/TerminalContext';
-import React, { useContext } from 'react';
-import { Pipeline, Prompt } from 'types';
+import React, { useContext, useEffect } from 'react';
+import { Pipeline, Prompt, Task } from 'types';
 import './PromptFactory.scss';
+import useMessagePanel from 'hooks/context/useMessagePanel';
 
 interface PromptFactoryProps {
+    taskId: Task.TaskId;
     task: Prompt.PromptTask;
     pipelineContext: Pipeline.Context;
     onSubmit: (data: any) => void;
@@ -23,6 +26,7 @@ interface PromptFactoryProps {
 }
 
 const PromptFactory: React.FC<PromptFactoryProps> = ({
+    taskId,
     task,
     pipelineContext,
     onSubmit: onSubmit,
@@ -205,9 +209,13 @@ const PromptFactory: React.FC<PromptFactoryProps> = ({
         }
     };
 
-    return <div className='prompt-component'>{renderPrompt()}</div>;
+    return (
+        <div className='prompt-component'>
+            <SlideIn key={taskId}>{renderPrompt()}</SlideIn>
+        </div>
+    );
 };
 
-PromptFactory.displayName = 'PromptHandler';
+PromptFactory.displayName = 'PromptFactory';
 
-export { PromptFactory as PromptHandler };
+export default PromptFactory;

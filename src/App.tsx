@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import 'App.scss';
 import Terminal from 'components/terminal/Terminal';
 import { AppProvider } from 'context/AppContext';
 import useApp from 'hooks/app/useApp';
-import 'App.scss';
 import useAppDispatcher from 'hooks/app/useAppDispatcher';
+import React, { useEffect } from 'react';
 
 const App: React.FC = () => {
     return (

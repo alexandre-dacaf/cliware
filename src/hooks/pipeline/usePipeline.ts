@@ -22,11 +22,6 @@ const usePipeline = () => {
         fileDownload: useFileDownloader(),
         appDispatcher: useAppDispatcher(),
     };
-    const messagePanel = useMessagePanel();
-    const historyLog = useHistoryLogger();
-    const clipboard = useClipboard();
-    const fileDownload = useFileDownloader();
-    const appDispatcher = useAppDispatcher();
 
     const currentTaskId = useMemo(
         () => pipelineContext?.currentTaskId,
@@ -44,10 +39,15 @@ const usePipeline = () => {
         const _pipelineBlueprint = commandBlueprint.pipeline;
         if (!commandEntrypoint || !_pipelineBlueprint) return;
 
-        const startTaskId = commandEntrypoint;
+        if (!_pipelineBlueprint.hasOwnProperty(commandEntrypoint)) {
+            handleError(
+                `Command \`${commandArgs.baseCommand}\` doesn't have task of id \`${commandEntrypoint}\``
+            );
+            return;
+        }
 
         setPipelineContext({
-            currentTaskId: startTaskId,
+            currentTaskId: commandEntrypoint,
             pipelineData: {},
             commandArgs,
             hooks,
@@ -75,14 +75,14 @@ const usePipeline = () => {
     }, [currentTask, isProcessing]);
 
     const handlePromptResponse = (data: any) => {
-        if (!pipelineContext) return;
+        if (!pipelineContext || !pipelineBlueprint) return;
         if (!currentTask || currentTask.type !== 'prompt') return;
 
-        finishTask({ pipelineContext, currentTask, data });
+        finishTask({ pipelineBlueprint, pipelineContext, currentTask, data });
     };
 
     const handleActionTask = async () => {
-        if (!pipelineContext) return;
+        if (!pipelineContext || !pipelineBlueprint) return;
         if (!currentTask || currentTask.type !== 'action') return;
 
         try {
@@ -90,7 +90,7 @@ const usePipeline = () => {
 
             const data = await currentTask.actionFunction(pipelineContext);
 
-            finishTask({ pipelineContext, currentTask, data });
+            finishTask({ pipelineBlueprint, pipelineContext, currentTask, data });
         } catch (error) {
             handleError(error);
         } finally {
@@ -99,10 +99,12 @@ const usePipeline = () => {
     };
 
     const finishTask = ({
+        pipelineBlueprint,
         pipelineContext,
         currentTask,
         data,
     }: {
+        pipelineBlueprint: Pipeline.Blueprint;
         pipelineContext: Pipeline.Context;
         currentTask: Task.Task;
         data: any;
@@ -120,6 +122,11 @@ const usePipeline = () => {
 
         if (!nextTaskId) {
             endPipelineAndSetIdle();
+            return;
+        }
+
+        if (!pipelineBlueprint.hasOwnProperty(nextTaskId)) {
+            handleError(`Pipeline doesn't have task of id \`${nextTaskId}\``);
             return;
         }
 

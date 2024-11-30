@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
-import { TerminalContext } from 'context/TerminalContext';
-import { Text, MessagePanel as MP } from 'types';
-import Spinner from '../text/Spinner';
-import ProgressBar from './ProgressBar';
-import './MessagePanel.scss';
 import RichText from 'components/text/RichText';
+import { TerminalContext } from 'context/TerminalContext';
+import React, { useContext } from 'react';
+import { MessagePanel as MP, Text } from 'types';
+import './MessagePanel.scss';
+import ProgressBar from './ProgressBar';
+import SlideIn from 'components/animations/SlideIn';
+import FadeIn from 'components/animations/FadeIn';
+import SlideDown from 'components/animations/SlideDown';
 
 const MessagePanel: React.FC = () => {
     const { state } = useContext(TerminalContext);
@@ -29,8 +31,10 @@ const MessagePanel: React.FC = () => {
 
     return (
         <div className='message-panel'>
-            {renderText()}
-            {renderProgressBar()}
+            <SlideIn key={1} duration={0.2}>
+                {renderText()}
+                {renderProgressBar()}
+            </SlideIn>
         </div>
     );
 };

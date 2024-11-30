@@ -1,6 +1,6 @@
 import usePipeline from 'hooks/pipeline/usePipeline';
 import React from 'react';
-import { PromptHandler } from './factory/PromptFactory';
+import PromptFactory from './factory/PromptFactory';
 
 interface PipelineProps {
     isActive: boolean;
@@ -25,7 +25,8 @@ const Pipeline: React.FC<PipelineProps> = ({ isActive }) => {
         if (!currentTask || currentTask.type !== 'prompt') return null;
 
         return (
-            <PromptHandler
+            <PromptFactory
+                taskId={currentTaskId}
                 task={currentTask}
                 pipelineContext={pipelineContext}
                 onSubmit={handlePromptResponse}

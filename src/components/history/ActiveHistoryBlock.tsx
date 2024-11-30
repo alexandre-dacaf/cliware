@@ -1,4 +1,4 @@
-import SlideDown from 'components/animations/SlideDown';
+import FadeIn from 'components/animations/FadeIn';
 import HistoryEntry from 'components/history/HistoryEntry';
 import { TerminalContext } from 'context/TerminalContext';
 import { useContext } from 'react';
@@ -17,9 +17,9 @@ const ActiveHistoryBlock = () => {
         <div className='active-history-block'>
             {activeBlock.entries.map((entry, index) => {
                 return (
-                    <SlideDown>
+                    <FadeIn key={`active-history-entry${index}`}>
                         <HistoryEntry key={index} entry={entry} />
-                    </SlideDown>
+                    </FadeIn>
                 );
             })}
         </div>

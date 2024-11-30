@@ -202,7 +202,7 @@ export namespace App {
 
 export namespace Terminal {
     export interface TerminalState {
-        currentHistoryBlockId: History.HistoryBlockId;
+        currentHistoryBlockId: History.HistoryBlockId | null;
         printHistory: History.HistoryBlock[];
         commandArgs: Command.Args | null;
         display: MessagePanel.Display | null;
@@ -231,12 +231,12 @@ export namespace Terminal {
         | { type: 'CLEAR_DISPLAY' };
 
     export interface StartNewCommandPayload {
-        currentBlockId: History.HistoryBlockId;
+        currentBlockId: History.HistoryBlockId | null;
         newGroupId: string;
         consoleInput: string;
     }
     export interface LogHistoryEntryPayload {
-        currentBlockId: History.HistoryBlockId;
+        currentBlockId: History.HistoryBlockId | null;
         entries: History.HistoryEntry | History.HistoryEntry[];
     }
 }
@@ -270,7 +270,7 @@ export namespace History {
         entries: HistoryEntry[];
     }
 
-    export type HistoryBlockId = string | null;
+    export type HistoryBlockId = string;
 
     export type HistoryEntry = TextHistoryEntry | JsonHistoryEntry | TableHistoryEntry;
 

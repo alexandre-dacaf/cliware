@@ -31,7 +31,10 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         // Scroll to the end of the terminal whenever the history changes
         setTimeout(() => {
             if (terminalRef.current) {
-                terminalRef.current.scrollTop = terminalRef.current?.scrollHeight;
+                terminalRef.current.scrollTo({
+                    top: terminalRef.current.scrollHeight,
+                    behavior: 'smooth', // Adiciona o scroll suave
+                });
             }
         }, 100);
     }, [terminalState]);
@@ -47,6 +50,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     return (
         <div className={terminalClassName} ref={terminalRef}>
             <History />
+
             <div className='command-container'>
                 <ActiveHistoryBlock />
                 {renderConsole()}
