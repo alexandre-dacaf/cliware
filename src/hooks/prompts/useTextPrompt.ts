@@ -30,7 +30,7 @@ const useTextPrompt = ({
     onGoBack,
 }: UseTextPromptProps) => {
     const [value, setValue] = useState<string>('');
-    const { printPromptResponse } = useHistoryLogger();
+    const { logPromptResponse } = useHistoryLogger();
     const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
@@ -88,7 +88,7 @@ const useTextPrompt = ({
             return;
         }
 
-        printPromptResponse(`${message} ${formattedValue}`);
+        logPromptResponse(`${message} ${formattedValue}`);
         onSubmit(formattedValue);
         setValue('');
     };

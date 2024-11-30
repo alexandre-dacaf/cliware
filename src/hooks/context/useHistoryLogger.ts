@@ -5,77 +5,57 @@ import { v4 as uuidv4 } from 'uuid';
 import { ensureArray } from 'services';
 
 const useHistoryLogger = (): Hooks.UseHistoryLoggerMethods => {
-    const { state, dispatch } = useContext(TerminalContext);
+    const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
 
-    const print = (entries: History.HistoryEntry | History.HistoryEntry[]) => {
-        dispatch({
+    const log = (entries: History.HistoryEntry | History.HistoryEntry[]) => {
+        const currentBlockId = terminalState.currentHistoryBlockId;
+
+        terminalDispatch({
             type: 'LOG_HISTORY_ENTRY',
-            payload: { currentGroupId: state.currentHistoryGroupId, entries },
+            payload: { currentBlockId, entries },
         });
     };
 
-    const printText = (content: Text.RichText) => {
+    const logRichText = (content: Text.RichText) => {
         const contentArray = ensureArray(content);
-        print({ type: 'text', content: contentArray });
+        log({ type: 'text', content: contentArray });
     };
 
-    const printCommand = (message: string) => {
-        printText({ color: 'blue', text: `> ${message}` });
+    const logPromptResponse = (message: string) => {
+        logRichText({ color: 'neutral-800', text: message });
     };
 
-    const printCommandNotFound = (commandString: string) => {
-        const newGroupId = uuidv4();
-
-        dispatch({
-            type: 'COMMAND_NOT_FOUND',
-            payload: {
-                currentGroupId: state.currentHistoryGroupId,
-                newGroupId,
-                commandString,
-            },
-        });
+    const logSuccess = (message: string) => {
+        logRichText({ color: 'green', text: message });
     };
 
-    const printPromptResponse = (message: string) => {
-        printText({ color: 'neutral-800', text: message });
+    const logAlert = (message: string) => {
+        logRichText({ color: 'yellow', text: message });
     };
 
-    const printSuccess = (message: string) => {
-        if (typeof message === 'string') {
-            printText({ color: 'green', text: message });
-        }
-    };
-
-    const printAlert = (message: string) => {
-        if (typeof message === 'string') {
-            printText({ color: 'yellow', text: message });
-        }
-    };
-
-    const printError = (error: any) => {
+    const logError = (error: any) => {
         const text = error?.message ?? error ?? 'ERROR';
-        printText({ color: 'red', text });
+        logRichText({ color: 'red', text });
     };
 
-    const printTable = (tableContent: Table.TableContent) => {
-        print({ type: 'table', content: tableContent });
+    const logTable = (tableContent: Table.TableContent) => {
+        log({ type: 'table', content: tableContent });
     };
 
-    const printJson = (json: object) => {
-        print({ type: 'json', content: json });
+    const logJson = (json: object) => {
+        log({ type: 'json', content: json });
     };
 
     return {
-        print,
-        printText,
-        printCommand,
-        printCommandNotFound,
-        printPromptResponse,
-        printSuccess,
-        printAlert,
-        printError,
-        printTable,
-        printJson,
+        terminalState,
+        log,
+        logRichText,
+        logPromptResponse,
+        logSuccess,
+        logAlert,
+        logError,
+        logTable,
+        logJson,
     };
 };
 

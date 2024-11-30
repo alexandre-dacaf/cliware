@@ -1,57 +1,55 @@
-import { Action, Pipeline } from 'types';
+import { Action, Pipeline, Prompt } from 'types';
 
 export const createTodo: Action.ActionFunction = async (
     context: Pipeline.Context
 ): Promise<any> => {
-    context.messagePanel.setMessageText([
-        { color: 'blue', spinner: { name: 'dots3' } },
-        { color: 'teal', text: ' Executando' },
-        { color: 'pink', spinner: { name: 'ellipsis', interval: 400 } },
-        { color: 'red', text: ' ' },
-        { color: 'yellow', spinner: { name: 'circleHalves' } },
-        { color: 'red', text: ' Executando...' },
+    context.hooks.messagePanel.setMessageText([
+        { color: 'yellow', spinner: { name: 'dots3' } },
+        { color: 'yellow', text: ' Executando' },
+        { color: 'yellow', spinner: { name: 'ellipsis', interval: 400 } },
     ]);
 
-    // context.messagePanel.setSpinner({ name: 'dots3' });
-
-    context.messagePanel.setProgressBarStyle({
-        color: 'red',
+    context.hooks.messagePanel.setProgressBarStyle({
+        color: 'yellow',
     });
 
-    context.messagePanel.updateProgressBarPercentage(0);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.messagePanel.updateProgressBarPercentage(10);
+    context.hooks.messagePanel.updateProgressBarPercentage(40);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    context.messagePanel.updateProgressBarPercentage(20);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    context.hooks.messagePanel.updateProgressBarPercentage(100);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+};
 
-    context.messagePanel.updateProgressBarPercentage(30);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+export const getChoices: Prompt.ChoiceFunction = async (context: Pipeline.Context) => {
+    context.hooks.messagePanel.setMessageText([
+        { color: 'yellow', spinner: { name: 'dots3' } },
+        { color: 'yellow', text: ' Executando' },
+        { color: 'yellow', spinner: { name: 'ellipsis', interval: 400 } },
+    ]);
 
-    context.messagePanel.updateProgressBarPercentage(40);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    context.messagePanel.setProgressBarStyle({
-        color: 'teal',
-    });
+    context.hooks.messagePanel.clearDisplay();
 
-    context.messagePanel.updateProgressBarPercentage(50);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    const choices = [
+        { label: 'Leão', value: 'lion', hint: 'Rei da selva' },
+        { label: 'Elefante', value: 'elephant' },
+        { label: 'Tigre', value: 'tiger' },
+        { label: 'Girafa', value: 'giraffe' },
+        { label: 'Zebra', value: 'zebra' },
+        { label: 'Canguru', value: 'kangaroo' },
+        { label: 'Panda', value: 'panda' },
+        { label: 'Rinoceronte', value: 'rhinoceros' },
+        { label: 'Hipopótamo', value: 'hippopotamus' },
+        { label: 'Gorila', value: 'gorilla' },
+        { label: 'Cobra', value: 'cobra' },
+        { label: 'Águia', value: 'eagle' },
+        { label: 'Lobo', value: 'wolf', hint: 'Auuuuuu' },
+        { label: 'Urso Polar', value: 'polar_bear' },
+        { label: 'Falcão', value: 'falcon' },
+    ];
 
-    context.messagePanel.updateProgressBarPercentage(60);
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    context.messagePanel.updateProgressBarPercentage(70);
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    context.messagePanel.updateProgressBarPercentage(80);
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    context.messagePanel.updateProgressBarPercentage(90);
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    context.messagePanel.updateProgressBarPercentage(100);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    return choices;
 };

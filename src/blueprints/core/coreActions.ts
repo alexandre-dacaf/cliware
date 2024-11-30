@@ -9,13 +9,13 @@ export const changeTerminalColumns: Action.ActionFunction = (context: Pipeline.C
         throw new Error("Insira um número de colunas. Ex.: 'columns 3'.");
     }
 
-    context.appDispatcher.changeTerminalColumns(columns);
+    context.hooks.appDispatcher.changeTerminalColumns(columns);
 };
 
 export const createTerminal = (context: Pipeline.Context) => {
-    context.appDispatcher.createTerminal();
+    context.hooks.appDispatcher.createTerminal();
 };
 
 export const deleteTerminal = (context: Pipeline.Context) => {
-    context.appDispatcher.deleteCurrentTerminal();
+    context.hooks.appDispatcher.deleteCurrentTerminal();
 };

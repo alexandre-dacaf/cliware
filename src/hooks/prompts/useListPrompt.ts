@@ -28,7 +28,7 @@ const useListPrompt = ({
 }: UseListPromptProps) => {
     const [value, setValue] = useState<string>('');
     const [list, setList] = useState<string[]>([]);
-    const { printPromptResponse } = useHistoryLogger();
+    const { logPromptResponse } = useHistoryLogger();
     const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const useListPrompt = ({
         }
 
         const formattedList = JSON.stringify(list);
-        printPromptResponse(`${message} ${formattedList}`);
+        logPromptResponse(`${message} ${formattedList}`);
         setValue('');
         onSubmit(list);
     };

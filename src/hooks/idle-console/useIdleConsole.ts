@@ -1,34 +1,31 @@
+import { blueprint } from 'blueprints/blueprint';
 import { AppContext } from 'context/AppContext';
+import { TerminalContext } from 'context/TerminalContext';
 import {
-    useState,
-    useEffect,
-    useMemo,
     KeyboardEvent as ReactKeyboardEvent,
     useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
 } from 'react';
-import { parseCommandArguments } from 'services/parser';
-import { Command } from 'types';
+import { v4 as uuidv4 } from 'uuid';
 
-interface UseCommandInputProps {
-    availableCommands: string[];
+interface UseIdleConsoleProps {
     itemsPerPage: number;
-    onSubmit: (commandString: string, commandArgs: Command.Args) => void;
     isActive: boolean;
 }
 
-const useIdleConsole = ({
-    availableCommands,
-    itemsPerPage,
-    onSubmit,
-    isActive,
-}: UseCommandInputProps) => {
-    const { dispatch } = useContext(AppContext);
+const useIdleConsole = ({ itemsPerPage, isActive }: UseIdleConsoleProps) => {
+    const availableCommands = useRef(Object.keys(blueprint).sort());
     const [value, setValue] = useState<string>('');
     const [filteredCommands, setFilteredCommands] = useState<string[]>([]);
     const [pageCommands, setPageCommands] = useState<string[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
+    const { dispatch: appDispatch } = useContext(AppContext);
+    const { state: terminalState, dispatch: terminalDispatch } = useContext(TerminalContext);
 
     const totalPages = useMemo(
         () => Math.ceil(filteredCommands.length / itemsPerPage),
@@ -36,7 +33,7 @@ const useIdleConsole = ({
     );
 
     useEffect(() => {
-        setFilteredCommands(availableCommands);
+        setFilteredCommands(availableCommands.current);
         setSelectedIndex(0);
         setCurrentPage(0);
     }, [availableCommands]);
@@ -61,7 +58,7 @@ const useIdleConsole = ({
         setValue(inputValue);
 
         if (inputValue.trim() === '') {
-            setFilteredCommands(availableCommands);
+            setFilteredCommands(availableCommands.current);
             return;
         }
 
@@ -70,7 +67,7 @@ const useIdleConsole = ({
 
         const pattern = new RegExp(normalizeText(inputValue), 'i');
 
-        const newFilteredCommands = availableCommands.filter((choice) => {
+        const newFilteredCommands = availableCommands.current.filter((choice) => {
             return pattern.test(normalizeText(choice));
         });
 
@@ -152,9 +149,18 @@ const useIdleConsole = ({
     };
 
     const submit = () => {
-        const commandString = value;
-        const commandArgs: Command.Args = parseCommandArguments(commandString);
-        onSubmit(commandString, commandArgs);
+        const newGroupId = uuidv4();
+        const consoleInput = value;
+
+        terminalDispatch({
+            type: 'START_NEW_COMMAND',
+            payload: {
+                currentBlockId: terminalState.currentHistoryBlockId,
+                newGroupId,
+                consoleInput,
+            },
+        });
+
         setValue('');
     };
 
@@ -195,7 +201,7 @@ const useIdleConsole = ({
 
     const deactivateTerminal = () => {
         if (isActive) {
-            dispatch({ type: 'DEACTIVATE_TERMINAL' });
+            appDispatch({ type: 'DEACTIVATE_TERMINAL' });
         }
     };
 
@@ -207,6 +213,7 @@ const useIdleConsole = ({
         currentPage,
         totalPages,
         handleKeyDown,
+        availableCommands,
     };
 };
 

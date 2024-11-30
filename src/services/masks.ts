@@ -1,4 +1,3 @@
-// masks.ts
 import { Prompt } from 'types';
 
 interface CurrencyFormat {

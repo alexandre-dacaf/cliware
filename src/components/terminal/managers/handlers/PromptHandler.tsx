@@ -1,21 +1,22 @@
-import React, { useContext } from 'react';
 import {
+    AutoCompletePrompt,
+    DatePrompt,
+    ListPrompt,
+    NumberPrompt,
+    PasswordPrompt,
+    SelectPrompt,
     TextPrompt,
     TogglePrompt,
-    SelectPrompt,
-    NumberPrompt,
-    ListPrompt,
-    DatePrompt,
-    AutoCompletePrompt,
-    PasswordPrompt,
 } from 'components/prompts';
 import { AppContext } from 'context/AppContext';
 import { TerminalContext } from 'context/TerminalContext';
-import { Prompt } from 'types';
+import React, { useContext } from 'react';
+import { Pipeline, Prompt } from 'types';
 import './PromptHandler.scss';
 
 interface PromptHandlerProps {
     task: Prompt.PromptTask;
+    pipelineContext: Pipeline.Context;
     onSubmit: (data: any) => void;
     onGoBack: () => void;
     isActive: boolean;
@@ -23,6 +24,7 @@ interface PromptHandlerProps {
 
 const PromptHandler: React.FC<PromptHandlerProps> = ({
     task,
+    pipelineContext,
     onSubmit: onSubmit,
     isActive,
     onGoBack,
@@ -44,7 +46,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
         }
     };
 
-    const endPipelineAndStandby = () => {
+    const endPipelineAndSetIdle = () => {
         if (isActive) {
             terminalDispatch({ type: 'SET_IDLE_CONSOLE' });
         }
@@ -65,7 +67,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );
@@ -79,7 +81,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );
@@ -94,8 +96,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
+                        pipelineContext={pipelineContext}
                     />
                 );
             case 'multiselect':
@@ -110,8 +113,9 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
+                        pipelineContext={pipelineContext}
                     />
                 );
             case 'number':
@@ -130,7 +134,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );
@@ -146,7 +150,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );
@@ -161,7 +165,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );
@@ -178,7 +182,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );
@@ -192,7 +196,7 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
                         isActive={isActive}
                         onSubmit={handleSubmit}
                         onEscape={deactivateTerminal}
-                        onAbort={endPipelineAndStandby}
+                        onAbort={endPipelineAndSetIdle}
                         onGoBack={handleGoBack}
                     />
                 );

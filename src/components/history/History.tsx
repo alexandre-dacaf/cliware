@@ -9,7 +9,7 @@ const History: React.FC = () => {
     return (
         <div className='history'>
             {state.printHistory
-                .filter((group) => group.id !== state.currentHistoryGroupId)
+                .filter((group) => group.id !== state.currentHistoryBlockId)
                 .map((group, index) => {
                     return <HistoryBlock key={index} group={group} className='history-block' />;
                 })}

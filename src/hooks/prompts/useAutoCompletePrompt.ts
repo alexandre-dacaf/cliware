@@ -35,7 +35,7 @@ const useSelectPrompt = ({
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const { printPromptResponse } = useHistoryLogger();
+    const { logPromptResponse } = useHistoryLogger();
     const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     const totalPages = useMemo(
@@ -188,7 +188,7 @@ const useSelectPrompt = ({
             return;
         }
 
-        printPromptResponse(`${message} ${value}`);
+        logPromptResponse(`${message} ${value}`);
         setValue('');
         onSubmit(value);
     };

@@ -3,7 +3,7 @@ import { getExtensionFromMimeType, hasValidExtension } from 'services';
 import useHistoryLogger from './useHistoryLogger';
 
 const useFileDownloader = (): Hooks.UseFileDowloaderMethods => {
-    const { printSuccess, printError } = useHistoryLogger();
+    const { logSuccess, logError } = useHistoryLogger();
 
     const downloadFile = (filename: string, content: string, mimeType: string) => {
         try {
@@ -22,9 +22,9 @@ const useFileDownloader = (): Hooks.UseFileDowloaderMethods => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            printSuccess(`File ${finalFilename} has been generated and is ready for download.`);
+            logSuccess(`File ${finalFilename} has been generated and is ready for download.`);
         } catch (error) {
-            printError('Error generating file.');
+            logError('Error generating file.');
         }
     };
 

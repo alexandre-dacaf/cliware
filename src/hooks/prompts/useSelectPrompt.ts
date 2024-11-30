@@ -1,11 +1,12 @@
+import { TerminalContext } from 'context/TerminalContext';
 import useHistoryLogger from 'hooks/context/useHistoryLogger';
 import useMessagePanel from 'hooks/context/useMessagePanel';
-import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useMemo } from 'react';
-import { Prompt } from 'types';
+import { KeyboardEvent as ReactKeyboardEvent, useContext, useEffect, useState } from 'react';
+import { Pipeline, Prompt } from 'types';
 
 type UseSelectPromptProps = {
     message: string;
-    choices: Prompt.Choice[];
+    choices: Prompt.Choice[] | Prompt.ChoiceFunction;
     multiselect: boolean;
     defaultValue: any;
     required: boolean;
@@ -14,6 +15,7 @@ type UseSelectPromptProps = {
     onEscape: () => void;
     onAbort: () => void;
     onGoBack: () => void;
+    pipelineContext: Pipeline.Context;
 };
 
 const useSelectPrompt = ({
@@ -27,21 +29,30 @@ const useSelectPrompt = ({
     onEscape,
     onAbort,
     onGoBack,
+    pipelineContext,
 }: UseSelectPromptProps) => {
+    const [formattedChoices, setFormattedChoices] = useState<Prompt.Choice[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
     const [checkedChoices, setCheckedChoices] = useState<Prompt.Choice[]>([]);
-    const { printPromptResponse } = useHistoryLogger();
+    const { state: terminalState } = useContext(TerminalContext);
+    const { logPromptResponse } = useHistoryLogger();
     const { setMessageAlert, clearDisplay } = useMessagePanel();
 
-    const formattedChoices = useMemo(
-        () =>
-            choices.map((choice) => ({
-                ...choice,
-                value: choice.value ?? choice.label,
-            })),
-        [choices]
-    );
+    useEffect(() => {
+        const setChoices = async () => {
+            const resolvedChoices: Prompt.Choice[] = await resolveChoices(choices);
+
+            setFormattedChoices(
+                resolvedChoices.map((choice) => ({
+                    ...choice,
+                    value: choice.value ?? choice.label,
+                }))
+            );
+        };
+
+        setChoices();
+    }, [choices]);
 
     useEffect(() => {
         setSelectedIndex(() => {
@@ -61,6 +72,20 @@ const useSelectPrompt = ({
     useEffect(() => {
         setCheckedChoices(checkedIndexes.map((index) => formattedChoices[index]));
     }, [checkedIndexes]);
+
+    const resolveChoices = async (
+        _choices: Prompt.Choice[] | Prompt.ChoiceFunction
+    ): Promise<Prompt.Choice[]> => {
+        let resolvedChoices: Prompt.Choice[];
+
+        if (typeof _choices === 'function') {
+            if (!pipelineContext) return [];
+
+            return await _choices(pipelineContext);
+        }
+
+        return _choices;
+    };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
         clearDisplay();
@@ -162,12 +187,15 @@ const useSelectPrompt = ({
         }
 
         const formattedCheckedChoices = checkedChoices.map((choice) => choice.label).join(', ');
-        printPromptResponse(`${message} ${formattedCheckedChoices}`);
+        logPromptResponse(`${message} ${formattedCheckedChoices}`);
         onSubmit(checkedChoices);
+        setFormattedChoices([]);
     };
 
     const checkAndSubmit = () => {
         const selectedChoice = formattedChoices[selectedIndex];
+
+        if (!selectedChoice) return;
 
         // `validation` can be a boolean or a string message
         // If it's not true, use it as an alert message or use a default alert message
@@ -183,11 +211,13 @@ const useSelectPrompt = ({
             return;
         }
 
-        printPromptResponse(`${message} ${selectedChoice.label}`);
+        logPromptResponse(`${message} ${selectedChoice.label}`);
         onSubmit(selectedChoice);
+        setFormattedChoices([]);
     };
 
     return {
+        formattedChoices,
         selectedIndex,
         checkedIndexes,
         handleKeyDown,

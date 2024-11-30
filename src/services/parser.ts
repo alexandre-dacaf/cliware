@@ -4,7 +4,7 @@ export const parseCommandArguments = (command: string) => {
     const [baseCommand, ...commandArgs] = command.split(' ');
 
     const data: Command.Args = {
-        command: baseCommand,
+        baseCommand,
         args: [],
         options: {},
         flags: [],

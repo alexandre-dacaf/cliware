@@ -4,26 +4,25 @@ import { Command } from 'types';
 import './IdleConsole.scss';
 
 interface IdleConsoleProps {
-    availableCommands: string[];
     itemsPerPage?: number;
-    onSubmit: (commandString: string, commandArgs: Command.Args) => void;
     isActive: boolean;
 }
 
-const IdleConsole: React.FC<IdleConsoleProps> = ({
-    availableCommands,
-    itemsPerPage = 10,
-    onSubmit,
-    isActive,
-}) => {
+const IdleConsole: React.FC<IdleConsoleProps> = ({ itemsPerPage = 10, isActive }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { value, pageCommands, pageIndex, handleChange, currentPage, totalPages, handleKeyDown } =
-        useIdleConsole({
-            availableCommands,
-            itemsPerPage,
-            onSubmit,
-            isActive,
-        });
+    const {
+        value,
+        pageCommands,
+        pageIndex,
+        handleChange,
+        currentPage,
+        totalPages,
+        handleKeyDown,
+        availableCommands,
+    } = useIdleConsole({
+        itemsPerPage,
+        isActive,
+    });
 
     useEffect(() => {
         if (isActive && inputRef.current) {
@@ -63,7 +62,7 @@ const IdleConsole: React.FC<IdleConsoleProps> = ({
                             {command}
                         </span>
                     ))}
-                    {availableCommands.length > itemsPerPage ? (
+                    {availableCommands.current.length > itemsPerPage ? (
                         <em className='command-pages'>
                             Page {currentPage + 1}/{totalPages}
                         </em>

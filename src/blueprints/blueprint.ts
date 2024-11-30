@@ -1,5 +1,5 @@
 import { Blueprint } from 'types';
-import { createTodo } from './actions';
+import { createTodo, getChoices } from './actions';
 import { coreCommands } from './core/coreCommands';
 
 export const blueprint: Blueprint = {
@@ -11,7 +11,7 @@ export const blueprint: Blueprint = {
             selectPromptType: {
                 type: 'prompt',
                 promptType: 'select',
-                message: 'Selecione o tipo de          prompt que deseja utilizar:',
+                message: 'Selecione o tipo de prompt que deseja utilizar:',
                 choices: [
                     { label: 'Texto', value: 'text' },
                     { label: 'Toggle', value: 'toggle' },
@@ -73,23 +73,7 @@ export const blueprint: Blueprint = {
                 type: 'prompt',
                 promptType: 'select',
                 message: 'Selecione um animal (Q1):',
-                choices: [
-                    { label: 'Leão', value: 'lion', hint: 'Rei da selva' },
-                    { label: 'Elefante', value: 'elephant' },
-                    { label: 'Tigre', value: 'tiger' },
-                    { label: 'Girafa', value: 'giraffe' },
-                    { label: 'Zebra', value: 'zebra' },
-                    { label: 'Canguru', value: 'kangaroo' },
-                    { label: 'Panda', value: 'panda' },
-                    { label: 'Rinoceronte', value: 'rhinoceros' },
-                    { label: 'Hipopótamo', value: 'hippopotamus' },
-                    { label: 'Gorila', value: 'gorilla' },
-                    { label: 'Cobra', value: 'cobra' },
-                    { label: 'Águia', value: 'eagle' },
-                    { label: 'Lobo', value: 'wolf', hint: 'Auuuuuu' },
-                    { label: 'Urso Polar', value: 'polar_bear' },
-                    { label: 'Falcão', value: 'falcon' },
-                ],
+                choices: getChoices,
                 default: 'zebra',
                 next: 'select_q2',
             },
@@ -361,7 +345,7 @@ export const blueprint: Blueprint = {
             result: {
                 type: 'action',
                 actionFunction: (context) => {
-                    context.history.printJson(context.pipelineData);
+                    context.hooks.historyLog.logJson(context.pipelineData);
                 },
             },
         },

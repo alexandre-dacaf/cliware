@@ -35,7 +35,7 @@ const useNumberPrompt = ({
     onGoBack,
 }: UseNumberPromptProps) => {
     const [value, setValue] = useState<string>('0');
-    const { printPromptResponse } = useHistoryLogger();
+    const { logPromptResponse } = useHistoryLogger();
     const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     const initValue = useMemo(() => {
@@ -161,7 +161,7 @@ const useNumberPrompt = ({
             return;
         }
 
-        printPromptResponse(`${message} ${numberValue}`);
+        logPromptResponse(`${message} ${numberValue}`);
         onSubmit(numberValue);
         clear();
     };

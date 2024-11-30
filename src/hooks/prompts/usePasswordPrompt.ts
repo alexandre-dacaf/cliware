@@ -23,7 +23,7 @@ const usePasswordPrompt = ({
     onGoBack,
 }: UsePasswordPromptProps) => {
     const [value, setValue] = useState<string>('');
-    const { printPromptResponse } = useHistoryLogger();
+    const { logPromptResponse } = useHistoryLogger();
     const { setMessageAlert, clearDisplay } = useMessagePanel();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +52,7 @@ const usePasswordPrompt = ({
             return;
         }
 
-        printPromptResponse(`${message} ${'•'.repeat(8)}`);
+        logPromptResponse(`${message} ${'•'.repeat(8)}`);
         onSubmit(value);
         setValue('');
     };

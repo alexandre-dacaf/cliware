@@ -7,8 +7,13 @@
 }
 
 .select-message {
-    margin-bottom: 0.6em;
     font-weight: bold;
+}
+
+.select-navigation-tip {
+    margin-bottom: 1em;
+    font-size: 0.9em;
+    color: $neutral-700;
 }
 
 .choices-list {
@@ -43,10 +48,4 @@
 
 .choice-hint.selected {
     display: inline;
-}
-
-.select-navigation-hint {
-    margin-top: 0.8rem;
-    font-size: 0.8em;
-    color: #768390;
 }

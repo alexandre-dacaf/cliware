@@ -1,5 +1,3 @@
-import RichText from 'components/text/RichText';
-
 export interface Blueprint {
     [command: string]: Command.Blueprint;
 }
@@ -7,7 +5,7 @@ export interface Blueprint {
 export namespace Task {
     export type Task = Prompt.PromptTask | Action.ActionTask;
 
-    export type TaskKey = string;
+    export type TaskId = string;
 
     export type TaskType = 'prompt' | 'action';
 
@@ -67,13 +65,13 @@ export namespace Prompt {
 
     export interface SelectPrompt extends BasePrompt {
         promptType: 'select';
-        choices: Choice[];
+        choices: Choice[] | ChoiceFunction;
         default?: any;
     }
 
     export interface MultiselectPrompt extends BasePrompt {
         promptType: 'multiselect';
-        choices: Choice[];
+        choices: Choice[] | ChoiceFunction;
         default?: any;
     }
 
@@ -120,6 +118,8 @@ export namespace Prompt {
         hint?: string;
     }
 
+    export type ChoiceFunction = (context: Pipeline.Context) => Promise<Choice[]> | Choice[];
+
     export type ValidateFunction = (response: any) => boolean | string;
 
     export type Mask = MaskTemplate | MaskFunction;
@@ -154,32 +154,9 @@ export namespace Action {
     export type ActionFunction = (context: Pipeline.Context) => Promise<any> | any;
 }
 
-export namespace Pipeline {
-    export interface Blueprint {
-        [taskKey: Task.TaskKey]: Task.Task;
-    }
-
-    export interface Context {
-        currentTaskKey: Task.TaskKey;
-        taskBreadcrumbs: Task.TaskKey[];
-        pipelineData: PipelineData;
-        pipelineBlueprint: Blueprint;
-        commandArgs: Command.Args | null;
-        messagePanel: Hooks.UseMessagePanelMethods;
-        history: Hooks.UseHistoryLoggerMethods;
-        clipboard: Hooks.UseClipboardMethods;
-        fileDownload: Hooks.UseFileDowloaderMethods;
-        appDispatcher: Hooks.UseAppDispatcherMethods;
-    }
-
-    export interface PipelineData {
-        [taskKey: Task.TaskKey]: any;
-    }
-}
-
 export namespace Command {
     export interface Args {
-        command: string;
+        baseCommand: string;
         args: string[];
         options: { [key: string]: string | string[] | boolean };
         flags: string[];
@@ -225,10 +202,9 @@ export namespace App {
 
 export namespace Terminal {
     export interface TerminalState {
-        commandArgs: Command.Args | null;
-        command: Command.Blueprint | null;
-        currentHistoryGroupId: History.HistoryBlockId;
+        currentHistoryBlockId: History.HistoryBlockId;
         printHistory: History.HistoryBlock[];
+        commandArgs: Command.Args | null;
         display: MessagePanel.Display | null;
     }
 
@@ -239,8 +215,11 @@ export namespace Terminal {
               payload: StartNewCommandPayload;
           }
         | {
-              type: 'COMMAND_NOT_FOUND';
-              payload: CommandNotFoundPayload;
+              type: 'FINISH_TASK';
+              payload: { currentTaskId: Task.TaskId; next?: Task.NextTask; data: any };
+          }
+        | {
+              type: 'GO_TO_PREVIOUS_TASK';
           }
         | {
               type: 'LOG_HISTORY_ENTRY';
@@ -252,22 +231,36 @@ export namespace Terminal {
         | { type: 'CLEAR_DISPLAY' };
 
     export interface StartNewCommandPayload {
-        currentGroupId: History.HistoryBlockId;
+        currentBlockId: History.HistoryBlockId;
         newGroupId: string;
-        commandString: string;
-        command: Command.Blueprint;
-        commandArgs: Command.Args;
+        consoleInput: string;
     }
-
-    export interface CommandNotFoundPayload {
-        currentGroupId: History.HistoryBlockId;
-        newGroupId: string;
-        commandString: string;
-    }
-
     export interface LogHistoryEntryPayload {
-        currentGroupId: History.HistoryBlockId;
+        currentBlockId: History.HistoryBlockId;
         entries: History.HistoryEntry | History.HistoryEntry[];
+    }
+}
+
+export namespace Pipeline {
+    export interface Blueprint {
+        [taskId: Task.TaskId]: Task.Task;
+    }
+
+    export interface Context {
+        currentTaskId: Task.TaskId | null;
+        pipelineData: PipelineData;
+        commandArgs: Command.Args | null;
+        hooks: {
+            messagePanel: Hooks.UseMessagePanelMethods;
+            historyLog: Hooks.UseHistoryLoggerMethods;
+            clipboard: Hooks.UseClipboardMethods;
+            fileDownload: Hooks.UseFileDowloaderMethods;
+            appDispatcher: Hooks.UseAppDispatcherMethods;
+        };
+    }
+
+    export interface PipelineData {
+        [taskId: Task.TaskId]: any;
     }
 }
 
@@ -419,16 +412,15 @@ export namespace Hooks {
     }
 
     export interface UseHistoryLoggerMethods {
-        print: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
-        printText: (content: Text.RichText) => void;
-        printCommand: (message: string) => void;
-        printCommandNotFound: (commandString: string) => void;
-        printPromptResponse: (message: string) => void;
-        printSuccess: (message: string) => void;
-        printAlert: (message: string) => void;
-        printError: (error: any) => void;
-        printTable: (tableContent: Table.TableContent) => void;
-        printJson: (json: object) => void;
+        terminalState: Terminal.TerminalState;
+        log: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
+        logRichText: (content: Text.RichText) => void;
+        logPromptResponse: (message: string) => void;
+        logSuccess: (message: string) => void;
+        logAlert: (message: string) => void;
+        logError: (error: any) => void;
+        logTable: (tableContent: Table.TableContent) => void;
+        logJson: (json: object) => void;
     }
 
     export interface UseClipboardMethods {
