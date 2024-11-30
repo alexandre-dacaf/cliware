@@ -12,9 +12,9 @@ import { AppContext } from 'context/AppContext';
 import { TerminalContext } from 'context/TerminalContext';
 import React, { useContext } from 'react';
 import { Pipeline, Prompt } from 'types';
-import './PromptHandler.scss';
+import './PromptFactory.scss';
 
-interface PromptHandlerProps {
+interface PromptFactoryProps {
     task: Prompt.PromptTask;
     pipelineContext: Pipeline.Context;
     onSubmit: (data: any) => void;
@@ -22,7 +22,7 @@ interface PromptHandlerProps {
     isActive: boolean;
 }
 
-const PromptHandler: React.FC<PromptHandlerProps> = ({
+const PromptFactory: React.FC<PromptFactoryProps> = ({
     task,
     pipelineContext,
     onSubmit: onSubmit,
@@ -208,6 +208,6 @@ const PromptHandler: React.FC<PromptHandlerProps> = ({
     return <div className='prompt-component'>{renderPrompt()}</div>;
 };
 
-PromptHandler.displayName = 'PromptHandler';
+PromptFactory.displayName = 'PromptHandler';
 
-export { PromptHandler };
+export { PromptFactory as PromptHandler };

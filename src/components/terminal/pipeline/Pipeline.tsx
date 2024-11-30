@@ -1,6 +1,6 @@
 import usePipeline from 'hooks/pipeline/usePipeline';
 import React from 'react';
-import { PromptHandler } from './handlers/PromptHandler';
+import { PromptHandler } from './factory/PromptFactory';
 
 interface PipelineProps {
     isActive: boolean;

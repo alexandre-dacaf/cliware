@@ -1,0 +1,8 @@
+@import 'styles/variables';
+
+.active-history-block {
+    background-color: #1119;
+    padding: 1em;
+    border-radius: 0.4em;
+    box-shadow: $shadow-inset-lower;
+}

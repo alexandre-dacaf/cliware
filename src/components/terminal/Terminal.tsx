@@ -1,10 +1,10 @@
+import ActiveHistoryBlock from 'components/history/ActiveHistoryBlock';
 import History from 'components/history/History';
-import HistoryBlock from 'components/history/HistoryBlock';
 import IdleConsole from 'components/idle-console/IdleConsole';
 import MessagePanel from 'components/message-panel/MessagePanel';
 import { TerminalContext, TerminalProvider } from 'context/TerminalContext';
 import React, { useContext, useEffect, useRef } from 'react';
-import Pipeline from './managers/Pipeline';
+import Pipeline from './pipeline/Pipeline';
 import './Terminal.scss';
 
 interface TerminalProps {
@@ -36,14 +36,6 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         }, 100);
     }, [terminalState]);
 
-    const renderActiveHistoryBlock = () => {
-        return terminalState.printHistory
-            .filter((group) => group.id === terminalState.currentHistoryBlockId)
-            .map((group, index) => {
-                return <HistoryBlock key={index} group={group} className='active-history-group' />;
-            });
-    };
-
     const renderConsole = () => {
         if (terminalState.commandArgs) {
             return <Pipeline isActive={isActive} />;
@@ -56,7 +48,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         <div className={terminalClassName} ref={terminalRef}>
             <History />
             <div className='command-container'>
-                {renderActiveHistoryBlock()}
+                <ActiveHistoryBlock />
                 {renderConsole()}
                 <MessagePanel />
             </div>

@@ -1,6 +1,6 @@
 import RichText from 'components/text/RichText';
 import React from 'react';
-import { Table, History as H } from 'types';
+import { History as H, Table } from 'types';
 import './HistoryEntry.scss';
 
 interface HistoryEntryProps {
