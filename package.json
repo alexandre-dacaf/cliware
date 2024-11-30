@@ -1,7 +1,7 @@
 {
     "name": "cliware",
-    "version": "0.5.0",
-    "description": "Front-end framework with cli-like experience, designed specifically for power users.",
+    "version": "0.6.0",
+    "description": "A React-based framework that simulates a CLI aesthetic, allowing developers to create streamlined front-end applications using a declarative configuration file for efficient command-based workflows.",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.17.0",
