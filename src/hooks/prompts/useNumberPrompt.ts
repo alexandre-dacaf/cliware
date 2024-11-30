@@ -47,8 +47,6 @@ const useNumberPrompt = ({
     }, [initValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        clearDisplay();
-
         const inputValue = event.target.value;
 
         if (!isValidInput(inputValue)) {
@@ -60,9 +58,7 @@ const useNumberPrompt = ({
 
     const adjustStep = (stepAmount: number) => {
         let numberContent = convertToNumber(value);
-
         numberContent += stepAmount;
-
         numberContent = Math.max(min, Math.min(max, numberContent));
 
         const newStringContent = formatFloatDecimals(numberContent);
@@ -107,6 +103,7 @@ const useNumberPrompt = ({
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLSpanElement>) => {
+        clearDisplay();
         const key = event.key;
         const isCtrlPressed = event.ctrlKey;
         preventDefaultEvents(event);

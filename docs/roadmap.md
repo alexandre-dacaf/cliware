@@ -14,7 +14,7 @@
 
 ### Extras
 
--  [ ] Ext.sprint6.1 - Rethink components and app flow
+-  [x] Ext.sprint6.1 - Rethink components and app flow
 
 
 ## Sprint 5: Advanced Outputs

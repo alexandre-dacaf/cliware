@@ -1,6 +1,8 @@
 import { Command } from 'types';
 
-export const parseCommandArguments = (command: string) => {
+export const parseCommandArguments = (command?: string) => {
+    if (!command) return;
+
     const [baseCommand, ...commandArgs] = command.split(' ');
 
     const data: Command.Args = {

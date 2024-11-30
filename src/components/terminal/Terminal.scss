@@ -40,7 +40,7 @@
     border: solid 1px $green;
 }
 
-.current-command-container {
+.command-container {
     margin-top: 1em;
     background-color: #ffffff0f;
     border-radius: 0.4em;
@@ -48,9 +48,31 @@
     padding-bottom: 1em;
 }
 
-.current-history-group {
+.active-history-group {
     background-color: #1119;
     padding: 1em;
     border-radius: 0.4em;
     box-shadow: $shadow-inset-lower;
+
+    .rich-text {
+        height: 0; // Inicialmente com altura zero
+        opacity: 0; // Invisível inicialmente
+        overflow: hidden; // Esconde o conteúdo até que a altura cresça
+        animation: slideUpHeight 0.2s ease-out forwards; // Animação para o efeito
+    }
+}
+
+@keyframes slideUpHeight {
+    0% {
+        height: 0; // Começa sem altura
+        opacity: 0; // Invisível
+    }
+    99% {
+        height: 15px; // Altura ajustada ao conteúdo
+        opacity: 1; // Visível
+    }
+    100% {
+        height: auto; // Altura ajustada ao conteúdo
+        opacity: 1; // Visível
+    }
 }

@@ -32,10 +32,11 @@ export const terminalReducer = (
             // Check if the current block ID matches the state's current history block ID
             if (currentBlockId !== state.currentHistoryBlockId) return state;
 
-            const commandArgs: Command.Args = parseCommandArguments(consoleInput);
-            const baseCommand = commandArgs.baseCommand;
+            const commandArgs = parseCommandArguments(consoleInput);
+            if (!commandArgs) return state;
 
             // Check if the command exists in the blueprint
+            const baseCommand = commandArgs.baseCommand;
             const commandBlueprint = blueprint[baseCommand];
 
             // Initialize history entries with the user's input command

@@ -40,7 +40,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
         return terminalState.printHistory
             .filter((group) => group.id === terminalState.currentHistoryBlockId)
             .map((group, index) => {
-                return <HistoryBlock key={index} group={group} className='current-history-group' />;
+                return <HistoryBlock key={index} group={group} className='active-history-group' />;
             });
     };
 
@@ -55,7 +55,7 @@ const TerminalBody: React.FC<TerminalProps> = ({ isActive, isSelected }) => {
     return (
         <div className={terminalClassName} ref={terminalRef}>
             <History />
-            <div className='current-command-container'>
+            <div className='command-container'>
                 {renderActiveHistoryBlock()}
                 {renderConsole()}
                 <MessagePanel />

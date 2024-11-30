@@ -47,7 +47,6 @@ const useHistoryLogger = (): Hooks.UseHistoryLoggerMethods => {
     };
 
     return {
-        terminalState,
         log,
         logRichText,
         logPromptResponse,

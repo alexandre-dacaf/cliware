@@ -3,6 +3,7 @@ import { Action, Pipeline, Prompt } from 'types';
 export const createTodo: Action.ActionFunction = async (
     context: Pipeline.Context
 ): Promise<any> => {
+    context.hooks.historyLog.logSuccess('Sucesso!');
     context.hooks.messagePanel.setMessageText([
         { color: 'yellow', spinner: { name: 'dots3' } },
         { color: 'yellow', text: ' Executando' },

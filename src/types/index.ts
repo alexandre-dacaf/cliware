@@ -412,7 +412,6 @@ export namespace Hooks {
     }
 
     export interface UseHistoryLoggerMethods {
-        terminalState: Terminal.TerminalState;
         log: (entries: History.HistoryEntry | History.HistoryEntry[]) => void;
         logRichText: (content: Text.RichText) => void;
         logPromptResponse: (message: string) => void;
